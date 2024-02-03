@@ -1,0 +1,19 @@
+default:
+  image: node:20.11.0
+
+build:
+  stage: build
+  script:
+    - yarn install --frozen-lockfile
+    - yarn lint
+    - yarn build
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  script:
+    - npm install --global vercel
+    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+    - vercel build --prod --token=$VERCEL_TOKEN
+    - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
