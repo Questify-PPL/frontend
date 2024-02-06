@@ -1,6 +1,11 @@
 default:
   image: node:20.11.0
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
 before_script:
   - yarn install --frozen-lockfile
 
