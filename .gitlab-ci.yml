@@ -7,19 +7,19 @@ cache:
     - node_modules/
 
 before_script:
-  - yarn install --frozen-lockfile
+  - npm install
 
 Build:
   stage: build
   script:
-    - yarn lint
-    - yarn build
+    - npm run lint
+    - npm run build
 
 Test:
   stage: test
   script:
-    - yarn test
-    - yarn test:coverage
+    - npm run test
+    - npm run test:coverage
 
 Deploy-Staging:
   stage: deploy
