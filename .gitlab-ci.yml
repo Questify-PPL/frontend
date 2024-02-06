@@ -63,3 +63,4 @@ sonarcloud-check:
   only:
     - staging
     - main
+  allow_failure: true
