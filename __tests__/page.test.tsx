@@ -5,11 +5,8 @@ import Page from "@/app/page";
 describe("Page", () => {
   it("renders without crashing", () => {
     render(<Page />);
+    const text = screen.getByText("This is Questify Staging");
 
-    const image = screen.getByAltText("Vercel Logo");
-    const text = screen.getByText(/Get started by editing/);
-
-    expect(image).toBeInTheDocument();
     expect(text).toBeInTheDocument();
   });
 });
