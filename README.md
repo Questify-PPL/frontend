@@ -1,3 +1,5 @@
+![Coverage](https://gitlab.com/questify-ppl/frontend/badges/main/coverage.svg?job=Test)
+
 This is Questify bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

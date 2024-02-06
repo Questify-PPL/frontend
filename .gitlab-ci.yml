@@ -25,6 +25,10 @@ Test:
   script:
     - npm run test
     - npm run test:coverage
+  artifacts:
+    paths:
+      - coverage/
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
 
 Deploy-Staging:
   stage: deploy
