@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Questify is a platform for creating and sharing prize-based questionnaire.",
 };
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
