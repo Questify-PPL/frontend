@@ -60,6 +60,8 @@ sonarcloud-check:
       - .sonar/cache
   script:
     - sonar-scanner
+  dependencies:
+    - Test
   only:
     - staging
     - main
