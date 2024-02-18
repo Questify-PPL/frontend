@@ -1,13 +1,12 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { LuCoins } from "react-icons/lu";
+import { Head } from "./Head";
 
 export function Hero() {
   return (
     <section className="flex flex-col items-center justify-center w-full px-2 py-6 lg:py-12">
-      <h1 className="text-2xl max-w-xs  sm:text-4xl sm:max-w-lg md:text-5xl md:max-w-2xl lg:text-6xl lg:max-w-4xl font-bold text-primary text-center">
-        Empower academic communities engagement
-      </h1>
+      <Head content="Empower academic communities engagement" />
       <p className="text-base md:text-xl lg:text-2xl text-primary text-center font-medium mt-2 pt-2 px-8">
         through redefined prize-based questionnaire
       </p>
