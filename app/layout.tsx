@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Footer, Navbar } from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Questify",
@@ -52,11 +53,13 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased relative",
           hauoraFont.variable,
         )}
       >
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
