@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Hero } from "@/components/landing-page";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen h-fit flex-col items-center justify-between p-24">
-      <h2 className="text-3xl font-bold">This is Questify Staging</h2>
+    <main className="flex min-h-screen h-fit flex-col items-center justify-between px-2">
+      <Hero />
     </main>
   );
 }
