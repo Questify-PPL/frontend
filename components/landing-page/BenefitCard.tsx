@@ -9,7 +9,7 @@ export function BenefitCard({
 }) {
   return (
     <div
-      className={`flex sm:gap-8 gap-2 w-full items-center overflow-hidden pb-4 pt-4 lg:pb-8 lg:pt-16 ${index % 2 == 0 ? "flex-row" : "flex-row-reverse"}`}
+      className={`flex sm:gap-8 gap-2 w-full items-center overflow-hidden sm:px-8 pb-4 pt-4 lg:pb-8 lg:pt-16 ${index % 2 == 0 ? "flex-row" : "flex-row-reverse"}`}
     >
       <Image
         src={benefit.src}
