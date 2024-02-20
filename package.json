@@ -11,7 +11,7 @@
     "test:coverage": "jest --coverage",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
-    "check-lint": "eslint . --ext ts --ext tsx --ext js",
+    "check-lint": "next lint",
     "format": "prettier --write .",
     "test-all": "npm run format && npm run check-format && npm run check-lint && npm run check-types",
     "prepare": "husky"

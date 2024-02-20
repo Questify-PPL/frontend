@@ -1,12 +1,9 @@
 import React from "react";
 import { Head } from "./Head";
-import Image from "next/image";
 import { BENEFIT } from "@/lib/constant";
 import { BenefitCard } from "./BenefitCard";
 
 export function Benefit() {
-  console.log("test");
-
   return (
     <section
       className="flex flex-col items-center justify-center w-fit px-2 sm:px-8 py-6 lg:py-12 space-y-2"
