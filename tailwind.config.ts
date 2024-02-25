@@ -79,6 +79,10 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      backgroundImage: {
+        "register-pattern":
+          'url("https://res.cloudinary.com/dicmrrmdr/image/upload/f_auto,q_auto/v1/questify/g5b2fhjzzpoa5kuaa6gf")',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

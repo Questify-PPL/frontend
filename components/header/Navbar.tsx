@@ -5,7 +5,10 @@ import Link from "next/link";
 export function Navbar() {
   return (
     <nav className="flex items-center justify-between py-4 px-4 sm:px-12 md:px-16 lg:px-24">
-      <div className="flex items-center space-x-4 cursor-pointer py-2">
+      <Link
+        className="flex items-center space-x-4 cursor-pointer py-2"
+        href={"/"}
+      >
         <Image
           src={"/assets/Questify.svg"}
           alt="Questify"
@@ -13,7 +16,7 @@ export function Navbar() {
           width={180}
           height={16}
         />
-      </div>
+      </Link>
       <div className="flex items-center space-x-4">
         <Link href="/login">
           <Button className="text-white font-bold sm:text-sm text-xs">
