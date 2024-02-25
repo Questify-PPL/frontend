@@ -21,7 +21,7 @@ export function RegisterForm() {
     },
   });
 
-  async function onSubmit() {
+  async function onSubmit(data: RegisterSchema) {
     return;
   }
 

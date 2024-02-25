@@ -13,4 +13,16 @@ export const RegisterSchema = z
     path: ["confirmPassword"],
   });
 
+const triviaLiteral = z.union([
+  z.literal("Basketball"),
+  z.literal("Football"),
+  z.literal("Baseball"),
+  z.literal("Hockey"),
+]);
+
+export const TriviaSchema = z.object({
+  answer: triviaLiteral,
+});
+
 export type RegisterSchema = z.infer<typeof RegisterSchema>;
+export type TriviaSchema = z.infer<typeof TriviaSchema>;
