@@ -33,7 +33,7 @@ describe("Register and RegisterForm", () => {
       await Register({
         params: "",
         searchParams: { ticket: "asdasd" },
-      })
+      }),
     );
 
     const email = screen.getByLabelText("Email");
@@ -55,7 +55,7 @@ describe("Register and RegisterForm", () => {
     render(
       <RegisterLayout>
         <div>asdasd</div>
-      </RegisterLayout>
+      </RegisterLayout>,
     );
   });
 });
