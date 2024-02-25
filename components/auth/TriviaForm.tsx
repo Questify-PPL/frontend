@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useToast } from "../ui/use-toast";
 
 export function TriviaForm() {
-  const { register, handleSubmit, watch, setValue } = useForm<TriviaSchema>({
+  const { handleSubmit, watch, setValue } = useForm<TriviaSchema>({
     resolver: zodResolver(TriviaSchema),
     defaultValues: {
       answer: undefined,

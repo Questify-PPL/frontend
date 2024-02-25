@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { RegisterSchema } from "@/lib/schema";
+import { instance } from "@/lib/config";
 
 export function RegisterForm() {
   const {
@@ -22,7 +23,14 @@ export function RegisterForm() {
   });
 
   async function onSubmit(data: RegisterSchema) {
-    return;
+    const res = await instance.post("/auth/register", data);
+
+    console.log(res);
+
+    const dt = res.data;
+
+    console.log(dt);
+    return dt;
   }
 
   return (
