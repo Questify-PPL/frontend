@@ -8,7 +8,7 @@ describe("Register and RegisterForm", () => {
     render(
       <RegisterLayout>
         <Register />
-      </RegisterLayout>
+      </RegisterLayout>,
     );
     const email = screen.getByLabelText("Email");
     const password = screen.getByLabelText("Password");
@@ -17,7 +17,7 @@ describe("Register and RegisterForm", () => {
     const headingElement = screen.getByRole("heading", { name: /Sign Up/i });
     expect(headingElement).toBeInTheDocument();
     expect(headingElement).toHaveTextContent(
-      /Sign Up to create an educationally optimal framework for diverse professional questionnaires together/i
+      /Sign Up to create an educationally optimal framework for diverse professional questionnaires together/i,
     );
 
     expect(email).toBeInTheDocument();
