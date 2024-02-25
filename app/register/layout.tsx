@@ -1,4 +1,4 @@
-import { TriviaForm } from "@/components/auth/TriviaForm";
+import { TriviaForm } from "@/components/auth";
 
 export default function RegisterLayout({
   children,

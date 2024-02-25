@@ -1,9 +1,13 @@
-import { RegisterForm } from "@/components/auth";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { RegisterForm, SSOButton } from "@/components/auth";
+import { Props } from "@/lib/types";
+import { cookies } from "next/headers";
+import { getCookie } from "cookies-next";
 import Link from "next/link";
+import Image from "next/image";
 
-export default function Register() {
+export default async function Register(props: Props) {
+  const { accessToken } = await getServerSideProps(props);
+
   return (
     <main className="flex-1 flex min-h-screen h-fit flex-col items-center justify-start md:justify-center  py-8 px-8 gap-8">
       <div className="flex flex-col md:flex-row gap-[15px] justify-center items-center">
@@ -23,13 +27,7 @@ export default function Register() {
           If you&apos;re an academic member at Universitas Indonesia,{" "}
           <span className="font-bold">Sign Up</span> here.
         </div>
-        <Button
-          className="flex flex-row gap-2 border-primary w-3/5 border-[1px] border-solid"
-          variant={"outline"}
-        >
-          <Image src={"/assets/UI Logo.png"} alt="UI" width={20} height={20} />
-          <span>Sign Up using SSO</span>
-        </Button>
+        <SSOButton />
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="font-medium text-center px-2">
@@ -45,4 +43,24 @@ export default function Register() {
       </div>
     </main>
   );
+}
+
+async function getServerSideProps(props: Props) {
+  try {
+    const { ticket } = props.searchParams;
+
+    if (!ticket) {
+      return {
+        accessToken: getCookie("name", { cookies }),
+      };
+    }
+
+    return {
+      props: {},
+    };
+  } catch (error) {
+    return {
+      props: {},
+    };
+  }
 }
