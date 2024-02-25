@@ -8,6 +8,8 @@ import Image from "next/image";
 export default async function Register(props: Props) {
   const { accessToken } = await getServerSideProps(props);
 
+  console.log(accessToken);
+
   return (
     <main className="flex-1 flex min-h-screen h-fit flex-col items-center justify-start md:justify-center  py-8 px-8 gap-8">
       <div className="flex flex-col md:flex-row gap-[15px] justify-center items-center">
@@ -55,12 +57,34 @@ async function getServerSideProps(props: Props) {
       };
     }
 
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/login-sso`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ticket,
+          serviceURL: process.env.NEXT_PUBLIC_BASE_URL + "/register",
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.status < 400) {
+      return {
+        accessToken: data.data.accessToken,
+      };
+    }
+
     return {
-      props: {},
+      accessToken: "",
     };
   } catch (error) {
     return {
-      props: {},
+      accessToken: "",
     };
   }
 }

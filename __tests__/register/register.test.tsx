@@ -32,7 +32,7 @@ describe("Register and RegisterForm", () => {
     render(
       await Register({
         params: "",
-        searchParams: { ticket: "asdasd" },
+        searchParams: { ticket: "Token" },
       }),
     );
 
@@ -51,11 +51,74 @@ describe("Register and RegisterForm", () => {
     expect(screen.getByText("Sign Up using SSO")).toBeInTheDocument();
   });
 
+  it("renders register if fetch succeds", async () => {
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          json: () => Promise.resolve({ data: { accessToken: "Token" } }),
+          status: 200,
+        }) as Promise<Response>,
+    );
+
+    render(
+      await Register({
+        params: "",
+        searchParams: { ticket: "Token" },
+      }),
+    );
+
+    const email = screen.getByLabelText("Email");
+    const password = screen.getByLabelText("Password");
+    const confirmPassword = screen.getByLabelText("Confirm Password");
+
+    const headingElement = screen.getByRole("heading", { name: /Sign Up/i });
+    expect(headingElement).toBeInTheDocument();
+
+    expect(email).toBeInTheDocument();
+    expect(password).toBeInTheDocument();
+    expect(confirmPassword).toBeInTheDocument();
+    expect(screen.getByText("Already have an account?")).toBeInTheDocument();
+    expect(screen.getByText("Log In")).toBeInTheDocument();
+    expect(screen.getByText("Sign Up using SSO")).toBeInTheDocument();
+  });
+
+  it("renders register if fetch fails", async () => {
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          json: () => Promise.resolve({ data: { accessToken: "Token" } }),
+          status: 400,
+        }) as Promise<Response>,
+    );
+
+    render(
+      await Register({
+        params: "",
+        searchParams: { ticket: "Token" },
+      }),
+    );
+
+    const email = screen.getByLabelText("Email");
+    const password = screen.getByLabelText("Password");
+    const confirmPassword = screen.getByLabelText("Confirm Password");
+
+    const headingElement = screen.getByRole("heading", { name: /Sign Up/i });
+    expect(headingElement).toBeInTheDocument();
+    expect(email).toBeInTheDocument();
+    expect(password).toBeInTheDocument();
+    expect(confirmPassword).toBeInTheDocument();
+    expect(screen.getByText("Already have an account?")).toBeInTheDocument();
+    expect(screen.getByText("Log In")).toBeInTheDocument();
+    expect(screen.getByText("Sign Up using SSO")).toBeInTheDocument();
+  });
+
   it("renders RegisterLayout without crashing", async () => {
     render(
       <RegisterLayout>
-        <div>asdasd</div>
+        <div>Register</div>
       </RegisterLayout>,
     );
+
+    expect(screen.getByText("Register")).toBeInTheDocument();
   });
 });
