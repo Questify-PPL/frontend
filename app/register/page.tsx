@@ -13,12 +13,14 @@ export default async function Register(props: Props) {
   return (
     <main className="flex-1 flex min-h-screen h-fit flex-col items-center justify-start md:justify-center  py-8 px-8 gap-8">
       <div className="flex flex-col md:flex-row gap-[15px] justify-center items-center">
-        <Image
-          src={"/assets/Questify.svg"}
-          alt="Logo"
-          width={138}
-          height={32}
-        />
+        <Link href={"/"} className="min-w-fit h-full">
+          <Image
+            src={"/assets/Questify.svg"}
+            alt="Logo"
+            width={138}
+            height={32}
+          />
+        </Link>
         <h2 className="font-medium text-base text-center md:text-start text-primary flex-wrap max-w-lg">
           <span className="font-bold">Sign Up</span> to create an educationally
           optimal framework for diverse professional questionnaires together

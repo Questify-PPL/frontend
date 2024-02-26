@@ -7,6 +7,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { RegisterSchema } from "@/lib/schema";
 import { instance } from "@/lib/config";
+import { useToast } from "../ui/use-toast";
 
 export function RegisterForm() {
   const {
@@ -22,15 +23,26 @@ export function RegisterForm() {
     },
   });
 
+  const { toast } = useToast();
+
   async function onSubmit(data: RegisterSchema) {
-    const res = await instance.post("/auth/register", data);
+    await instance
+      .post("/auth/register", data)
+      .catch((err) => {
+        toast({
+          title: "Error",
+          description: err.response.data.message,
+          variant: "destructive",
+        });
+      })
+      .then((res) => {
+        if (!res) return;
 
-    console.log(res);
-
-    const dt = res.data;
-
-    console.log(dt);
-    return dt;
+        toast({
+          title: "Success",
+          description: res.data.message,
+        });
+      });
   }
 
   return (
