@@ -70,7 +70,7 @@ async function getServerSideProps(props: Props) {
           ticket,
           serviceURL: process.env.NEXT_PUBLIC_BASE_URL + "/register",
         }),
-      }
+      },
     );
 
     const data = await response.json();
