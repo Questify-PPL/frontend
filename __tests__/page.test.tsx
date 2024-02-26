@@ -15,7 +15,7 @@ describe("Page", () => {
   it("renders the end section", async () => {
     render(<Page />);
     const text = screen.getByText(
-      /Unlock academic success with our streamlined form builder and distributor/i
+      /Unlock academic success with our streamlined form builder and distributor/i,
     );
     const buttons = await screen.findAllByText(/Sign Up/i);
 
