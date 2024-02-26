@@ -12,15 +12,14 @@ describe("Page", () => {
     expect(button).toBeInTheDocument();
   });
 
-  it("renders the end section", async () => {
+  it("renders the end section", () => {
     render(<Page />);
     const text = screen.getByText(
       /Unlock academic success with our streamlined form builder and distributor/i,
     );
-    const buttons = await screen.findAllByText(/Sign Up/i);
-
-    expect(buttons.length).toBeGreaterThan(0);
+    const button = screen.getByText(/Sign Up/i);
 
     expect(text).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 });
