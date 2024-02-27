@@ -16,9 +16,31 @@ import {
   LuChevronUp,
   LuCheckCheck,
 } from "react-icons/lu";
+import { FormData } from "@/lib/schema/user-info.schema";
+import userInfoSchema from "@/lib/schema/user-info.schema";
 
 const Form = () => {
+  const [formData, setFormData] = useState<FormData>({
+    question1: {
+      name: "",
+    },
+    question2: {
+      gender: "Male",
+      birthDate: new Date(),
+    },
+  });
+
   const [openCard, setOpenCard] = useState<number>(1);
+
+  const handleSubmitButtonClick = () => {
+    try {
+      userInfoSchema.parse(formData);
+      console.log("Form data is valid:", formData);
+      setOpenCard((prev) => Math.min(prev + 1, 4));
+    } catch (error: any) {
+      console.error("Form data validation error:", error.errors);
+    }
+  };
 
   const handleNextButtonClick = () => {
     setOpenCard((prev) => Math.min(prev + 1, 4));
@@ -30,9 +52,11 @@ const Form = () => {
 
   return (
     <div className="flex flex-row w-full h-full justify-center items-center">
-      <Card className={`flex flex-col w-[50%] h-[90%] ${
+      <Card
+        className={`flex flex-col w-[50%] h-[90%] ${
           openCard === 1 ? "" : "hidden"
-        }`}>
+        }`}
+      >
         <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
           <div>User Additional Information</div>
           <Image
@@ -58,9 +82,11 @@ const Form = () => {
           </div>
         </div>
       </Card>
-      <Card className={`flex flex-col w-[50%] h-[90%] ${
+      <Card
+        className={`flex flex-col w-[50%] h-[90%] ${
           openCard === 2 ? "" : "hidden"
-        }`}>
+        }`}
+      >
         <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
           <div>User Additional Information</div>
           <Image
@@ -85,6 +111,13 @@ const Form = () => {
             <Input
               type="text"
               placeholder="Your answer here"
+              value={formData.question1.name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  question1: { name: e.target.value },
+                }))
+              }
               className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
             />
             <span className="w-full h-0.5 bg-primary/40"></span>
@@ -108,9 +141,11 @@ const Form = () => {
           </div>
         </div>
       </Card>
-      <Card className={`flex flex-col w-[50%] h-[90%] ${
+      <Card
+        className={`flex flex-col w-[50%] h-[90%] ${
           openCard === 3 ? "" : "hidden"
-        }`}>
+        }`}
+      >
         <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
           <div>User Additional Information</div>
           <Image
@@ -138,12 +173,15 @@ const Form = () => {
             <div className="flex flex-col gap-4 w-full justify-start">
               <div className="font-semibold text-lg">Whats your gender?</div>
               <div className="flex flex-col gap-0 w-full h-fit">
-                <RadioGroup className="flex flex-col gap-2">
+                <RadioGroup
+                  value={formData.question2.gender}
+                  className="flex flex-col gap-2"
+                >
                   <div className="flex items-center self-stretch gap-2">
                     <RadioGroupItem
                       value="Male"
                       id="option-one"
-                      className="h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                      className="border-[1px] border-solid border-[#CDDDE1]"
                     />
                     <Label
                       className="text-base font-medium"
@@ -156,7 +194,7 @@ const Form = () => {
                     <RadioGroupItem
                       value="Female"
                       id="option-two"
-                      className="h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                      className="border-[1px] border-solid border-[#CDDDE1]"
                     />
                     <Label className="text-base" htmlFor="option-two">
                       Female
@@ -197,16 +235,18 @@ const Form = () => {
           </div>
           <div className="w-[45%] flex flex-col gap-1">
             <ClickEnter></ClickEnter>
-            <Button className="gap-2" onClick={handleNextButtonClick}>
-              Next
+            <Button className="gap-2" onClick={handleSubmitButtonClick}>
+              Submit
               <LuCheck className="w-5 h-5" />
             </Button>
           </div>
         </div>
       </Card>
-      <Card className={`flex flex-col w-[50%] h-[90%] ${
+      <Card
+        className={`flex flex-col w-[50%] h-[90%] ${
           openCard === 4 ? "" : "hidden"
-        }`}>
+        }`}
+      >
         <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
           <div>User Additional Information</div>
           <Image
