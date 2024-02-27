@@ -1,25 +1,23 @@
 import { Props } from "@/lib/types";
 
-
 export default async function Verify(props: Props) {
   const message = await getServerSideProps(props);
-  console.log("message",message);
+  console.log("message", message);
 
   return (
     <div>
       <p>{message.message as string}</p>
     </div>
-
   );
 }
 
 async function getServerSideProps(props: Props) {
   const { token } = props.searchParams;
   try {
-    console.log("token",token)
+    console.log("token", token);
     if (!token) {
       return {
-        "message":"Cannot access"
+        message: "Cannot access",
       };
     }
     const response = await fetch(
@@ -31,22 +29,22 @@ async function getServerSideProps(props: Props) {
         },
       },
     );
-    
-    console.log("status",response.status);
+
+    console.log("status", response.status);
     if (response.status < 400) {
       console.log("masuk sini");
       return {
-        "message": "Email verification successful, your email has been successfully verified"
+        message:
+          "Email verification successful, your email has been successfully verified",
       };
     }
-    console.log(">400")
+    console.log(">400");
     return {
-      "message": "Email already verified / invalid token",
+      message: "Email already verified / invalid token",
     };
   } catch (error) {
     return {
-      "message": error,
+      message: error,
     };
   }
-
 }

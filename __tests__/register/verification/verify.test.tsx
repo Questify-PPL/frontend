@@ -1,7 +1,7 @@
 import Verify from "@/app/register/verification/page";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import React from 'react';
+import React from "react";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -20,19 +20,26 @@ describe("Verify Component", () => {
   it("renders message with search params", async () => {
     render(<Verify params={{}} searchParams={{ token: "Token" }} />);
 
-    const messageElement = await screen.findByText("Email verification successful, your email has been successfully verified");
+    const messageElement = await screen.findByText(
+      "Email verification successful, your email has been successfully verified",
+    );
     expect(messageElement).toBeInTheDocument();
   });
 
   it("renders message if fetch succeeds", async () => {
     global.fetch = jest.fn().mockResolvedValueOnce({
-      json: async () => ({ message: "Email verification successful, your email has been successfully verified" }),
+      json: async () => ({
+        message:
+          "Email verification successful, your email has been successfully verified",
+      }),
       status: 200,
     });
 
     render(<Verify params={{}} searchParams={{ token: "Token" }} />);
 
-    const messageElement = await screen.findByText("Email verification successful, your email has been successfully verified");
+    const messageElement = await screen.findByText(
+      "Email verification successful, your email has been successfully verified",
+    );
     expect(messageElement).toBeInTheDocument();
   });
 
@@ -44,7 +51,9 @@ describe("Verify Component", () => {
 
     render(<Verify params={{}} searchParams={{ token: "Token" }} />);
 
-    const messageElement = await screen.findByText("Email already verified / invalid token");
+    const messageElement = await screen.findByText(
+      "Email already verified / invalid token",
+    );
     expect(messageElement).toBeInTheDocument();
   });
 });
