@@ -1,19 +1,45 @@
+"use client";
+
+import Image from "next/image";
 import React from "react";
-import { Props } from "@/lib/types";
 import ClickEnter from "@/components/ui/click-enter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LuCheck, LuChevronDown, LuChevronUp } from "react-icons/lu";
-import Image from "next/image";
+import { LuChevronRight } from "react-icons/lu";
 
-export default async function UserInfo() {
-  const backgroundImageUrl = "/assets/user-info-bg.png";
+interface OpeningProps {
+  onClick: () => void;
+}
+
+const Opening: React.FC<OpeningProps> = ({ onClick }) => {
   return (
-    <main
-      className="flex bg-cover bg-center h-screen w-screen justify-center items-center"
-      style={{ backgroundImage: `url(${backgroundImageUrl})` }}
-    >
+    <div>
+      <Card className="flex flex-col w-[50%] h-[90%]">
+        <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
+          <div>User Additional Information</div>
+          <Image
+            src="/assets/Questify.svg"
+            alt="Questify"
+            width={70}
+            height={16}
+          />
+        </div>
+        <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
+          <div className="text-base text-primary">Opening</div>
+          <div className="text-xl">
+            Greetings! Welcome to Questify. Let&apos;s get you set up swiftly;
+            it&apos;ll only take a few seconds to ensure you&apos;re ready to
+            go.
+          </div>
+          <div className="w-[45%] flex flex-col gap-1">
+            <ClickEnter />
+            <Button className="gap-2" onClick={onClick}>
+              Start
+              <LuChevronRight className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </Card>
       <Card className="flex flex-col w-[50%] h-[90%]">
         <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
           <div>User Additional Information</div>
@@ -26,24 +52,15 @@ export default async function UserInfo() {
         </div>
         <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
           <div className="flex gap-2 text-base text-primary w-full justify-start">
-            <div>Question 2</div>
+            <span className="w-1.5 h-full bg-[#FE476C] rounded-md"></span>
+            <div>Question 1</div>
           </div>
-          <div className="flex flex-row gap-3 w-full">
-            <div className="flex flex-row gap-1 w-6.5 h-fit pt-1">
-              <span className="w-1.5 h-5 bg-[#FE476C] rounded-md"></span>
-              <div className="flex w-5 h-5 bg-secondary rounded-md text-primary justify-center items-center text-[10px]">1</div>
-            </div>
-
-            <div className="flex flex-col gap-1 w-full justify-start">
-              <div className="font-semibold text-lg">
-                When were you born?
-              </div>
-              {/* <div className="font-normal text-xs text-primary/70">
-                Fill with your full name.
-              </div> */}
+          <div className="flex flex-col gap-1 w-full justify-start">
+            <div className="font-semibold text-lg">What&apos;s your name?</div>
+            <div className="font-normal text-xs text-primary/70">
+              Fill with your full name.
             </div>
           </div>
-
           <div className="flex flex-col gap-0.5 w-full h-fit">
             <Input
               type="text"
@@ -71,6 +88,8 @@ export default async function UserInfo() {
           </div>
         </div>
       </Card>
-    </main>
+    </div>
   );
-}
+};
+
+export default Opening;
