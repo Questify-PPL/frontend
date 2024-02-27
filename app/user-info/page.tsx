@@ -1,11 +1,5 @@
 import React from "react";
-import { Props } from "@/lib/types";
-import ClickEnter from "@/components/ui/click-enter";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LuCheck, LuChevronDown, LuChevronUp } from "react-icons/lu";
-import Image from "next/image";
+import Form from "@/components/user-info/Form";
 
 export default async function UserInfo() {
   const backgroundImageUrl = "/assets/user-info-bg.png";
@@ -14,63 +8,7 @@ export default async function UserInfo() {
       className="flex bg-cover bg-center h-screen w-screen justify-center items-center"
       style={{ backgroundImage: `url(${backgroundImageUrl})` }}
     >
-      <Card className="flex flex-col w-[50%] h-[90%]">
-        <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
-          <div>User Additional Information</div>
-          <Image
-            src="/assets/Questify.svg"
-            alt="Questify"
-            width={70}
-            height={16}
-          />
-        </div>
-        <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
-          <div className="flex gap-2 text-base text-primary w-full justify-start">
-            <div>Question 2</div>
-          </div>
-          <div className="flex flex-row gap-3 w-full">
-            <div className="flex flex-row gap-1 w-6.5 h-fit pt-1">
-              <span className="w-1.5 h-5 bg-[#FE476C] rounded-md"></span>
-              <div className="flex w-5 h-5 bg-secondary rounded-md text-primary justify-center items-center text-[10px]">1</div>
-            </div>
-
-            <div className="flex flex-col gap-1 w-full justify-start">
-              <div className="font-semibold text-lg">
-                When were you born?
-              </div>
-              {/* <div className="font-normal text-xs text-primary/70">
-                Fill with your full name.
-              </div> */}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-0.5 w-full h-fit">
-            <Input
-              type="text"
-              placeholder="Your answer here"
-              className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
-            />
-            <span className="w-full h-0.5 bg-primary/40"></span>
-          </div>
-        </div>
-        <div className="flex flex-row bg-transparent h-[15%] justify-between items-end text-xl p-6 gap-1 rounded-t-md">
-          <div className="flex gap-1">
-            <Button variant="outline">
-              <LuChevronUp className="w-5 h-5" />
-            </Button>
-            <Button variant="outline">
-              <LuChevronDown className="w-5 h-5" />
-            </Button>
-          </div>
-          <div className="w-[45%] flex flex-col gap-1">
-            <ClickEnter></ClickEnter>
-            <Button className="gap-2">
-              Next
-              <LuCheck className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </Card>
+      <Form />
     </main>
   );
 }
