@@ -1,4 +1,4 @@
-export default function RegisterLayout({
+export default function VerificationLayout({
   children,
 }: {
   children: React.ReactNode;

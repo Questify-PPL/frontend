@@ -1,6 +1,7 @@
 import Verify from "@/app/register/verification/page";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import VerificationLayout from "@/app/register/verification/layout";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -80,5 +81,15 @@ describe("Verify Component", () => {
       }),
     );
     expect(await screen.findByText("API Error")).toBeVisible();
+  });
+
+  it("renders VerificationLayout without crashing", async () => {
+    render(
+      <VerificationLayout>
+        <div>Register</div>
+      </VerificationLayout>,
+    );
+
+    expect(screen.getByText("Register")).toBeInTheDocument();
   });
 });
