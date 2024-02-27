@@ -284,7 +284,7 @@ const Form = () => {
           </div>
           <div className="w-[45%] flex flex-col gap-1">
             <ClickEnter />
-            <Button className="gap-2" onClick={handleNextButtonClick}>
+            <Button type="submit" className="gap-2" onClick={handleNextButtonClick}>
               Finish
               <LuCheckCheck className="w-5 h-5" />
             </Button>
