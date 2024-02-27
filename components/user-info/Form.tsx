@@ -173,15 +173,18 @@ const Form = () => {
             <div className="flex flex-col gap-4 w-full justify-start">
               <div className="font-semibold text-lg">Whats your gender?</div>
               <div className="flex flex-col gap-0 w-full h-fit">
-                <RadioGroup
-                  value={formData.question2.gender}
-                  className="flex flex-col gap-2"
-                >
-                  <div className="flex items-center self-stretch gap-2">
+                <RadioGroup className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem
                       value="Male"
                       id="option-one"
                       className="border-[1px] border-solid border-[#CDDDE1]"
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          question2: { ...prev.question2, gender: "Male" },
+                        }));
+                      }}
                     />
                     <Label
                       className="text-base font-medium"
@@ -190,11 +193,17 @@ const Form = () => {
                       Male
                     </Label>
                   </div>
-                  <div className="flex items-center self-stretch gap-2">
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem
                       value="Female"
                       id="option-two"
                       className="border-[1px] border-solid border-[#CDDDE1]"
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          question2: { ...prev.question2, gender: "Female" },
+                        }));
+                      }}
                     />
                     <Label className="text-base" htmlFor="option-two">
                       Female
@@ -218,6 +227,18 @@ const Form = () => {
                 <Input
                   type="date"
                   placeholder="Your answer here"
+                  value={
+                    formData.question2.birthDate.toISOString().split("T")[0]
+                  }
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      question2: {
+                        ...prev.question2,
+                        birthDate: new Date(e.target.value),
+                      },
+                    }))
+                  }
                   className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
                 />
               </div>
