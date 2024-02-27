@@ -8,18 +8,19 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-
 beforeEach(() => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      status: 200,
-      json: () =>
-        Promise.resolve({
-          message: "Email verification successful, your email has been successfully verified"
-        })
-    }) as Promise<Response>
+  global.fetch = jest.fn(
+    () =>
+      Promise.resolve({
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            message:
+              "Email verification successful, your email has been successfully verified",
+          }),
+      }) as Promise<Response>,
   );
-});;
+});
 
 describe("Verify Component", () => {
   it("renders without crashing", async () => {
@@ -29,7 +30,11 @@ describe("Verify Component", () => {
         searchParams: { token: "Token" },
       }),
     );
-    expect(await screen.findByText("Email verification successful, your email has been successfully verified")).toBeVisible();
+    expect(
+      await screen.findByText(
+        "Email verification successful, your email has been successfully verified",
+      ),
+    ).toBeVisible();
   });
 
   it("renders error message if token is missing", async () => {
@@ -43,23 +48,26 @@ describe("Verify Component", () => {
   });
 
   it("renders error message if API call fails", async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        status: 400,
-        json: () =>
-          Promise.resolve({
-            message: "Email already verified / invalid token"
-          })
-      }) as Promise<Response>
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          status: 400,
+          json: () =>
+            Promise.resolve({
+              message: "Email already verified / invalid token",
+            }),
+        }) as Promise<Response>,
     );
 
     render(
       await Verify({
         params: "",
-        searchParams: {token:"Token"},
+        searchParams: { token: "Token" },
       }),
     );
-    expect( await screen.findByText("Email already verified / invalid token")).toBeVisible();
+    expect(
+      await screen.findByText("Email already verified / invalid token"),
+    ).toBeVisible();
   });
 
   it("renders error message if API call throws an error", async () => {
@@ -68,7 +76,7 @@ describe("Verify Component", () => {
     render(
       await Verify({
         params: "",
-        searchParams: {token:"Token"},
+        searchParams: { token: "Token" },
       }),
     );
     expect(await screen.findByText("API Error")).toBeVisible();
