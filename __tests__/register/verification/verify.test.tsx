@@ -1,6 +1,6 @@
 import Verify from "@/app/register/verification/page";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom"
 import React from "react";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -54,6 +54,8 @@ describe("Verify Component", () => {
     const messageElement = await screen.findByText(
       "Email already verified / invalid token",
     );
+("Email already verified / invalid token");
+("Email already verified / invalid token");
     expect(messageElement).toBeInTheDocument();
   });
 });
