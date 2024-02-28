@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import Terminus from "@/components/respondent-q/Terminus";
+import Question from "@/components/respondent-q/Question";
+import SubQuestion from "@/components/respondent-q/SubQuestion";
 import {
   LuCheck,
   LuChevronRight,
@@ -20,6 +23,37 @@ import { FormData } from "@/lib/schema/user-info.schema";
 import userInfoSchema from "@/lib/schema/user-info.schema";
 
 const Form = () => {
+  // Introduce error state variables
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [birthDateError, setBirthDateError] = useState<string | null>(null);
+  const [phoneNumberError, setPhoneNumberError] = useState<string | null>(null);
+
+  const handleSubmitButtonClick = () => {
+    try {
+      // Reset errors on each submit attempt
+      setNameError(null);
+      setBirthDateError(null);
+      setPhoneNumberError(null);
+
+      userInfoSchema.parse(formData);
+      console.log("Form data is valid:", formData);
+      setOpenCard((prev) => Math.min(prev + 1, 4));
+    } catch (error: any) {
+      console.error("Form data validation error:", error.errors);
+
+      // Update error states based on validation errors
+      error.errors.forEach((validationError: any) => {
+        if (validationError.path.includes("question1.name")) {
+          setNameError(validationError.message);
+        } else if (validationError.path.includes("question2.birthDate")) {
+          setBirthDateError(validationError.message);
+        } else if (validationError.path.includes("question2.phoneNumber")) {
+          setPhoneNumberError(validationError.message);
+        }
+      });
+    }
+  };
+
   const [formData, setFormData] = useState<FormData>({
     question1: {
       name: "",
@@ -27,20 +61,11 @@ const Form = () => {
     question2: {
       gender: "Male",
       birthDate: new Date(),
+      phoneNumber: "",
     },
   });
 
   const [openCard, setOpenCard] = useState<number>(1);
-
-  const handleSubmitButtonClick = () => {
-    try {
-      userInfoSchema.parse(formData);
-      console.log("Form data is valid:", formData);
-      setOpenCard((prev) => Math.min(prev + 1, 4));
-    } catch (error: any) {
-      console.error("Form data validation error:", error.errors);
-    }
-  };
 
   const handleNextButtonClick = () => {
     setOpenCard((prev) => Math.min(prev + 1, 4));
@@ -52,127 +77,91 @@ const Form = () => {
 
   return (
     <div className="flex flex-row w-full h-full justify-center items-center">
-      <Card
-        className={`flex flex-col w-[50%] h-[90%] ${
-          openCard === 1 ? "" : "hidden"
-        }`}
-      >
-        <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
-          <div>User Additional Information</div>
+      <Terminus
+        className={`${openCard === 1 ? "" : "hidden"}`}
+        terminusQRETitle="User Additional Information"
+        terminusImage={
           <Image
             src="/assets/Questify.svg"
             alt="Questify"
             width={70}
             height={16}
           />
-        </div>
-        <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
-          <div className="text-base text-primary">Opening</div>
-          <div className="text-xl">
-            Greetings! Welcome to Questify. Let&apos;s get you set up swiftly;
-            it&apos;ll only take a few seconds to ensure you&apos;re ready to
-            go.
-          </div>
-          <div className="w-[45%] flex flex-col gap-1">
-            <ClickEnter />
-            <Button className="gap-2" onClick={handleNextButtonClick}>
-              Start
-              <LuChevronRight className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </Card>
-      <Card
-        className={`flex flex-col w-[50%] h-[90%] ${
-          openCard === 2 ? "" : "hidden"
-        }`}
-      >
-        <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
-          <div>User Additional Information</div>
+        }
+        terminusSectionTitle="Opening"
+        terminusText="Greetings! Welcome to Questify. Let's get you set up swiftly; it'll only take a few seconds to ensure you're ready to go."
+        buttonClickHandler={handleNextButtonClick}
+        buttonText="Next"
+        buttonIcon={<LuChevronRight className="w-5 h-5" />}
+      ></Terminus>
+      <Question
+        className={`${openCard === 2 ? "" : "hidden"}`}
+        questionQRETitle="User Additional Information"
+        questionImage={
           <Image
             src="/assets/Questify.svg"
             alt="Questify"
             width={70}
             height={16}
           />
-        </div>
-        <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
-          <div className="flex gap-2 text-base text-primary w-full justify-start">
-            <span className="w-1.5 h-full bg-[#FE476C] rounded-md"></span>
-            <div>Question 1</div>
-          </div>
-          <div className="flex flex-col gap-1 w-full justify-start">
-            <div className="font-semibold text-lg">What&apos;s your name?</div>
-            <div className="font-normal text-xs text-primary/70">
-              Fill with your full name.
-            </div>
-          </div>
-          <div className="flex flex-col gap-0.5 w-full h-fit">
-            <Input
-              type="text"
-              placeholder="Your answer here"
-              value={formData.question1.name}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  question1: { name: e.target.value },
-                }))
-              }
-              className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
-            />
-            <span className="w-full h-0.5 bg-primary/40"></span>
-          </div>
-        </div>
-        <div className="flex flex-row bg-transparent h-[15%] justify-between items-end text-xl p-6 gap-1 rounded-t-md">
-          <div className="flex gap-1">
-            <Button variant="outline" onClick={handlePrevButtonClick}>
-              <LuChevronUp className="w-5 h-5" />
-            </Button>
-            <Button variant="outline" onClick={handleNextButtonClick}>
-              <LuChevronDown className="w-5 h-5" />
-            </Button>
-          </div>
-          <div className="w-[45%] flex flex-col gap-1">
-            <ClickEnter></ClickEnter>
-            <Button className="gap-2" onClick={handleNextButtonClick}>
-              Next
-              <LuCheck className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </Card>
-      <Card
-        className={`flex flex-col w-[50%] h-[90%] ${
-          openCard === 3 ? "" : "hidden"
-        }`}
-      >
-        <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
-          <div>User Additional Information</div>
-          <Image
-            src="/assets/Questify.svg"
-            alt="Questify"
-            width={70}
-            height={16}
-          />
-        </div>
-        <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
-          <div className="flex-col gap-2 text-base text-primary w-full justify-start">
-            <div>Question 2</div>
-            <div className="text-xl text-black">
-              This section is made to add a personal touch to your account.
-            </div>
-          </div>
-          <div className="flex flex-row gap-3 w-full">
-            <div className="flex flex-row gap-1 w-6.5 h-fit pt-1">
-              <span className="w-1.5 h-5 bg-[#FE476C] rounded-md"></span>
-              <div className="flex w-5 h-5 bg-secondary rounded-md text-primary justify-center items-center text-[10px]">
-                1
+        }
+        questionSectionTitle="Question 1"
+        required={true}
+        questions={
+          <div className="flex flex-col gap-8 text-base text-primary w-full justify-start ">
+            <div className="flex flex-col gap-1 w-full justify-start">
+              <div className="font-semibold text-lg text-black">
+                What&apos;s your name?
+              </div>
+              <div className="font-normal text-xs text-primary/70">
+                Fill with your full name.
               </div>
             </div>
-
-            <div className="flex flex-col gap-4 w-full justify-start">
-              <div className="font-semibold text-lg">Whats your gender?</div>
-              <div className="flex flex-col gap-0 w-full h-fit">
+            <div className="flex flex-col gap-0.5 w-full h-fit">
+              <Input
+                type="text"
+                placeholder="Your answer here"
+                value={formData.question1.name}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    question1: { name: e.target.value },
+                  }))
+                }
+                className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
+              />
+              <span className="w-full h-0.5 bg-primary/40"></span>
+              {nameError && (
+                <div className="text-red-500 text-sm">{nameError}</div>
+              )}
+            </div>
+          </div>
+        }
+        prevButton={handlePrevButtonClick}
+        nextButton={handleNextButtonClick}
+        buttonText="Next"
+        buttonIcon={<LuCheck className="w-5 h-5" />}
+      ></Question>
+      <Question
+        className={`${openCard === 3 ? "" : "hidden"}`}
+        questionQRETitle="User Additional Information"
+        questionImage={
+          <Image
+            src="/assets/Questify.svg"
+            alt="Questify"
+            width={70}
+            height={16}
+          />
+        }
+        questionSectionTitle="Question 2"
+        questionSectionText="This section is made to add a personal touch to your account."
+        questions={
+          <div className="flex flex-col gap-4 w-full">
+            <SubQuestion
+              numbering="1"
+              required={true}
+              subQuestion="Whats your gender?"
+              answer={
                 <RadioGroup className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <RadioGroupItem
@@ -210,20 +199,12 @@ const Form = () => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-row gap-3 w-full">
-            <div className="flex flex-row gap-1 w-6.5 h-fit pt-1">
-              <span className="w-1.5 h-5 bg-transparent rounded-md"></span>
-              <div className="flex w-5 h-5 bg-secondary rounded-md text-primary justify-center items-center text-[10px]">
-                2
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4 w-full justify-start">
-              <div className="font-semibold text-lg">When were you born?</div>
-              <div className="flex flex-col gap-0 w-full h-fit">
+              }
+            ></SubQuestion>
+            <SubQuestion
+              numbering="2"
+              subQuestion="When were you born?"
+              answer={
                 <Input
                   type="date"
                   placeholder="Your answer here"
@@ -241,28 +222,37 @@ const Form = () => {
                   }
                   className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
                 />
-              </div>
-            </div>
+              }
+            ></SubQuestion>
+            <SubQuestion
+              numbering="3"
+              subQuestion="Phone Number"
+              answer={
+                <Input
+                  type="text"
+                  placeholder="Your answer here"
+                  value={formData.question2.phoneNumber}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      question2: {
+                        ...prev.question2,
+                        phoneNumber: e.target.value,
+                      },
+                    }))
+                  }
+                  className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background h-fit"
+                />
+              }
+            ></SubQuestion>
           </div>
-        </div>
-        <div className="flex flex-row bg-transparent h-[15%] justify-between items-end text-xl p-6 gap-1 rounded-t-md">
-          <div className="flex gap-1">
-            <Button variant="outline" onClick={handlePrevButtonClick}>
-              <LuChevronUp className="w-5 h-5" />
-            </Button>
-            <Button variant="outline" onClick={handleNextButtonClick}>
-              <LuChevronDown className="w-5 h-5" />
-            </Button>
-          </div>
-          <div className="w-[45%] flex flex-col gap-1">
-            <ClickEnter></ClickEnter>
-            <Button className="gap-2" onClick={handleSubmitButtonClick}>
-              Submit
-              <LuCheck className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </Card>
+        }
+        prevButton={handlePrevButtonClick}
+        nextButton={handleNextButtonClick}
+        buttonText="Next"
+        buttonIcon={<LuCheck className="w-5 h-5" />}
+      ></Question>
+
       <Card
         className={`flex flex-col w-[50%] h-[90%] ${
           openCard === 4 ? "" : "hidden"
@@ -284,7 +274,7 @@ const Form = () => {
           </div>
           <div className="w-[45%] flex flex-col gap-1">
             <ClickEnter />
-            <Button type="submit" className="gap-2" onClick={handleNextButtonClick}>
+            <Button type="submit" className="gap-2">
               Finish
               <LuCheckCheck className="w-5 h-5" />
             </Button>
@@ -295,6 +285,6 @@ const Form = () => {
   );
 };
 
-Form.displayName = 'Form';
+Form.displayName = "Form";
 
 export default Form;
