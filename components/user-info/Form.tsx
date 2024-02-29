@@ -57,6 +57,7 @@ const Form = () => {
 
   const handleQuestion2Validation = () => {
     const result = question2Schema.safeParse(formData.question2);
+    console.log(result);
     if (!result.success) {
       setErrors((prev) => ({
         ...prev,
@@ -76,6 +77,8 @@ const Form = () => {
       return true;
     }
   };
+
+  console.log(errors)
 
   return (
     <div className="flex flex-row w-full h-full justify-center items-center">

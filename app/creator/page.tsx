@@ -9,10 +9,10 @@ export default async function HomePage(props: Props) {
         mainActionM="Create QRE"
         mainActionD="Create Questionnaire"
         state="home"
-        onClickHome={redirect("./creator")}
-        onClickAction={redirect("/create")}
-        onClickResponses={redirect("/responses")}
+        onClickHome={toHome()}
+        onClickAction={toCreate()}
+        onClickResponses={toResponses()}
       ></Navigation>
     </div>
   );
-};
+}
