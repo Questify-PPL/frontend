@@ -3,69 +3,31 @@
 import Image from "next/image";
 import { useState } from "react";
 import React from "react";
-import ClickEnter from "@/components/ui/click-enter";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import Terminus from "@/components/respondent-q/Terminus";
-import Question from "@/components/respondent-q/Question";
-import SubQuestion from "@/components/respondent-q/SubQuestion";
+import Terminus from "@/components/respondent-side/Terminus";
+import Question from "@/components/respondent-side/Question";
+import QuestionLayout from "@/components/respondent-side/QuestionLayout";
+import { LuCheck, LuChevronRight, LuCheckCheck } from "react-icons/lu";
+
 import {
-  LuCheck,
-  LuChevronRight,
-  LuChevronDown,
-  LuChevronUp,
-  LuCheckCheck,
-} from "react-icons/lu";
-import { FormData } from "@/lib/schema/user-info.schema";
-import userInfoSchema from "@/lib/schema/user-info.schema";
+  question1Schema,
+  question2Schema,
+} from "@/lib/schema/user-info.schema";
 
 const Form = () => {
-  // Introduce error state variables
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [birthDateError, setBirthDateError] = useState<string | null>(null);
-  const [phoneNumberError, setPhoneNumberError] = useState<string | null>(null);
-
-  const handleSubmitButtonClick = () => {
-    try {
-      // Reset errors on each submit attempt
-      setNameError(null);
-      setBirthDateError(null);
-      setPhoneNumberError(null);
-
-      userInfoSchema.parse(formData);
-      console.log("Form data is valid:", formData);
-      setOpenCard((prev) => Math.min(prev + 1, 4));
-    } catch (error: any) {
-      console.error("Form data validation error:", error.errors);
-
-      // Update error states based on validation errors
-      error.errors.forEach((validationError: any) => {
-        if (validationError.path.includes("question1.name")) {
-          setNameError(validationError.message);
-        } else if (validationError.path.includes("question2.birthDate")) {
-          setBirthDateError(validationError.message);
-        } else if (validationError.path.includes("question2.phoneNumber")) {
-          setPhoneNumberError(validationError.message);
-        }
-      });
-    }
-  };
-
-  const [formData, setFormData] = useState<FormData>({
-    question1: {
-      name: "",
-    },
-    question2: {
-      gender: "Male",
-      birthDate: new Date(),
-      phoneNumber: "",
-    },
-  });
-
   const [openCard, setOpenCard] = useState<number>(1);
+  const [formData, setFormData] = useState({
+    question1: { name: "" },
+    question2: { gender: "", birthDate: new Date(), phoneNumber: "" },
+  });
+  const [errors, setErrors] = useState({
+    nameError: "",
+    birthDateError: "",
+    genderError: "",
+    phoneNumberError: "",
+  });
 
   const handleNextButtonClick = () => {
     setOpenCard((prev) => Math.min(prev + 1, 4));
@@ -73,6 +35,46 @@ const Form = () => {
 
   const handlePrevButtonClick = () => {
     setOpenCard((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleQuestion1Validation = () => {
+    const result = question1Schema.safeParse(formData.question1);
+    if (!result.success) {
+      setErrors((prev) => ({
+        ...prev,
+        nameError: result.error.errors?.[0]?.message,
+      }));
+      return false;
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        nameError: "",
+      }));
+      handleNextButtonClick();
+      return true;
+    }
+  };
+
+  const handleQuestion2Validation = () => {
+    const result = question2Schema.safeParse(formData.question2);
+    if (!result.success) {
+      setErrors((prev) => ({
+        ...prev,
+        genderError: result.error.errors?.[0]?.message,
+        birthDateError: result.error.errors?.[1]?.message,
+        phoneNumberError: result.error.errors?.[2]?.message,
+      }));
+      return false;
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        genderError: "",
+        birthDateError: "",
+        phoneNumberError: "",
+      }));
+      handleNextButtonClick();
+      return true;
+    }
   };
 
   return (
@@ -90,8 +92,9 @@ const Form = () => {
         }
         terminusSectionTitle="Opening"
         terminusText="Greetings! Welcome to Questify. Let's get you set up swiftly; it'll only take a few seconds to ensure you're ready to go."
+        buttonType="button"
         buttonClickHandler={handleNextButtonClick}
-        buttonText="Next"
+        buttonText="Start"
         buttonIcon={<LuChevronRight className="w-5 h-5" />}
       ></Terminus>
       <Question
@@ -131,14 +134,16 @@ const Form = () => {
                 className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
               />
               <span className="w-full h-0.5 bg-primary/40"></span>
-              {nameError && (
-                <div className="text-red-500 text-sm">{nameError}</div>
+              {errors.nameError && (
+                <div className="text-red-500 font-normal text-xs mt-0.5">
+                  {errors.nameError}
+                </div>
               )}
             </div>
           </div>
         }
         prevButton={handlePrevButtonClick}
-        nextButton={handleNextButtonClick}
+        nextButton={handleQuestion1Validation}
         buttonText="Next"
         buttonIcon={<LuCheck className="w-5 h-5" />}
       ></Question>
@@ -157,130 +162,140 @@ const Form = () => {
         questionSectionText="This section is made to add a personal touch to your account."
         questions={
           <div className="flex flex-col gap-4 w-full">
-            <SubQuestion
+            <QuestionLayout
               numbering="1"
               required={true}
-              subQuestion="Whats your gender?"
+              question="Whats your gender?"
               answer={
-                <RadioGroup className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem
-                      value="Male"
-                      id="option-one"
-                      className="border-[1px] border-solid border-[#CDDDE1]"
-                      onClick={() => {
-                        setFormData((prev) => ({
-                          ...prev,
-                          question2: { ...prev.question2, gender: "Male" },
-                        }));
-                      }}
-                    />
-                    <Label
-                      className="text-base font-medium"
-                      htmlFor="option-one"
-                    >
-                      Male
-                    </Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem
-                      value="Female"
-                      id="option-two"
-                      className="border-[1px] border-solid border-[#CDDDE1]"
-                      onClick={() => {
-                        setFormData((prev) => ({
-                          ...prev,
-                          question2: { ...prev.question2, gender: "Female" },
-                        }));
-                      }}
-                    />
-                    <Label className="text-base" htmlFor="option-two">
-                      Female
-                    </Label>
-                  </div>
-                </RadioGroup>
+                <div>
+                  <RadioGroup className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem
+                        value="Male"
+                        id="option-one"
+                        className="flex h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                        onClick={() => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            question2: { ...prev.question2, gender: "Male" },
+                          }));
+                        }}
+                      />
+                      <Label
+                        className="text-base font-medium"
+                        htmlFor="option-one"
+                      >
+                        Male
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem
+                        value="Female"
+                        id="option-two"
+                        className="flex h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                        onClick={() => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            question2: { ...prev.question2, gender: "Female" },
+                          }));
+                        }}
+                      />
+                      <Label className="text-base" htmlFor="option-two">
+                        Female
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                  {errors.genderError && (
+                    <div className="text-red-500 font-normal text-xs mt-0.5">
+                      {errors.genderError}
+                    </div>
+                  )}
+                </div>
               }
-            ></SubQuestion>
-            <SubQuestion
+            ></QuestionLayout>
+            <QuestionLayout
               numbering="2"
-              subQuestion="When were you born?"
+              question="When were you born?"
               answer={
-                <Input
-                  type="date"
-                  placeholder="Your answer here"
-                  value={
-                    formData.question2.birthDate.toISOString().split("T")[0]
-                  }
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      question2: {
-                        ...prev.question2,
-                        birthDate: new Date(e.target.value),
-                      },
-                    }))
-                  }
-                  className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
-                />
+                <div>
+                  <Input
+                    type="date"
+                    placeholder="Your answer here"
+                    value={
+                      formData.question2.birthDate.toISOString().split("T")[0]
+                    }
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        question2: {
+                          ...prev.question2,
+                          birthDate: new Date(e.target.value),
+                        },
+                      }))
+                    }
+                    className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
+                  />
+                  {errors.birthDateError && (
+                    <div className="text-red-500 font-normal text-xs mt-0.5">
+                      {errors.birthDateError}
+                    </div>
+                  )}
+                </div>
               }
-            ></SubQuestion>
-            <SubQuestion
+            ></QuestionLayout>
+            <QuestionLayout
               numbering="3"
-              subQuestion="Phone Number"
+              question="Phone Number"
               answer={
-                <Input
-                  type="text"
-                  placeholder="Your answer here"
-                  value={formData.question2.phoneNumber}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      question2: {
-                        ...prev.question2,
-                        phoneNumber: e.target.value,
-                      },
-                    }))
-                  }
-                  className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background h-fit"
-                />
+                <div>
+                  <Input
+                    type="text"
+                    placeholder="Your answer here"
+                    value={formData.question2.phoneNumber}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        question2: {
+                          ...prev.question2,
+                          phoneNumber: e.target.value,
+                        },
+                      }))
+                    }
+                    className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background h-fit"
+                  />
+                  {errors.phoneNumberError && (
+                    <div className="text-red-500 font-normal text-xs mt-0.5">
+                      {errors.phoneNumberError}
+                    </div>
+                  )}
+                </div>
               }
-            ></SubQuestion>
+            ></QuestionLayout>
           </div>
         }
         prevButton={handlePrevButtonClick}
-        nextButton={handleNextButtonClick}
+        nextButton={handleQuestion2Validation}
         buttonText="Next"
         buttonIcon={<LuCheck className="w-5 h-5" />}
       ></Question>
-
-      <Card
-        className={`flex flex-col w-[50%] h-[90%] ${
-          openCard === 4 ? "" : "hidden"
-        }`}
-      >
-        <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
-          <div>User Additional Information</div>
+      <Terminus
+        className={`${openCard === 4 ? "" : "hidden"}`}
+        terminusQRETitle="User Additional Information"
+        terminusImage={
           <Image
             src="/assets/Questify.svg"
             alt="Questify"
             width={70}
             height={16}
           />
-        </div>
-        <div className="flex flex-col h-full justify-center items-center font-medium text-xl px-24 py-14 gap-8 rounded-t-md">
-          <div className="text-base text-primary">Ending</div>
-          <div className="text-xl">
-            All set! Let&apos;s jump into the workspace.
-          </div>
-          <div className="w-[45%] flex flex-col gap-1">
-            <ClickEnter />
-            <Button type="submit" className="gap-2">
-              Finish
-              <LuCheckCheck className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </Card>
+        }
+        terminusSectionTitle="Ending"
+        terminusText="All set! Let's jump into the workspace."
+        buttonClickHandler={handleNextButtonClick}
+        buttonText="Finish"
+        buttonIcon={<LuCheckCheck className="w-5 h-5" />}
+        buttonType="submit"
+      ></Terminus>
     </div>
   );
 };

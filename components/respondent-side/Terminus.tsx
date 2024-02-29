@@ -9,6 +9,7 @@ interface TerminusProps {
   terminusImage?: ReactNode;
   terminusSectionTitle?: string;
 	terminusText?: string;
+  buttonType?: "button" | "submit" | "reset";
   buttonClickHandler?: () => void;
 	buttonText?: string;
 	buttonIcon?: ReactNode;
@@ -20,6 +21,7 @@ const Terminus: React.FC<TerminusProps> = ({
 	terminusImage = null,
 	terminusSectionTitle = "",
 	terminusText = "",
+  buttonType = "button",
 	buttonClickHandler = () => {},
 	buttonText = "",
 	buttonIcon = null,
@@ -35,7 +37,7 @@ const Terminus: React.FC<TerminusProps> = ({
         <div className="text-xl">{terminusText}</div>
         <div className="w-[45%] flex flex-col gap-1">
           <ClickEnter />
-          <Button className="gap-2" onClick={buttonClickHandler}>
+          <Button className="gap-2" type={buttonType} onClick={buttonClickHandler}>
             {buttonText}
             {buttonIcon}
           </Button>
