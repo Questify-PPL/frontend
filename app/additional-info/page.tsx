@@ -1,8 +1,7 @@
 import React from "react";
-import Form from "@/components/user-info/Form";
-import { Props } from "@/lib/types";
+import Form from "@/components/additional-info/Form";
 
-export default async function UserInfo(props: Props) {
+export default async function UserInfo() {
   const backgroundImageUrl = "/assets/user-info-bg.png";
 
   return (

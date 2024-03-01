@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Navigation from "@/components/layout/Navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {

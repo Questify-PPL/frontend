@@ -1,12 +1,6 @@
 import React from "react";
 import CreatorNav from "@/components/creator-side/CreatorNav";
 import HomeCard from "@/components/creator-side/HomeCard";
-import { Button } from "@/components/ui/button";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
 
 export default function Home() {
   return (
