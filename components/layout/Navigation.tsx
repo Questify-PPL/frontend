@@ -5,8 +5,7 @@ import { LuHome, LuClipboardList, LuHistory } from "react-icons/lu";
 
 interface NavigationProps {
   className?: string;
-  mainActionM?: string;
-  mainActionD?: string;
+  action?: string;
   state?: "home" | "action" | "responses";
   onClickHome?: () => void;
   homeChildren?: React.ReactNode;
@@ -23,8 +22,7 @@ const buttonIndicatorClassMd = `hidden w-1 h-full bg-primary rounded-l-md md:fle
 
 const Navigation: React.FC<NavigationProps> = ({
   className = "",
-  mainActionM = "",
-  mainActionD = "",
+  action = "",
   state = "home",
   onClickHome = () => {},
   homeChildren = null,
@@ -65,14 +63,11 @@ const Navigation: React.FC<NavigationProps> = ({
           )}
           <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
             <LuClipboardList className="w-full h-5 text-primary" />
-            <div className="md:hidden font-bold text-xs md:text-sm text-[#324B4F]">
-              {mainActionM}
-            </div>
-            <div className="hidden lg:flex font-bold text-sm text-[#324B4F]">
-              {mainActionD}
+            <div className="font-bold text-xs md:text-sm text-[#324B4F]">
+              {action}
             </div>
           </div>
-          {state === "responses" ? (
+          {state === "action" ? (
             <span className={buttonIndicatorClassMd}></span>
           ) : (
             <span className={`${buttonIndicatorClassMd} bg-transparent`}></span>

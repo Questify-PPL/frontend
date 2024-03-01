@@ -18,22 +18,21 @@ const HomeNav: React.FC<HomeNavProps> = ({
   const router = useRouter();
 
   const toHome = () => {
-    router.push("/creator");
+    router.push("/home");
   };
 
   const toCreate = () => {
-    router.push("creator/create");
+    router.push("/create");
   };
 
   const toResponses = () => {
-    router.push("creator/responses");
+    router.push("/home");
   };
 
   return (
     <Navigation
       className={className}
-      mainActionM="Create QRE"
-      mainActionD="Create Questionnaire"
+      action="Create QRE"
       state={state}
       onClickHome={toHome}
       onClickAction={toCreate}
