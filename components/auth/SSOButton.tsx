@@ -7,7 +7,7 @@ import { redirectLogin } from "@/lib/services";
 export function SSOButton() {
   return (
     <Button
-      className="flex flex-row gap-2 border-primary w-3/5 border-[1px] border-solid"
+      className="flex flex-row gap-2 border-primary xs:w-3/5 border-[1px] border-solid flex-wrap h-fit w-fit"
       variant={"outline"}
       onClick={() => {
         redirectLogin("/register");
