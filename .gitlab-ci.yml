@@ -69,7 +69,4 @@ sonarcloud-check:
     - sonar-scanner
   dependencies:
     - Test
-  only:
-    - staging
-    - main
   allow_failure: true
