@@ -1,12 +1,11 @@
 import { RegisterForm, SSOButton } from "@/components/auth";
 import { Props } from "@/lib/types";
-import { cookies } from "next/headers";
-import { getCookie } from "cookies-next";
 import Link from "next/link";
 import Image from "next/image";
+import { getUserSSOJWT } from "@/lib/services";
 
-export default async function Register(props: Props) {
-  const { accessToken } = await getServerSideProps(props);
+export default async function Register(props: Readonly<Props>) {
+  const { accessToken } = await getUserSSOJWT(props, "/register");
 
   console.log(accessToken);
 
@@ -31,7 +30,11 @@ export default async function Register(props: Props) {
           If you&apos;re an academic member at Universitas Indonesia,{" "}
           <span className="font-bold">Sign Up</span> here.
         </div>
-        <SSOButton />
+        <SSOButton
+          text="Sign Up using SSO"
+          className="flex flex-row gap-2 border-primary w-3/5 border-[1px] border-solid"
+          url="/register"
+        />
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
         <div className="font-medium text-center px-2">
@@ -47,46 +50,4 @@ export default async function Register(props: Props) {
       </div>
     </main>
   );
-}
-
-async function getServerSideProps(props: Props) {
-  try {
-    const { ticket } = props.searchParams;
-
-    if (!ticket) {
-      return {
-        accessToken: getCookie("name", { cookies }),
-      };
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login-sso`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ticket,
-          serviceURL: process.env.NEXT_PUBLIC_BASE_URL + "/register",
-        }),
-      },
-    );
-
-    const data = await response.json();
-
-    if (response.status < 400) {
-      return {
-        accessToken: data.data.accessToken,
-      };
-    }
-
-    return {
-      accessToken: "",
-    };
-  } catch (error) {
-    return {
-      accessToken: "",
-    };
-  }
 }
