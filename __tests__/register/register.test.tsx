@@ -1,7 +1,8 @@
 import Register from "@/app/register/page";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import RegisterLayout from "@/app/register/layout";
+import ErrorPage from "@/app/register/error";
+import { useRouter } from "next/navigation";
 
 jest.mock("@/app/register/page", () => {
   const originalModule = jest.requireActual("@/app/register/page");
@@ -13,18 +14,46 @@ jest.mock("@/app/register/page", () => {
   };
 });
 
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
+
+jest.mock("react-dom", () => {
+  const originalModule = jest.requireActual("react-dom");
+
+  return {
+    ...originalModule,
+    useFormState: () => [undefined, jest.fn()],
+    useFormStatus: jest.fn().mockReturnValue({
+      pending: true,
+      data: null,
+      method: null,
+      action: null,
+    }),
+    __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: {
+      Events: [],
+    },
+  };
+});
+
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
 }));
 
+jest.mock("next/navigation", () => {
+  return { useRouter: jest.fn() };
+});
+
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+
 describe("Register and RegisterForm", () => {
   it("renders without crashing", async () => {
     global.fetch = jest.fn(
       () =>
         Promise.resolve({
-          json: () => Promise.resolve({ data: { accessToken: "Token" } }),
+          json: () => Promise.resolve({ data: { accessToken: undefined } }),
           status: 201,
         }) as Promise<Response>,
     );
@@ -50,7 +79,7 @@ describe("Register and RegisterForm", () => {
     global.fetch = jest.fn(
       () =>
         Promise.resolve({
-          json: () => Promise.resolve({ data: { accessToken: "Token" } }),
+          json: () => Promise.resolve({ data: { accessToken: undefined } }),
           status: 201,
         }) as Promise<Response>,
     );
@@ -93,19 +122,14 @@ describe("Register and RegisterForm", () => {
       }),
     );
 
-    const email = screen.getByLabelText("Email");
-    const password = screen.getByLabelText("Password");
-    const confirmPassword = screen.getByLabelText("Confirm Password");
+    const ssoLabel = screen.getByTestId("sso-label");
+    expect(ssoLabel).toBeInTheDocument();
 
-    const headingElement = screen.getByRole("heading", { name: /Sign Up/i });
-    expect(headingElement).toBeInTheDocument();
+    const ssoInput = screen.getByTestId("sso-input");
+    expect(ssoInput).toBeInTheDocument();
 
-    expect(email).toBeInTheDocument();
-    expect(password).toBeInTheDocument();
-    expect(confirmPassword).toBeInTheDocument();
-    expect(screen.getByText("Already have an account?")).toBeInTheDocument();
-    expect(screen.getByText("Log In")).toBeInTheDocument();
-    expect(screen.getByText("Sign Up using SSO")).toBeInTheDocument();
+    const loginButton = screen.getByTestId("sso-button");
+    expect(loginButton).toBeInTheDocument();
   });
 
   it("renders error if fetch fails", async () => {
@@ -136,13 +160,32 @@ describe("Register and RegisterForm", () => {
     }
   });
 
-  it("renders RegisterLayout without crashing", async () => {
-    render(
-      <RegisterLayout>
-        <div>Register</div>
-      </RegisterLayout>,
-    );
+  it("renders error.tsx without crashing", async () => {
+    const error = new Error("error");
+    render(ErrorPage({ error, reset: jest.fn() }));
 
-    expect(screen.getByText("Register")).toBeInTheDocument();
+    const message = screen.getByRole("heading", {
+      name: "Something went wrong!",
+    });
+    expect(message).toBeInTheDocument();
+  });
+
+  it("calls router.replace on button click", () => {
+    const error = new Error("error");
+    const mockReplace = jest.fn();
+    mockedUseRouter.mockImplementation(() => ({
+      replace: mockReplace,
+      back: jest.fn(),
+      forward: jest.fn(),
+      refresh: jest.fn(),
+      push: jest.fn(),
+      prefetch: jest.fn(),
+    }));
+
+    render(<ErrorPage error={error} reset={jest.fn()} />);
+    const button = screen.getByTestId("reset");
+    fireEvent.click(button);
+
+    expect(mockReplace).toHaveBeenCalledWith("/");
   });
 });
