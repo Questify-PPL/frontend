@@ -15,41 +15,35 @@ export function redirectLogout() {
 }
 
 export async function getUserSSOJWT(props: Props, pathname: string) {
-  try {
-    const { ticket } = props.searchParams;
+  const { ticket } = props.searchParams;
 
-    if (!ticket) {
-      return {
-        accessToken: "",
-      };
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login-sso`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ticket,
-          serviceURL: process.env.NEXT_PUBLIC_BASE_URL + pathname,
-        }),
-      },
-    );
-
-    const data = await response.json();
-
-    if (response.status !== 201) {
-      console.log(data);
-
-      throw Error(data.message);
-    }
-
+  if (!ticket) {
     return {
-      accessToken: data.data.accessToken,
+      accessToken: "",
     };
-  } catch (error) {
-    throw error;
   }
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/login-sso`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticket,
+        serviceURL: process.env.NEXT_PUBLIC_BASE_URL + pathname,
+      }),
+    },
+  );
+
+  const data = await response.json();
+
+  if (response.status !== 201) {
+    throw Error(data.message);
+  }
+
+  return {
+    accessToken: data.data.accessToken,
+  };
 }

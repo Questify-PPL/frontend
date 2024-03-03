@@ -1,8 +1,13 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { Session } from "next-auth";
 
-export function Navbar() {
+type Props = {
+  user: Session | null;
+};
+
+export function Navbar({ user }: Readonly<Props>) {
   return (
     <nav className="flex items-center justify-between py-4 px-4 sm:px-12 md:px-16 lg:px-24">
       <Link
@@ -18,9 +23,9 @@ export function Navbar() {
         />
       </Link>
       <div className="flex items-center space-x-4">
-        <Link href="/login">
+        <Link href={user ? "/home" : "/register"}>
           <Button className="text-white font-bold sm:text-sm text-xs">
-            Sign Up
+            {user ? "Home" : "Sign Up"}
           </Button>
         </Link>
       </div>
