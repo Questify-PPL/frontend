@@ -162,7 +162,7 @@ const Form = () => {
               <QuestionLayout
                 numbering={1}
                 required={true}
-                question="Whats your gender?"
+                question="What's your gender?"
                 answer={
                   <div>
                     <RadioGroup
@@ -208,7 +208,7 @@ const Form = () => {
                   <div>
                     <Input
                       type="date"
-                      placeholder="Your answer here"
+                      placeholder="DD/MM/YYYY"
                       {...register("birthDate")}
                       className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
                     />

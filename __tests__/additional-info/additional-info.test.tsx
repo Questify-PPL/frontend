@@ -14,11 +14,14 @@ test("renders the first step of the form", () => {
 
   expect(screen.getByText("User Additional Information")).toBeInTheDocument();
   expect(screen.getByText("Opening")).toBeInTheDocument();
-  expect(screen.getByText("Greetings! Welcome to Questify. Let's get you set up swiftly; it'll only take a few seconds to ensure you're ready to go.")).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      "Greetings! Welcome to Questify. Let's get you set up swiftly; it'll only take a few seconds to ensure you're ready to go."
+    )
+  ).toBeInTheDocument();
 
   expect(screen.getByText("Start")).toBeInTheDocument();
 });
-
 
 test("allows user to progress through the form steps", async () => {
   render(<Form />);
@@ -29,12 +32,22 @@ test("allows user to progress through the form steps", async () => {
   expect(screen.getByText("Fill with your full name.")).toBeInTheDocument();
 
   const nameInput = screen.getByPlaceholderText(
-    "Your answer here",
+    "Your answer here"
   ) as HTMLInputElement;
-  fireEvent.change(nameInput, { target: { value: "John Doe" } });
+  fireEvent.change(nameInput, { target: { value: "Jane Doe" } });
   fireEvent.click(screen.getByText("Next"));
 
   await screen.findByText("Question 2");
   expect(screen.getByText("Question 2")).toBeInTheDocument();
-});
+  expect(screen.getByText("What's your gender?")).toBeInTheDocument();
 
+  fireEvent.click(screen.getByText("Female"));
+
+  const birthDateMock = new Date(2003, 4, 21);
+
+  const birthDateInput = screen.getByPlaceholderText(
+    "DD/MM/YYYY"
+  ) as HTMLInputElement;
+
+  fireEvent.change(birthDateInput, { target: { value: birthDateMock } });
+});
