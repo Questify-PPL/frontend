@@ -1,7 +1,10 @@
 "use server";
 
-import { signIn } from "@/auth";
-import { AuthError } from "next-auth";
+import { auth, signIn, signOut } from "@/auth";
+import { Session, AuthError } from "next-auth";
+import { logoutUrl as ssoLogoutUrl } from "../services";
+
+const logoutRedirectUrl = "/login";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -20,4 +23,14 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function logout() {
+  const session = (await auth()) as Session;
+  const useSSO = session.user.id.startsWith("UI");
+  const redirectOption = {
+    redirectTo: useSSO ? ssoLogoutUrl : logoutRedirectUrl,
+  };
+
+  await signOut(redirectOption);
 }

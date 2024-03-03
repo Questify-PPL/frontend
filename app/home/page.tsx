@@ -1,3 +1,9 @@
+import { UserDropdownMenu } from "@/components/dashboard";
+
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <div className="flex h-screen justify-end items-start">
+      <UserDropdownMenu />
+    </div>
+  );
 }

@@ -17,6 +17,8 @@ export const RBACRoutes = {
   ADMIN: ["/admin"],
 } as Record<UserRole, string[]>;
 
+const ssoLogoutUrl = "https://sso.ui.ac.id/cas2/logout";
+
 export const authConfig = {
   pages: {
     signIn: "/login",
@@ -92,6 +94,12 @@ export const authConfig = {
 
         return hasCallbackUrl ? callbackUrl : homepageRoute;
       }
+
+      // Allows redirect to SSO
+      if (url.startsWith(ssoLogoutUrl)) {
+        return url;
+      }
+
       // Allows callback URLs on the same origin
       else if (urlObj.origin === baseUrl) return url;
 

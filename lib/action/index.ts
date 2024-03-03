@@ -1,3 +1,3 @@
-import { authenticate } from "./authenticate";
+import { authenticate, logout } from "./authenticate";
 
-export { authenticate };
+export { authenticate, logout };
