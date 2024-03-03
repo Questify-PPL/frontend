@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, findByText } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Form from "@/components/additional-info/Form";
 
@@ -40,14 +40,22 @@ test("allows user to progress through the form steps", async () => {
   await screen.findByText("Question 2");
   expect(screen.getByText("Question 2")).toBeInTheDocument();
   expect(screen.getByText("What's your gender?")).toBeInTheDocument();
-
   fireEvent.click(screen.getByText("Female"));
 
+  expect(screen.getByText("When were you born?")).toBeInTheDocument();
   const birthDateMock = new Date(2003, 4, 21);
-
   const birthDateInput = screen.getByPlaceholderText(
     "DD/MM/YYYY"
   ) as HTMLInputElement;
-
   fireEvent.change(birthDateInput, { target: { value: birthDateMock } });
+
+  expect(screen.getByText("Phone Number?")).toBeInTheDocument();
+  const phoneNumberInput = screen.getByPlaceholderText(
+    "Your number here"
+  ) as HTMLInputElement;
+  fireEvent.change(phoneNumberInput, { target: { value: "1234567890" } });
+
+  fireEvent.click(screen.getByText("Next"));
+
+  await screen.findByText("Ending");
 });

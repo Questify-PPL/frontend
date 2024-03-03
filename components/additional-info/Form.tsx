@@ -227,7 +227,7 @@ const Form = () => {
                   <div>
                     <Input
                       type="text"
-                      placeholder="Your answer here"
+                      placeholder="Your number here"
                       {...register("phoneNumber")}
                       className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background h-fit"
                     />
