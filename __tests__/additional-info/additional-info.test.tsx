@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Form from "@/components/additional-info/Form";
+import { act } from "react-dom/test-utils";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -40,16 +41,16 @@ test("allows user to progress through the form steps", async () => {
   await screen.findByText("Question 2");
   expect(screen.getByText("Question 2")).toBeInTheDocument();
   expect(screen.getByText("What's your gender?")).toBeInTheDocument();
-  fireEvent.click(screen.getByText("Female"));
+  const genderRadioButton = screen.getByLabelText("Male") as HTMLInputElement;
+  fireEvent.click(genderRadioButton);
 
   expect(screen.getByText("When were you born?")).toBeInTheDocument();
-  const birthDateMock = new Date(2003, 4, 21);
-  const birthDateInput = screen.getByPlaceholderText(
-    "DD/MM/YYYY"
-  ) as HTMLInputElement;
-  fireEvent.change(birthDateInput, { target: { value: birthDateMock } });
 
-  expect(screen.getByText("Phone Number?")).toBeInTheDocument();
+  fireEvent.change(screen.getByPlaceholderText("DD/MM/YYYY"), {
+    target: { value: "21042003" },
+  });
+
+  expect(screen.getByText("Phone Number")).toBeInTheDocument();
   const phoneNumberInput = screen.getByPlaceholderText(
     "Your number here"
   ) as HTMLInputElement;
@@ -58,4 +59,11 @@ test("allows user to progress through the form steps", async () => {
   fireEvent.click(screen.getByText("Next"));
 
   await screen.findByText("Ending");
+
+  expect(screen.getByText("Ending")).toBeInTheDocument();
+  expect(
+    screen.getByText("All set! Let's jump into the workspace.")
+  ).toBeInTheDocument();
+  expect(screen.getByText("Finish")).toBeInTheDocument();
 });
+

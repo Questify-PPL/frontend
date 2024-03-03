@@ -53,10 +53,10 @@ const Question: React.FC<QuestionProps> = ({
       </div>
       <div className="flex flex-row bg-transparent h-[15%] justify-between items-end text-xl p-6 gap-1 rounded-t-md">
         <div className="flex gap-1">
-          <Button variant="outline" onClick={prevButton}>
+          <Button variant="outline" id="prev" onClick={prevButton}>
             <LuChevronUp className="w-5 h-5" />
           </Button>
-          <Button variant="outline" onClick={nextButton}>
+          <Button variant="outline" id="next" onClick={nextButton}>
             <LuChevronDown className="w-5 h-5" />
           </Button>
         </div>
