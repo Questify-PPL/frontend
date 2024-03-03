@@ -48,7 +48,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
               <span className="font-bold text-sm">{creditsBalance}</span>
             </div>
           </div>
-          <LuX className="w-5 h-5"></LuX>
+          <LuX className="w-5 h-5" onClick={onCancel}></LuX>
         </div>
         <div className="flex flex-col gap-4 w-full">
           <div className="flex flex-col justify-center items-center">
