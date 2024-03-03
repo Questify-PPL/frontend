@@ -357,5 +357,16 @@ describe("authConfig", () => {
 
       expect(returnedUrl).toBe(callbackUrl);
     });
+
+    it("should allow redirect to SSO url", async () => {
+      const baseUrl = "http://localhost:3000";
+      const url = `https://sso.ui.ac.id/cas2/logout?url=${baseUrl}`;
+      const returnedUrl = await authConfig.callbacks.redirect({
+        url,
+        baseUrl,
+      });
+
+      expect(returnedUrl).toBe(url);
+    });
   });
 });
