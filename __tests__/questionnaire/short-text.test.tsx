@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import FirstComponentPage from "@/app/questionnaire/first-components/page";
+import FirstComponentPage from "@/app/questionnaire/[type]/page";
 
 describe("ShortText", () => {
   beforeEach(() => {
-    render(<FirstComponentPage />);
+    render(<FirstComponentPage params={{ type: "short-text" }} />);
   });
 
   it("renders the ShortText component correctly", () => {
