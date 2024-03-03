@@ -27,7 +27,7 @@ export async function authenticate(
 
 export async function logout() {
   const session = (await auth()) as Session;
-  const useSSO = session.user.id.startsWith("UI");
+  const useSSO = session?.user.id.startsWith("UI");
   const redirectOption = {
     redirectTo: useSSO ? ssoLogoutUrl : logoutRedirectUrl,
   };
