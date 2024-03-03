@@ -1,6 +1,6 @@
 import { Props } from "@/lib/types";
 
-export default async function Verify(props: Props) {
+export default async function Verify(props: Readonly<Props>) {
   const message = await getServerSideProps(props);
   console.log("message", message);
 

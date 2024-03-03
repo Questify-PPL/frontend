@@ -82,6 +82,8 @@ const config = {
       backgroundImage: {
         "register-pattern":
           'url("https://res.cloudinary.com/dicmrrmdr/image/upload/f_auto,q_auto/v1/questify/g5b2fhjzzpoa5kuaa6gf")',
+        "login-pattern":
+          'url("https://res.cloudinary.com/dwoicn6yn/image/upload/v1709365547/bbocyuakyu5dszsrzacz.png")',
       },
     },
   },

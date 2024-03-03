@@ -17,6 +17,13 @@ const config: Config = {
     "!**/node_modules/**",
     "!**/.next/**",
   ],
+  automock: false,
+  setupFiles: ["./setupJest.ts"],
+  moduleNameMapper: {
+    "@/(.*)": "<rootDir>/$1",
+    "next-auth": "<rootDir>/__tests__/mocks/next-auth.ts",
+  },
+  testPathIgnorePatterns: ["next-auth.ts"],
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
