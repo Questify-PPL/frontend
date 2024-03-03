@@ -22,7 +22,12 @@ export function Navbar({ user }: Readonly<Props>) {
           height={16}
         />
       </Link>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2 md:space-x-4">
+        <Link href={user ? "/home" : "/login"}>
+          <Button className="text-primary bg-white font-bold sm:text-sm text-xs hover:bg-[#E5EEF0]">
+            {user ? "Home" : "Sign In"}
+          </Button>
+        </Link>
         <Link href={user ? "/home" : "/register"}>
           <Button className="text-white font-bold sm:text-sm text-xs">
             {user ? "Home" : "Sign Up"}

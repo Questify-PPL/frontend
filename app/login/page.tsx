@@ -25,13 +25,15 @@ export default async function Login(props: Props) {
       <div className="md:flex md:justify-center md:items-center flex-auto">
         <div className="py-10 px-8 max-w-96 mx-auto md:max-w-full md:px-10">
           <div className="mb-7 md:flex md:gap-[15px] md:mb-8 md:items-center">
-            <Image
-              src={"/assets/Questify.svg"}
-              alt="Questify Logo"
-              width={138}
-              height={32}
-              className="mx-auto mb-[10px] md:mb-0"
-            />
+            <Link href="/">
+              <Image
+                src={"/assets/Questify.svg"}
+                alt="Questify Logo"
+                width={138}
+                height={32}
+                className="mx-auto mb-[10px] md:mb-0"
+              />
+            </Link>
             <h1 className="text-center md:text-left text-primary text-[10px] md:text-base md:max-w-[400px]">
               <span className="font-bold">Log In</span> to continue your journey
               in contributing to the progress of today&#39;s academic
