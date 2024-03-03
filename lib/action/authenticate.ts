@@ -4,7 +4,7 @@ import { auth, signIn, signOut } from "@/auth";
 import { Session, AuthError } from "next-auth";
 import { logoutUrl as ssoLogoutUrl } from "../services";
 
-const logoutRedirectUrl = "/login";
+const logoutRedirectUrl = "/";
 
 export async function authenticate(
   prevState: string | undefined,

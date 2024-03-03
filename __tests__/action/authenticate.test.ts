@@ -60,7 +60,7 @@ describe("signOut", () => {
 
     await logout();
     expect(signOut).toHaveBeenCalledTimes(1);
-    expect(signOut).toHaveBeenCalledWith({ redirectTo: "/login" });
+    expect(signOut).toHaveBeenCalledWith({ redirectTo: "/" });
   });
 
   it("should signOut valid SSO user", async () => {
