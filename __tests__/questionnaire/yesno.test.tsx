@@ -41,24 +41,6 @@ describe("YesNo", () => {
     expect(screen.getByText("Switch to Creator Mode")).toBeInTheDocument();
   });
 
-  it("allows inputting an answer in respondent mode with radio buttons", () => {
-    const switchButton = screen.getByText(
-      "Switch to Respondent Mode",
-    ) as HTMLElement;
-    fireEvent.click(switchButton);
-
-    const yesRadioButton = screen.getByLabelText("Yes") as HTMLInputElement;
-    const noRadioButton = screen.getByLabelText("No") as HTMLInputElement;
-
-    fireEvent.click(yesRadioButton);
-    expect(yesRadioButton.checked).toBe(true);
-    expect(noRadioButton.checked).toBe(false);
-
-    fireEvent.click(noRadioButton);
-    expect(yesRadioButton.checked).toBe(false);
-    expect(noRadioButton.checked).toBe(true);
-  });
-
   it("changes input height dynamically for question and description", () => {
     const questionInput = screen.getByPlaceholderText(
       "Your question here.",

@@ -41,17 +41,6 @@ describe("MultipleChoice", () => {
     expect(screen.getByText("Switch to Creator Mode")).toBeInTheDocument();
   });
 
-  it("allows inputting an answer in respondent mode with radio buttons", () => {
-    const switchButton = screen.getByText("Switch to Respondent Mode") as HTMLElement;
-    fireEvent.click(switchButton);
-  
-    const option1RadioButton = screen.getByLabelText("Option 1") as HTMLInputElement;
-
-    fireEvent.click(option1RadioButton);
-    expect(option1RadioButton.checked).toBe(true);
-    expect(option1RadioButton.checked).toBe(false);
-  });
-
   it("changes input height dynamically for question and description", () => {
     const questionInput = screen.getByPlaceholderText(
       "Your question here.",

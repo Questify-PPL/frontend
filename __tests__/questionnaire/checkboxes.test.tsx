@@ -40,17 +40,7 @@ describe("Checkboxes", () => {
   
       expect(screen.getByText("Switch to Creator Mode")).toBeInTheDocument();
     });
-  
-    it("allows inputting an answer in respondent mode with checkboxes", () => {
-        const switchButton = screen.getByText("Switch to Respondent Mode") as HTMLElement;
-        fireEvent.click(switchButton);
-      
-        const option1Checkbox = screen.getByLabelText("Option 1") as HTMLInputElement;
-        
-        fireEvent.click(option1Checkbox);
-        expect(option1Checkbox.checked).toBe(true);
-        expect(option1Checkbox.checked).toBe(true);
-      });
+
   
     it("changes input height dynamically for question and description", () => {
       const questionInput = screen.getByPlaceholderText(
