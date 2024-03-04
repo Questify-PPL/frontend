@@ -42,14 +42,10 @@ describe("MultipleChoice", () => {
   });
 
   it("allows inputting an answer in respondent mode with radio buttons", () => {
-    const switchButton = screen.getByText(
-      "Switch to Respondent Mode",
-    ) as HTMLElement;
+    const switchButton = screen.getByText("Switch to Respondent Mode") as HTMLElement;
     fireEvent.click(switchButton);
-
-    const option1RadioButton = screen.getByLabelText(
-      "Option 1",
-    ) as HTMLInputElement;
+  
+    const option1RadioButton = screen.getByLabelText("Option 1") as HTMLInputElement;
 
     fireEvent.click(option1RadioButton);
     expect(option1RadioButton.checked).toBe(true);
