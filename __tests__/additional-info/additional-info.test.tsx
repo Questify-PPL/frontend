@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Form from "@/components/additional-info/Form";
+import AdditionalInfo from "@/app/additional-info/page";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -10,7 +10,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 }));
 
 test("renders the first step of the form", () => {
-  render(<Form />);
+  render(<AdditionalInfo />);
 
   expect(screen.getByText("User Additional Information")).toBeInTheDocument();
   expect(screen.getByText("Opening")).toBeInTheDocument();
@@ -24,7 +24,7 @@ test("renders the first step of the form", () => {
 });
 
 test("allows user to progress through the form steps", async () => {
-  render(<Form />);
+  render(<AdditionalInfo />);
   fireEvent.click(screen.getByText("Start"));
   await screen.findByText("Question 1");
   expect(screen.getByText("Question 1")).toBeInTheDocument();
@@ -65,4 +65,3 @@ test("allows user to progress through the form steps", async () => {
   ).toBeInTheDocument();
   expect(screen.getByText("Finish")).toBeInTheDocument();
 });
-

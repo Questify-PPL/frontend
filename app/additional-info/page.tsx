@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "@/components/additional-info/Form";
 
-export default async function UserInfo() {
+export default async function AdditionalInfo() {
   const backgroundImageUrl = "/assets/user-info-bg.png";
 
   return (
