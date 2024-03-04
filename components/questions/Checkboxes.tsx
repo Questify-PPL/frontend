@@ -67,6 +67,25 @@ export function Checkboxes() {
     setIsChecked(!isChecked);
   };
 
+  const [minWidth, setMinWidth] = useState(
+    typeof window !== "undefined"
+      ? Math.min(455, window.innerWidth * 0.8)
+      : 455,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMinWidth(Math.min(455, window.innerWidth * 0.8));
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
   const checkboxTemplate = (
     <div key="template" className="flex items-center self-stretch gap-2 ml-6">
       <input
@@ -88,7 +107,7 @@ export function Checkboxes() {
   return (
     <div
       style={{
-        width: "30%",
+        width: `${minWidth}px`,
         margin: "auto",
         borderColor: "#E5EEF0",
         borderWidth: "3px",
@@ -115,7 +134,7 @@ export function Checkboxes() {
               marginLeft: "13px",
               backgroundColor: "#FAD6E8",
               height: "30px",
-              width: "150px",
+              width: `${minWidth * 0.2857}px`,
             }}
             className="rounded-full p-2 flex flex-row items-center"
           >
@@ -142,7 +161,12 @@ export function Checkboxes() {
               ></div>
             </div>
             <span
-              style={{ marginLeft: "6px", color: "#E7328C" }}
+              style={{
+                marginLeft: `${minWidth > 320 ? 6 : 9}px`,
+                color: "#E7328C",
+                fontSize: `${minWidth > 430 ? 16 : minWidth > 400 ? 14 : minWidth > 365 ? 12 : 10}px`,
+              }}
+              
               className="font-medium"
             >
               Checkboxes
@@ -150,7 +174,14 @@ export function Checkboxes() {
           </div>
           {!isRespondent && (
             <div className="ml-auto flex flex-row items-center">
-              <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <span
+                style={{
+                  fontSize: `${minWidth > 430 ? 14 : minWidth > 400 ? 12 : 10}px`,
+                  marginRight: `${minWidth > 430 ? 12 : minWidth > 400 ? 10 : 8}px`,
+                }}
+                className="text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+
                 Required
               </span>
               <Switch checked={isChecked} onClick={handleCheckboxChange} />
@@ -158,7 +189,11 @@ export function Checkboxes() {
           )}
         </div>
         <div
-          style={{ marginLeft: "45px", fontSize: "18px" }}
+          style={{
+            marginLeft: "45px",
+            fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
+          }}
+          
           className="font-semibold pt-2"
         >
           <textarea
@@ -167,19 +202,25 @@ export function Checkboxes() {
             onChange={(event) => handleInputChange(event, setQuestionValue)}
             placeholder="Your question here."
             style={{
-              width: "345px",
+              width: `${minWidth * 0.73}px`,
               resize: "none",
             }}
             rows={1}
           />
         </div>
-        <div style={{ marginLeft: "45px", fontSize: "15px" }}>
+        <div
+          style={{
+            marginLeft: "45px",
+            fontSize: `${minWidth > 430 ? 15 : minWidth > 400 ? 14 : minWidth > 365 ? 13 : 12}px`,
+          }}
+        >
+
           <textarea
             value={descriptionValue}
             onChange={(event) => handleInputChange(event, setDescriptionValue)}
             placeholder="Description (optional)"
             style={{
-              width: "345px",
+              width: `${minWidth * 0.73}px`,
               resize: "none",
             }}
             rows={1}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { RadioGroup } from "../ui/radio-group";
 import { RadioGroupItem } from "../ui/radio-group";
 import { Switch } from "../ui/switch";
@@ -89,10 +89,29 @@ export function MultipleChoice() {
     </div>
   );
 
+  const [minWidth, setMinWidth] = useState(
+    typeof window !== "undefined"
+      ? Math.min(455, window.innerWidth * 0.8)
+      : 455,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMinWidth(Math.min(455, window.innerWidth * 0.8));
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
   return (
     <div
       style={{
-        width: "30%",
+        width: `${minWidth}px`,
         margin: "auto",
         borderColor: "#E5EEF0",
         borderWidth: "3px",
@@ -119,7 +138,7 @@ export function MultipleChoice() {
               marginLeft: "13px",
               backgroundColor: "#FAD6E8",
               height: "30px",
-              width: "170px",
+              width: `${minWidth * 0.2857}px`,
             }}
             className="rounded-full p-2 flex flex-row items-center"
           >
@@ -146,7 +165,12 @@ export function MultipleChoice() {
               ></div>
             </div>
             <span
-              style={{ marginLeft: "6px", color: "#E7328C" }}
+              style={{
+                marginLeft: `${minWidth > 320 ? 6 : 9}px`,
+                color: "#E7328C",
+                fontSize: `${minWidth > 430 ? 12 : minWidth > 400 ? 10 : minWidth > 365 ? 12 : 10}px`,
+              }}
+              
               className="font-medium"
             >
               Multiple Choice
@@ -154,7 +178,14 @@ export function MultipleChoice() {
           </div>
           {!isRespondent && (
             <div className="ml-auto flex flex-row items-center">
-              <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <span
+                style={{
+                  fontSize: `${minWidth > 430 ? 14 : minWidth > 400 ? 12 : 10}px`,
+                  marginRight: `${minWidth > 430 ? 12 : minWidth > 400 ? 10 : 8}px`,
+                }}
+                className="text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+
                 Required
               </span>
               <Switch checked={isChecked} onClick={handleCheckboxChange} />
@@ -162,13 +193,17 @@ export function MultipleChoice() {
           )}
         </div>
         <div
-          style={{ marginLeft: "45px", fontSize: "18px" }}
+          style={{
+            marginLeft: "45px",
+            fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
+          }}
+          
           className="font-semibold pt-2"
         >
           {isRespondent ? (
             <span
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
                 display: "inline-block",
                 wordWrap: "break-word",
               }}
@@ -182,20 +217,26 @@ export function MultipleChoice() {
               onChange={(event) => handleInputChange(event, setQuestionValue)}
               placeholder="Your question here."
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
                 resize: "none",
               }}
               rows={1}
             />
           )}
         </div>
-        <div style={{ marginLeft: "45px", fontSize: "15px" }}>
+        <div
+          style={{
+            marginLeft: "45px",
+            fontSize: `${minWidth > 430 ? 15 : minWidth > 400 ? 14 : minWidth > 365 ? 13 : 12}px`,
+          }}
+        >
+
           {isRespondent ? (
             descriptionValue.length != 0 && (
               <div className="pt-2">
                 <span
                   style={{
-                    width: "345px",
+                    width: `${minWidth * 0.73}px`,
                     display: "inline-block",
                     wordWrap: "break-word",
                   }}
@@ -212,7 +253,7 @@ export function MultipleChoice() {
               }
               placeholder="Description (optional)"
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
                 resize: "none",
               }}
               rows={1}
@@ -231,7 +272,7 @@ export function MultipleChoice() {
                 checked={index === selectedOptionIndex} // Set the checked state
               />
               <input
-                style={{ borderBottom: "none" }}
+                style={{ borderBottom: "none", width: '170px' }}
                 type="text"
                 value={option}
                 placeholder={`Option ${index + 1}`}
