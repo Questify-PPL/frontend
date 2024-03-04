@@ -13,10 +13,9 @@ interface FormLeftMenuProps {
   endingChildren?: React.ReactNode;
 }
 
-const buttonClass = `flex flex-col justify-start py-0 pb-2 px-2 gap-2 h-fit w-full bg-background hover:bg-accent text-[#324B4F] hover:text-[#324B4F]
-  md:flex-row md:justify-between md:px-0 md:pb-0 rounded-none`;
-const buttonIndicatorClassSm = `md:hidden w-full h-0.5 bg-primary rounded-b-md`;
-const buttonIndicatorClassMd = `hidden w-1 h-full bg-primary rounded-l-md md:flex`;
+const buttonClass = `flex gap-2 h-fit w-full bg-background hover:bg-accent text-[#324B4F] hover:text-[#324B4F]
+  flex-row justify-between p-0 rounded-none`;
+const buttonIndicatorClass = `w-1 h-full bg-primary rounded-l-md flex`;
 
 const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
   className = "",
@@ -29,71 +28,46 @@ const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
   endingChildren = null,
 }) => {
   return (
-    <div className={`flex p-4 md:py-0  ${className}`}>
-      <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0">
+    <div className={`flex p-0  ${className}`}>
+      <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
         <Button className={buttonClass} onClick={onClickOpening}>
-          {state === "opening" ? (
-            <span className={buttonIndicatorClassSm}></span>
-          ) : (
-            <span className={`${buttonIndicatorClassSm} bg-transparent`}></span>
-          )}
-          <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
-            <div className="font-bold text-xs text-[#324B4F] md:text-sm">
-              Opening
-            </div>
+          <div className="flex flex-row gap-3 pl-5 py-3 items-center">
+            <div className="font-bold text-[#324B4F] text-sm">Opening</div>
           </div>
           {state === "opening" ? (
-            <span className={buttonIndicatorClassMd}></span>
+            <span className={buttonIndicatorClass}></span>
           ) : (
-            <span className={`${buttonIndicatorClassMd} bg-transparent`}></span>
+            <span className={`${buttonIndicatorClass} bg-transparent`}></span>
           )}
         </Button>
         {state == "opening" ? (
-          <div className="hidden md:flex flex-col h-full">
-            {openingChildren}
-          </div>
+          <div className="flex flex-col h-full">{openingChildren}</div>
         ) : null}
         <Button className={buttonClass} onClick={onClickContents}>
-          {state === "contents" ? (
-            <span className={buttonIndicatorClassSm}></span>
-          ) : (
-            <span className={`${buttonIndicatorClassSm} bg-transparent`}></span>
-          )}
-          <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
-            <div className="font-bold text-xs text-[#324B4F] md:text-sm">
-              Opening
-            </div>
+          <div className="flex flex-row gap-3 pl-5 py-3 items-center">
+            <div className="font-bold text-[#324B4F] text-sm">Contents</div>
           </div>
           {state === "contents" ? (
-            <span className={buttonIndicatorClassMd}></span>
+            <span className={buttonIndicatorClass}></span>
           ) : (
-            <span className={`${buttonIndicatorClassMd} bg-transparent`}></span>
+            <span className={`${buttonIndicatorClass} bg-transparent`}></span>
           )}
         </Button>
         {state == "contents" ? (
-          <div className="hidden md:flex flex-col h-full">
-            {contentsChildren}
-          </div>
+          <div className="flex flex-col h-full">{contentsChildren}</div>
         ) : null}
         <Button className={buttonClass} onClick={onClickEnding}>
-          {state === "ending" ? (
-            <span className={buttonIndicatorClassSm}></span>
-          ) : (
-            <span className={`${buttonIndicatorClassSm} bg-transparent`}></span>
-          )}
-          <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
-            <div className="font-bold text-xs text-[#324B4F] md:text-sm">
-              Opening
-            </div>
+          <div className="flex flex-row gap-3 pl-5 py-3 items-center">
+            <div className="font-bold text-[#324B4F] text-sm">Ending</div>
           </div>
           {state === "ending" ? (
-            <span className={buttonIndicatorClassMd}></span>
+            <span className={buttonIndicatorClass}></span>
           ) : (
-            <span className={`${buttonIndicatorClassMd} bg-transparent`}></span>
+            <span className={`${buttonIndicatorClass} bg-transparent`}></span>
           )}
         </Button>
         {state == "ending" ? (
-          <div className="hidden md:flex flex-col h-full">{endingChildren}</div>
+          <div className="flex flex-col h-full">{endingChildren}</div>
         ) : null}
       </Card>
     </div>
