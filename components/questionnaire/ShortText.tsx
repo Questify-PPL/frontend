@@ -205,16 +205,17 @@ export function ShortText() {
             }}
             className="pt-2"
           >
-            <input
+            <textarea
               {...(isChecked && { required: true })}
-              type="text"
               value={answerValue}
               onChange={(event) => handleInputChange(event, setAnswerValue)}
               placeholder="Type your answer here"
               style={{
                 width: `${minWidth * 0.73}px`,
+                resize: "none",
               }}
-              maxLength={30}
+              maxLength={70}
+              rows={1}
             />
           </div>
         )}
