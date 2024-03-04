@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { Switch } from "../ui/switch";
 
 export function ShortText() {
@@ -31,10 +31,28 @@ export function ShortText() {
     }
   };
 
+  const [minWidth, setMinWidth] = useState(
+    typeof window !== "undefined"
+      ? Math.min(455, window.innerWidth * 0.8)
+      : 455,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMinWidth(Math.min(455, window.innerWidth * 0.8));
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div
       style={{
-        width: "30%",
+        width: `${minWidth}px`,
         margin: "auto",
         borderColor: "#E5EEF0",
         borderWidth: "3px",
@@ -61,7 +79,7 @@ export function ShortText() {
               marginLeft: "13px",
               backgroundColor: "#D2E4E3",
               height: "30px",
-              width: "130px",
+              width: `${minWidth * 0.2857}px`,
             }}
             className="rounded-full p-2 flex flex-row items-center"
           >
@@ -88,7 +106,11 @@ export function ShortText() {
               ></div>
             </div>
             <span
-              style={{ marginLeft: "6px", color: "#1D7973" }}
+              style={{
+                marginLeft: `${minWidth > 320 ? 6 : 9}px`,
+                color: "#1D7973",
+                fontSize: `${minWidth > 430 ? 16 : minWidth > 400 ? 14 : minWidth > 365 ? 12 : 10}px`,
+              }}
               className="font-medium"
             >
               Short Text
@@ -96,7 +118,13 @@ export function ShortText() {
           </div>
           {!isRespondent && (
             <div className="ml-auto flex flex-row items-center">
-              <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <span
+                style={{
+                  fontSize: `${minWidth > 430 ? 14 : minWidth > 400 ? 12 : 10}px`,
+                  marginRight: `${minWidth > 430 ? 12 : minWidth > 400 ? 10 : 8}px`,
+                }}
+                className="text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
                 Required
               </span>
               <Switch checked={isChecked} onClick={handleCheckboxChange} />
@@ -104,13 +132,16 @@ export function ShortText() {
           )}
         </div>
         <div
-          style={{ marginLeft: "45px", fontSize: "18px" }}
+          style={{
+            marginLeft: "45px",
+            fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
+          }}
           className="font-semibold pt-2"
         >
           {isRespondent ? (
             <span
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
                 display: "inline-block",
                 wordWrap: "break-word",
               }}
@@ -124,20 +155,25 @@ export function ShortText() {
               onChange={(event) => handleInputChange(event, setQuestionValue)}
               placeholder="Your question here."
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
                 resize: "none",
               }}
               rows={1}
             />
           )}
         </div>
-        <div style={{ marginLeft: "45px", fontSize: "15px" }}>
+        <div
+          style={{
+            marginLeft: "45px",
+            fontSize: `${minWidth > 430 ? 15 : minWidth > 400 ? 14 : minWidth > 365 ? 13 : 12}px`,
+          }}
+        >
           {isRespondent ? (
             descriptionValue.length != 0 && (
               <div className="pt-2">
                 <span
                   style={{
-                    width: "345px",
+                    width: `${minWidth * 0.73}px`,
                     display: "inline-block",
                     wordWrap: "break-word",
                   }}
@@ -154,7 +190,7 @@ export function ShortText() {
               }
               placeholder="Description (optional)"
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
                 resize: "none",
               }}
               rows={1}
@@ -163,7 +199,10 @@ export function ShortText() {
         </div>
         {isRespondent && (
           <div
-            style={{ marginLeft: "45px", fontSize: "15px" }}
+            style={{
+              marginLeft: "45px",
+              fontSize: `${minWidth > 430 ? 15 : minWidth > 400 ? 14 : minWidth > 365 ? 13 : 12}px`,
+            }}
             className="pt-2"
           >
             <input
@@ -173,7 +212,7 @@ export function ShortText() {
               onChange={(event) => handleInputChange(event, setAnswerValue)}
               placeholder="Type your answer here"
               style={{
-                width: "345px",
+                width: `${minWidth * 0.73}px`,
               }}
               maxLength={30}
             />
