@@ -32,6 +32,20 @@ test("renders main feature and open the modal", async () => {
   await screen.findByText("Give the Questionnaire what it needs first :)");
 });
 
+test("open then close (cancel) the modal", async () => {
+  render(<Create />);
+
+  const createButton = screen.getByText(
+    "Create a new Questionnaire"
+  ) as HTMLButtonElement;
+  fireEvent.click(createButton);
+
+  await screen.findByText("Give the Questionnaire what it needs first :)");
+
+  const cancelButton = screen.getByText("Cancel") as HTMLButtonElement;
+  fireEvent.click(cancelButton);
+});
+
 test("fill the required create modal successfully", async () => {
   render(<Create />);
 

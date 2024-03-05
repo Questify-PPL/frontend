@@ -34,9 +34,9 @@ export default function Form() {
           onClickOpening={openOpening}
           onClickContents={openContents}
           onClickEnding={openEnding}
-          openingChildren={<div>Opening</div>}
-          contentsChildren={<div>Contents</div>}
-          endingChildren={<div>Ending</div>}
+          openingChildren={<div>Opening Children</div>}
+          contentsChildren={<div>Contents Children</div>}
+          endingChildren={<div>Ending Children</div>}
         ></FormLeftMenu>
         <div className="flex flex-col w-full h-full gap-4">
           <div className="flex flex-col w-full h-fit px-5 py-3 gap-2 bg-accent rounded-md">
