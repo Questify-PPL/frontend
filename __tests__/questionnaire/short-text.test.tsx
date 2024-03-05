@@ -86,4 +86,41 @@ describe("ShortText", () => {
 
     expect(screen.getByText("Required")).toBeInTheDocument();
   });
+
+  it("should not display error message when answer field is not empty", () => {
+    const switchButton = screen.getByText("Switch to Respondent Mode");
+    fireEvent.click(switchButton);
+
+    const answerInput = screen.getByPlaceholderText(
+      "Type your answer here",
+    ) as HTMLInputElement;
+    fireEvent.change(answerInput, { target: { value: "John" } });
+
+    expect(screen.queryByText("Answer can't be empty")).toBeNull();
+  });
+
+  it("displays error message when answer field is left empty and not required", () => {
+    const switchButton = screen.getByText("Switch to Respondent Mode");
+    fireEvent.click(switchButton);
+
+    const answerInput = screen.getByPlaceholderText(
+      "Type your answer here",
+    ) as HTMLInputElement;
+    fireEvent.change(answerInput, { target: { value: "" } });
+
+    expect(screen.queryByText("Answer can't be empty")).toBeNull();
+  });
+
+  it("displays error message when question field is left empty", () => {
+    const questionInput = screen.getByPlaceholderText(
+      "Your question here.",
+    ) as HTMLTextAreaElement;
+    fireEvent.change(questionInput, {
+      target: { value: "" },
+    });
+
+    fireEvent.blur(questionInput);
+
+    expect(screen.getByText("Question can't be empty")).toBeInTheDocument();
+  });
 });
