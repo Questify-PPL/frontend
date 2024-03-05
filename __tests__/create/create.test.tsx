@@ -32,4 +32,32 @@ test("renders main feature and open the modal", async () => {
   await screen.findByText("Give the Questionnaire what it needs first :)");
 });
 
+test("fill the required create modal successfully", async () => {
+  render(<Create />);
 
+  const createButton = screen.getByText(
+    "Create a new Questionnaire"
+  ) as HTMLButtonElement;
+  fireEvent.click(createButton);
+
+  await screen.findByText("Give the Questionnaire what it needs first :)");
+
+  expect(screen.getByText("Title")).toBeInTheDocument();
+
+  const titleInput = screen.getByPlaceholderText(
+    "Give your Questionnaire a title"
+  ) as HTMLInputElement;
+  fireEvent.change(titleInput, {
+    target: { value: "Oreo Satisfaction: User Feedback in Indonesia " },
+  });
+
+  expect(screen.getByText("Prize")).toBeInTheDocument();
+
+  const prizeInput = screen.getByPlaceholderText(
+    "Decide your prize Credits"
+  ) as HTMLInputElement;
+  fireEvent.change(prizeInput, { target: { value: "1000" } });
+
+  expect(screen.getByText("for each responder")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("for each responder"));
+});
