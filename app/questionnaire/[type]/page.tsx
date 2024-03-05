@@ -1,4 +1,7 @@
 import { ShortText } from "@/components/questionnaire";
+import { Checkboxes } from "@/components/questions";
+import { MultipleChoice } from "@/components/questions";
+import { YesNo } from "@/components/questions";
 
 interface Props {
   params: {
@@ -13,6 +16,13 @@ export default function FirstComponentPage({ params }: Props) {
     switch (type) {
       case "short-text":
         return <ShortText />;
+      case "checkboxes":
+        return <Checkboxes />;
+      case "yesno":
+        return <YesNo />;
+      case "multiple-choice":
+        return <MultipleChoice />;
+
       // case "long-text":
       //   return <LongText />;
       // case "checkbox":
