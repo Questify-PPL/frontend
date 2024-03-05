@@ -62,7 +62,7 @@ export default function Form() {
           </div>
           <div className="flex w-full h-full bg-primary/20 rounded-md"></div>
           <div className="flex w-full h-fit">
-            <Button className="w-fit">Add Question</Button>
+            <Button className="w-fit">Desktop</Button>
           </div>
         </div>
       </div>
