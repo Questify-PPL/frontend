@@ -1,9 +1,21 @@
+import React from "react";
+import CreatorNav from "@/components/creator-side/CreatorNav";
+import HomeCard from "@/components/creator-side/HomeCard";
 import { UserDropdownMenu } from "@/components/dashboard";
 
 export default function Home() {
   return (
-    <div className="flex h-screen justify-end items-start">
+    <main className="flex flex-col h-screen w-full">
       <UserDropdownMenu />
-    </div>
+      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5">
+        <CreatorNav
+          className="absolute md:relative md:flex md:w-[20%]"
+          state="home"
+        ></CreatorNav>
+        <div className="flex flex-col w-full">
+          <HomeCard className="w-full"></HomeCard>
+        </div>
+      </div>
+    </main>
   );
 }
