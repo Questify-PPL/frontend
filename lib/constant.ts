@@ -24,3 +24,8 @@ export const BENEFIT = [
       "Experience an exquisite and user-friendly interface for both Creators and Responders.",
   },
 ];
+
+export const URL = {
+  login: `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+  profile: `${process.env.NEXT_PUBLIC_API_URL}/user/me`,
+};

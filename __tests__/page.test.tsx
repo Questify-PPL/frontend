@@ -1,10 +1,13 @@
+import Page from "@/app/page";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import Page from "@/app/page";
+import NextAuth from "./mocks/next-auth";
 
 describe("Page", () => {
-  it("renders the hero section", () => {
-    render(<Page />);
+  it("renders the hero section", async () => {
+    NextAuth().auth.mockResolvedValue({ user: null });
+
+    render(await Page());
     const text = screen.getByText(/Empower academic communities engagement/i);
     const button = screen.getByText(/Get Started/i);
 
@@ -12,14 +15,16 @@ describe("Page", () => {
     expect(button).toBeInTheDocument();
   });
 
-  it("renders the end section", () => {
-    render(<Page />);
+  it("renders the end section", async () => {
+    NextAuth().auth.mockResolvedValue({ user: null });
+    render(await Page());
     const text = screen.getByText(
       /Unlock academic success with our streamlined form builder and distributor/i,
     );
-    const button = screen.getByText(/Sign Up/i);
+    const buttons = await screen.findAllByText(/Sign Up/i);
+
+    expect(buttons.length).toBeGreaterThan(0);
 
     expect(text).toBeInTheDocument();
-    expect(button).toBeInTheDocument();
   });
 });

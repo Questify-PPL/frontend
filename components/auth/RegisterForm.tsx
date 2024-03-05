@@ -7,6 +7,9 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { RegisterSchema } from "@/lib/schema";
 import { instance } from "@/lib/config";
+import { useToast } from "../ui/use-toast";
+import { ReloadIcon } from "../common";
+import { useState } from "react";
 
 export function RegisterForm() {
   const {
@@ -22,15 +25,38 @@ export function RegisterForm() {
     },
   });
 
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   async function onSubmit(data: RegisterSchema) {
-    const res = await instance.post("/auth/register", data);
+    setLoading(true);
+    await instance
+      .post("/auth/register", data)
+      .catch((err) => {
+        if (!err.response) {
+          toast({
+            title: "Error",
+            description: "Network Error",
+            variant: "destructive",
+          });
+          return;
+        }
 
-    console.log(res);
+        toast({
+          title: "Error",
+          description: err.response.data.message,
+          variant: "destructive",
+        });
+      })
+      .then((res) => {
+        if (!res) return;
 
-    const dt = res.data;
-
-    console.log(dt);
-    return dt;
+        toast({
+          title: "Success",
+          description: res.data.message,
+        });
+      });
+    setLoading(false);
   }
 
   return (
@@ -83,8 +109,15 @@ export function RegisterForm() {
           </span>
         )}
       </div>
-      <Button type="submit" className="bg-primary text-white">
-        Sign Up
+      <Button
+        type="submit"
+        className="bg-primary text-white"
+        disabled={loading}
+      >
+        {loading && (
+          <ReloadIcon className="mr-2 h-4 w-4 animate-spin fill-white" />
+        )}
+        {!loading && <>{"Sign Up"}</>}
       </Button>
     </form>
   );
