@@ -20,3 +20,16 @@ test("renders navigation pane with no problem", () => {
   expect(screen.getByText("Create")).toBeInTheDocument();
   expect(screen.getByText("Responses")).toBeInTheDocument();
 });
+
+test("renders main feature and open the modal", async () => {
+  render(<Create />);
+
+  const createButton = screen.getByText(
+    "Create a new Questionnaire"
+  ) as HTMLButtonElement;
+  fireEvent.click(createButton);
+
+  await screen.findByText("Give the Questionnaire what it needs first :)");
+});
+
+
