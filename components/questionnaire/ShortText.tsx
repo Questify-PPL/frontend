@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, FocusEvent, useState, useEffect } from "react";
 import { Switch } from "../ui/switch";
 
 export function ShortText() {
@@ -9,6 +9,8 @@ export function ShortText() {
   const [answerValue, setAnswerValue] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isRespondent, setIsRespondent] = useState(false); // TO BE DELETED
+  const [questionError, setQuestionError] = useState("");
+  const [answerError, setAnswerError] = useState("");
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -20,14 +22,32 @@ export function ShortText() {
   };
 
   const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: ChangeEvent<HTMLTextAreaElement> | FocusEvent<HTMLTextAreaElement>,
     setValue: React.Dispatch<React.SetStateAction<string>>,
+    field: string = "",
+    required: boolean = false,
   ) => {
-    const { value } = event.target;
+    const target = event.target as HTMLTextAreaElement;
+    const { value, tagName } = target;
     setValue(value);
-    if (event.target.tagName === "TEXTAREA") {
-      event.target.style.height = "auto";
-      event.target.style.height = `${event.target.scrollHeight}px`;
+
+    if (tagName === "TEXTAREA") {
+      target.style.height = "auto";
+      target.style.height = `${target.scrollHeight}px`;
+    }
+
+    if (required && value.trim() === "") {
+      if (field === "Question") {
+        setQuestionError(`${field} can't be empty`);
+      } else if (field === "Answer") {
+        setAnswerError(`${field} can't be empty`);
+      }
+    } else {
+      if (field === "Question") {
+        setQuestionError("");
+      } else if (field === "Answer") {
+        setAnswerError("");
+      }
     }
   };
 
@@ -136,7 +156,7 @@ export function ShortText() {
             marginLeft: "45px",
             fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
           }}
-          className="font-semibold pt-2"
+          className="pt-2"
         >
           {isRespondent ? (
             <span
@@ -145,21 +165,39 @@ export function ShortText() {
                 display: "inline-block",
                 wordWrap: "break-word",
               }}
+              className="font-semibold"
             >
               {questionValue}
             </span>
           ) : (
             <textarea
-              required
               value={questionValue}
-              onChange={(event) => handleInputChange(event, setQuestionValue)}
+              onChange={(event) =>
+                handleInputChange(event, setQuestionValue, "Question", true)
+              }
+              onBlur={(event) =>
+                handleInputChange(event, setQuestionValue, "Question", true)
+              }
               placeholder="Your question here."
               style={{
                 width: `${minWidth * 0.73}px`,
                 resize: "none",
               }}
+              className="font-semibold"
               rows={1}
             />
+          )}
+          {questionError && !isRespondent && (
+            <div className="pb-2">
+              <span
+                style={{
+                  fontSize: `${minWidth > 430 ? 14 : minWidth > 400 ? 13 : minWidth > 365 ? 12 : 11}px`,
+                }}
+                className="text-red-500 my-1"
+              >
+                {questionError}
+              </span>
+            </div>
           )}
         </div>
         <div
@@ -206,9 +244,13 @@ export function ShortText() {
             className="pt-2"
           >
             <textarea
-              {...(isChecked && { required: true })}
               value={answerValue}
-              onChange={(event) => handleInputChange(event, setAnswerValue)}
+              onChange={(event) =>
+                handleInputChange(event, setAnswerValue, "Answer", isChecked)
+              }
+              onBlur={(event) =>
+                handleInputChange(event, setAnswerValue, "Answer", isChecked)
+              }
               placeholder="Type your answer here"
               style={{
                 width: `${minWidth * 0.73}px`,
@@ -217,6 +259,16 @@ export function ShortText() {
               maxLength={70}
               rows={1}
             />
+            {answerError && isRespondent && (
+              <span
+                style={{
+                  fontSize: `${minWidth > 430 ? 14 : minWidth > 400 ? 13 : minWidth > 365 ? 12 : 11}px`,
+                }}
+                className="text-red-500 my-1"
+              >
+                {answerError}
+              </span>
+            )}
           </div>
         )}
       </div>
