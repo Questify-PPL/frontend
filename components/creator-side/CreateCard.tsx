@@ -53,7 +53,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
         <div className="flex flex-col gap-4 w-full">
           <div className="flex flex-col justify-center items-center">
             <span className="flex font-extrabold text-xl">
-              Create New Questionnaire
+              Create a New Questionnaire
             </span>
             <span className="flex font-regular text-sm text-primary/40">
               Give the Questionnaire what it needs first :)
@@ -73,7 +73,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
             <div className="flex flex-row items-center gap-3 pr-3">
               <Input
                 type="text"
-                id="title"
+                id="prize"
                 placeholder="Decide your prize Credits"
                 className={`rounded-[6px] border-[1px] border-solid`}
               />

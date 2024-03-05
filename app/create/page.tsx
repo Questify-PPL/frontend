@@ -22,8 +22,8 @@ export default function Create() {
           state="action"
         ></CreatorNav>
         <div className="flex flex-col w-full">
-          <Button className="w-fit" onClick={OpenCreateCard}>
-            Create New Questionnaire
+          <Button className="flex w-fit" onClick={OpenCreateCard}>
+            Create a new Questionnaire
           </Button>
         </div>
       </div>
