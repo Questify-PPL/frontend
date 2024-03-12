@@ -19,7 +19,7 @@ export function MultipleChoice() {
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    setValue: React.Dispatch<React.SetStateAction<string>>,
+    setValue: React.Dispatch<React.SetStateAction<string>>
   ) => {
     const { value } = event.target;
     setValue(value);
@@ -60,7 +60,7 @@ export function MultipleChoice() {
 
   const handleInputClick = (index: number) => {
     if (index === options.length - 1) {
-      const newValue = lastOptionRef.current?.value || "";
+      // const newValue = lastOptionRef.current?.value || "";
       addNewOption();
     }
   };
@@ -90,9 +90,7 @@ export function MultipleChoice() {
   );
 
   const [minWidth, setMinWidth] = useState(
-    typeof window !== "undefined"
-      ? Math.min(455, window.innerWidth * 0.8)
-      : 455,
+    typeof window !== "undefined" ? Math.min(455, window.innerWidth * 0.8) : 455
   );
 
   useEffect(() => {
