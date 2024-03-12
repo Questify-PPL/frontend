@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Questify",
@@ -54,11 +55,14 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          hauoraFont.variable,
+          hauoraFont.variable
         )}
       >
         {children}
         <Toaster />
+        <GoogleAnalytics
+          gaId={process.env.NEXT_PUBLIC_MEASUREMENT_ID as string}
+        />
       </body>
     </html>
   );
