@@ -1,71 +1,96 @@
 "use client";
 
-import React from "react";
-import FormLeftMenu from "@/components/creator-side/FormLeftMenu";
+import React, { useState } from "react";
+import FormLeftMenu from "@/components/creator-side/create/FormLeftMenu";
+import FormRightMenu from "@/components/creator-side/create/FormRightMenu";
+import FormUpperMenu from "@/components/creator-side/create/FormUpperMenu";
+import FormLowerMenu from "@/components/creator-side/create/FormLowerMenu";
+import QuestionToggle from "@/components/creator-side/create/QuestionToggle";
 import { UserDropdownMenu } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
-import { LuChevronLeft, LuSave } from "react-icons/lu";
 
-export default function Form() {
-  const [menuState, setMenuState] = React.useState("opening");
+const Form = () => {
+  const [leftMenuState, setLeftMenuState] = useState("opening");
+  const [rightMenuState, setRightMenuState] = useState("question");
+  const [isMobile, setIsMobile] = useState(true);
 
-  const openOpening = () => {
-    console.log("clicked opening");
-    setMenuState("opening");
+  const handleLeftMenuChange = (menuState: React.SetStateAction<string>) => {
+    setLeftMenuState(menuState);
   };
 
-  const openContents = () => {
-    console.log("clicked contents");
-    setMenuState("contents");
+  const handleRightMenuChange = (menuState: React.SetStateAction<string>) => {
+    setRightMenuState(menuState);
   };
 
-  const openEnding = () => {
-    console.log("clicked ending");
-    setMenuState("ending");
+  const handleBack = () => {
+    console.log("Back");
+  };
+
+  const handleSave = () => {
+    console.log("Save");
+  };
+
+  const handleMobileToggle = () => {
+    setIsMobile(!isMobile);
   };
 
   return (
     <main className="flex flex-col h-screen w-full">
       <UserDropdownMenu />
+
       <div className="flex flex-row w-full h-full gap-4 p-5">
         <FormLeftMenu
-          className="absolute md:relative md:flex md:w-[20%]"
-          state={menuState as "opening" | "contents" | "ending" | undefined}
-          onClickOpening={openOpening}
-          onClickContents={openContents}
-          onClickEnding={openEnding}
-          openingChildren={<div>Opening Children</div>}
+          className="hidden md:flex md:w-[20%]"
+          state={leftMenuState}
+          onClickOpening={() => handleLeftMenuChange("opening")}
+          onClickContents={() => handleLeftMenuChange("contents")}
+          onClickEnding={() => handleLeftMenuChange("ending")}
+          openingChildren={
+            <div className="flex flex-col w-full">
+              <QuestionToggle
+                isActive={false}
+                numbering={1}
+                questionType="Short Text"
+                question="What's your favorite Oreo flavor?"
+              ></QuestionToggle>
+              <QuestionToggle
+                isActive={true}
+                numbering={2}
+                questionType="Picture Choice"
+                question="What's your favorite Oreo packaging?"
+              ></QuestionToggle>
+            </div>
+          }
           contentsChildren={<div>Contents Children</div>}
           endingChildren={<div>Ending Children</div>}
-        ></FormLeftMenu>
-        <div className="flex flex-col w-full h-full gap-4">
-          <div className="flex flex-col w-full h-fit px-5 py-3 gap-2 bg-accent rounded-md">
-            <div className="flex flex-row justify-between">
-              <Button
-                variant="secondary"
-                className="p-0 gap-1 h-fit text-[#95B0B4]"
-              >
-                <LuChevronLeft className="w-4 h-4" />
-                Back
-              </Button>
-              <Button
-                variant="secondary"
-                className="p-0 gap-1 h-fit text-[#95B0B4]"
-              >
-                <LuSave className="w-4 h-4" />
-                Save as Draft
-              </Button>
-            </div>
-            <span className="flex text-primary font-semibold">
-              Oreo Satisfaction: User Feedback in Indonesia
-            </span>
-          </div>
-          <div className="flex w-full h-full bg-primary/20 rounded-md"></div>
-          <div className="flex w-full h-fit">
-            <Button className="w-fit">Desktop</Button>
-          </div>
+        />
+
+        <div className="flex flex-col w-[60%] h-full gap-4">
+          <FormUpperMenu
+            onBack={handleBack}
+            onSave={handleSave}
+            QRETitle="Oreo Satisfaction: User Feedback in Indonesia"
+          />
+          <span className="flex bg-accent w-full h-full rounded-md"></span>
+          <FormLowerMenu onChange={handleMobileToggle} isMobile={isMobile} />
         </div>
+
+        <FormRightMenu
+          className="hidden md:flex md:w-[20%]"
+          state={rightMenuState}
+          onClickQuestion={() => handleRightMenuChange("question")}
+          onClickDesign={() => handleRightMenuChange("design")}
+          onClickLogic={() => handleRightMenuChange("logic")}
+          onClickPreview={() => handleRightMenuChange("preview")}
+          onClickPublish={() => handleRightMenuChange("publish")}
+          questionChildren={<div>Question Children</div>}
+          designChildren={<div>Design Children</div>}
+          logicChildren={<div>Logic Children</div>}
+          previewChildren={<div>Preview Children</div>}
+          publishChildren={<div>Publish Children</div>}
+        />
       </div>
     </main>
   );
-}
+};
+
+export default Form;

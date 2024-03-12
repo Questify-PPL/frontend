@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { Checkboxes } from "@/components/questions";
+import { RadioButton } from "@/components/questions";
 import { QuestionnaireProvider } from "@/lib/provider";
 
-describe("Checkbox component", () => {
+describe("RadioButton component", () => {
   const mockQuestion = {
     numbering: 1,
     questionId: 1,
@@ -18,7 +18,7 @@ describe("Checkbox component", () => {
   it("renders correctly with provided props", () => {
     render(
       <QuestionnaireProvider>
-        <Checkboxes {...mockQuestion} role="RESPONDENT" />,
+        <RadioButton {...mockQuestion} role="RESPONDENT" />,
       </QuestionnaireProvider>,
     );
 
@@ -29,26 +29,25 @@ describe("Checkbox component", () => {
   it("allows changing the question", () => {
     render(
       <QuestionnaireProvider>
-        <Checkboxes {...mockQuestion} role="RESPONDENT" />,
+        <RadioButton {...mockQuestion} role="RESPONDENT" />,
       </QuestionnaireProvider>,
     );
-
     const questionSpan = screen.getByText("What is your name?");
-    questionSpan.textContent = "What is your age?";
+    questionSpan.textContent = "What is your age?"; // Change the text content directly
 
-    expect(questionSpan.textContent).toBe("What is your age?");
+    expect(questionSpan.textContent).toBe("What is your age?"); // Assert the new text content
   });
 
   it("allows changing the description", () => {
     render(
       <QuestionnaireProvider>
-        <Checkboxes {...mockQuestion} role="RESPONDENT" />,
+        <RadioButton {...mockQuestion} role="RESPONDENT" />,
       </QuestionnaireProvider>,
     );
 
     const descriptionSpan = screen.getByText("Please provide your name.");
-    descriptionSpan.textContent = "Please provide your age.";
+    descriptionSpan.textContent = "Please provide your age."; // Change the text content directly
 
-    expect(descriptionSpan.textContent).toBe("Please provide your age.");
+    expect(descriptionSpan.textContent).toBe("Please provide your age."); // Assert the new text content
   });
 });

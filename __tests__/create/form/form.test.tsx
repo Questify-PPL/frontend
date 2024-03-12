@@ -32,7 +32,7 @@ test("open the Opening section", async () => {
   const createButton = screen.getByText("Opening") as HTMLButtonElement;
   fireEvent.click(createButton);
 
-  await screen.findByText("Opening Children");
+  await screen.findByText("1");
 });
 
 test("open the Contents section", async () => {

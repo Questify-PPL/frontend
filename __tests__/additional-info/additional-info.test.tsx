@@ -16,8 +16,8 @@ test("renders the first step of the form", () => {
   expect(screen.getByText("Opening")).toBeInTheDocument();
   expect(
     screen.getByText(
-      "Greetings! Welcome to Questify. Let's get you set up swiftly; it'll only take a few seconds to ensure you're ready to go.",
-    ),
+      "Greetings! Welcome to Questify. Let's get you set up swiftly; it'll only take a few seconds to ensure you're ready to go."
+    )
   ).toBeInTheDocument();
 
   expect(screen.getByText("Start")).toBeInTheDocument();
@@ -32,7 +32,7 @@ test("allows user to progress through the form steps", async () => {
   expect(screen.getByText("Fill with your full name.")).toBeInTheDocument();
 
   const nameInput = screen.getByPlaceholderText(
-    "Your answer here",
+    "Your answer here"
   ) as HTMLInputElement;
   fireEvent.change(nameInput, { target: { value: "Jane Doe" } });
   fireEvent.click(screen.getByText("Next"));
@@ -51,7 +51,7 @@ test("allows user to progress through the form steps", async () => {
 
   expect(screen.getByText("Phone Number")).toBeInTheDocument();
   const phoneNumberInput = screen.getByPlaceholderText(
-    "Your number here",
+    "Your number here"
   ) as HTMLInputElement;
   fireEvent.change(phoneNumberInput, { target: { value: "1234567890" } });
 
@@ -61,7 +61,7 @@ test("allows user to progress through the form steps", async () => {
 
   expect(screen.getByText("Ending")).toBeInTheDocument();
   expect(
-    screen.getByText("All set! Let's jump into the workspace."),
+    screen.getByText("All set! Let's jump into the workspace.")
   ).toBeInTheDocument();
   expect(screen.getByText("Finish")).toBeInTheDocument();
 });

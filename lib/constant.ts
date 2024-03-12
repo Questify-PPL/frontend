@@ -1,3 +1,5 @@
+import { QuestionnaireItem, Answer } from "@/lib/context";
+
 export const BENEFIT = [
   {
     src: "https://res.cloudinary.com/dicmrrmdr/image/upload/f_auto,q_auto/v1/questify/fgdt8bbziw7cm8mhqgwn",
@@ -30,3 +32,90 @@ export const URL = {
   profile: `${process.env.NEXT_PUBLIC_API_URL}/user/me`,
   updateProfile: `${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`,
 };
+
+export const QUESTIONNAIRE: QuestionnaireItem[] = [
+  {
+    type: "SECTION",
+    sectionId: 1,
+    sectionName: "Section 1",
+    sectionDescription: "This is the first section of the questionnaire",
+    questions: [
+      {
+        questionId: 1,
+        questionType: "CHECKBOX",
+        questionTypeName: "Multiple Choice",
+        isRequired: false,
+        question: "What is your favorite programming language?",
+        description: "Choose one from the options below",
+        choice: [],
+      },
+      {
+        questionId: 2,
+        questionType: "TEXT",
+        questionTypeName: "Short Text",
+        isRequired: false,
+        question: "question2",
+        description: "desc2",
+      },
+      {
+        questionId: 3,
+        questionType: "RADIO",
+        questionTypeName: "Multiple Choice",
+        isRequired: false,
+        question: "Are you enjoying this tutorial?",
+        description: "",
+      },
+    ],
+  },
+  {
+    type: "SECTION",
+    sectionId: 2,
+    sectionName: "Section 2",
+    sectionDescription: "This is the second section of the questionnaire",
+    questions: [
+      {
+        questionId: 4,
+        questionType: "CHECKBOX",
+        questionTypeName: "Multiple Choice",
+        isRequired: false,
+        question: "What is your favorite programming language?",
+        description: "Choose one from the options below",
+        choice: [],
+      },
+      {
+        questionId: 5,
+        questionType: "TEXT",
+        questionTypeName: "Short Text",
+        isRequired: false,
+        question: "question5",
+        description: "desc5",
+      },
+    ],
+  },
+  {
+    type: "DEFAULT",
+    question: {
+      questionId: 6,
+      questionType: "TEXT",
+      questionTypeName: "Short Text",
+      isRequired: false,
+      question: "question6",
+      description: "desc6",
+    },
+  },
+];
+
+export const ANSWERS: Answer[] = [
+  {
+    questionId: 2,
+    answer: "answer2",
+  },
+  {
+    questionId: 5,
+    answer: "answer5",
+  },
+  {
+    questionId: 6,
+    answer: "answer6",
+  },
+];
