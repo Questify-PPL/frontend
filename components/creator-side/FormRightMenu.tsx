@@ -23,10 +23,10 @@ const FormRightMenu: React.FC<FormRightMenuProps> = ({
   state = "opening",
   onClickOpening = () => {},
   openingChildren = null,
-  onClickContents = () => {},
-  contentsChildren = null,
-  onClickEnding = () => {},
-  endingChildren = null,
+  // onClickContents = () => {},
+  // contentsChildren = null,
+  // onClickEnding = () => {},
+  // endingChildren = null,
 }) => {
   return (
     <div className={`flex p-4 md:py-0  ${className}`}>
