@@ -57,6 +57,12 @@ export async function changeRole(role: UserRole) {
   }
 }
 
+export async function getCurrentSession() {
+  const session = (await auth()) as Session;
+
+  return session;
+}
+
 export async function updateProfile(
   prevState: UpdateState,
   formData: FormData,

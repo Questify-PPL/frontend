@@ -1,4 +1,4 @@
-export * from "./SLText";
+export * from "./Text";
 export * from "./Checkboxes";
-export * from "./MultipleChoice";
-export * from "./YesNo";
+export * from "./RadioButton";
+export * from "./Questionnaire";

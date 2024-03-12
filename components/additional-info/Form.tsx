@@ -7,12 +7,13 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import Terminus from "@/components/respondent-side/Terminus";
-import Question from "@/components/respondent-side/Question";
-import QuestionLayout from "@/components/respondent-side/QuestionLayout";
+import QuestionBox from "@/components/respondent-side/QuestionBox";
+import QuestionLayout from "@/components/questions/QuestionLayout";
 import { LuCheck, LuChevronRight, LuCheckCheck } from "react-icons/lu";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AdditionalInfo, FieldName } from "@/lib/schema/additional-info.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import QuestionNum from "../questions/QuestionNum";
 
 const steps = [
   {
@@ -80,7 +81,7 @@ const Form = () => {
     >
       {currentStep == 0 && (
         <Terminus
-          terminusQRETitle="User Additional Information"
+          QRETitle="User Additional Information"
           terminusImage={
             <Image
               src="/assets/Questify.svg"
@@ -99,8 +100,8 @@ const Form = () => {
       )}
 
       {currentStep === 1 && (
-        <Question
-          questionQRETitle="User Additional Information"
+        <QuestionBox
+          QRETitle="User Additional Information"
           questionImage={
             <Image
               src="/assets/Questify.svg"
@@ -109,33 +110,36 @@ const Form = () => {
               height={16}
             />
           }
-          questionSectionTitle="Question 1"
-          required={true}
+          questionNum={
+            <QuestionNum
+              isRequired={true}
+              questionNum={currentStep}
+              isSection={false}
+              sectionText="This section is made to add a personal touch to your account."
+            />
+          }
           questions={
-            <div className="flex flex-col gap-8 text-base text-primary w-full justify-start ">
-              <div className="flex flex-col gap-1 w-full justify-start">
-                <div className="font-semibold text-lg text-black">
-                  What&apos;s your name?
+            <QuestionLayout
+              role="RESPONDENT"
+              question="What's your name?"
+              description="Fill with your full name."
+              answer={
+                <div className="flex flex-col gap-0.5 w-full">
+                  <Input
+                    type="text"
+                    placeholder="Your answer here"
+                    {...register("name")}
+                    className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
+                  />
+                  <span className="w-full h-0.5 bg-primary/40"></span>
+                  {errors.name && (
+                    <div className="text-red-500 font-normal text-xs mt-0.5">
+                      {errors.name.message}
+                    </div>
+                  )}
                 </div>
-                <div className="font-normal text-xs text-primary/70">
-                  Fill with your full name.
-                </div>
-              </div>
-              <div className="flex flex-col gap-0.5 w-full h-fit">
-                <Input
-                  type="text"
-                  placeholder="Your answer here"
-                  {...register("name")}
-                  className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
-                />
-                <span className="w-full h-0.5 bg-primary/40"></span>
-                {errors.name && (
-                  <div className="text-red-500 font-normal text-xs mt-0.5">
-                    {errors.name.message}
-                  </div>
-                )}
-              </div>
-            </div>
+              }
+            ></QuestionLayout>
           }
           prevButton={prev}
           nextButton={next}
@@ -145,8 +149,8 @@ const Form = () => {
       )}
 
       {currentStep == 2 && (
-        <Question
-          questionQRETitle="User Additional Information"
+        <QuestionBox
+          QRETitle="User Additional Information"
           questionImage={
             <Image
               src="/assets/Questify.svg"
@@ -155,11 +159,17 @@ const Form = () => {
               height={16}
             />
           }
-          questionSectionTitle="Question 2"
-          questionSectionText="This section is made to add a personal touch to your account."
+          questionNum={
+            <QuestionNum
+              questionNum={currentStep}
+              isSection={false}
+              sectionText="This section is made to add a personal touch to your account."
+            />
+          }
           questions={
             <div className="flex flex-col gap-4 w-full">
               <QuestionLayout
+                role="RESPONDENT"
                 numbering={1}
                 required={true}
                 question="What's your gender?"
@@ -202,6 +212,7 @@ const Form = () => {
                 }
               ></QuestionLayout>
               <QuestionLayout
+                role="RESPONDENT"
                 numbering={2}
                 question="When were you born?"
                 answer={
@@ -221,6 +232,7 @@ const Form = () => {
                 }
               ></QuestionLayout>
               <QuestionLayout
+                role="RESPONDENT"
                 numbering={3}
                 question="Phone Number"
                 answer={
@@ -250,7 +262,7 @@ const Form = () => {
 
       {currentStep === 3 && (
         <Terminus
-          terminusQRETitle="User Additional Information"
+          QRETitle="User Additional Information"
           terminusImage={
             <Image
               src="/assets/Questify.svg"

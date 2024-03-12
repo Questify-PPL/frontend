@@ -66,7 +66,7 @@ const QuestionaireJoinForm = () => {
     if (currentSelection.includes(edition)) {
       setValue(
         "oreoEditions",
-        currentSelection.filter((item) => item !== edition)
+        currentSelection.filter((item) => item !== edition),
       );
     } else {
       setValue("oreoEditions", [...currentSelection, edition]);
@@ -107,7 +107,7 @@ const QuestionaireJoinForm = () => {
       >
         {currentStep === 0 && (
           <Terminus
-            terminusQRETitle="Oreo Satisfaction: User Feedback in Indonesia"
+            QRETitle="Oreo Satisfaction: User Feedback in Indonesia"
             terminusSectionTitle="Opening"
             terminusText="Hello! I'm Ruben. I'm a Scientist at Oreo. Through this questionnaire I'd like to know consumer's preferences for Oreo flavors and packaging."
             buttonClickHandler={next}
@@ -266,7 +266,7 @@ const QuestionaireJoinForm = () => {
 
         {currentStep === 3 && (
           <Terminus
-            terminusQRETitle="Oreo Satisfaction: User Feedback in Indonesia"
+            QRETitle="Oreo Satisfaction: User Feedback in Indonesia"
             terminusSectionTitle="Ending"
             terminusText="Thank you for participating! Your insights are valuable. I hope you don't mind joining future questionnaires."
             buttonClickHandler={next}
