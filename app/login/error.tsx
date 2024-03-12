@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 
 export default function ErrorPage({
   error,
-  reset,
 }: Readonly<{
   error: Error & { digest?: string };
-  reset: () => void;
 }>) {
   const router = useRouter();
 

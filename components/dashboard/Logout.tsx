@@ -1,6 +1,6 @@
-import { logout } from "@/lib/action/authenticate";
+import { logout } from "@/lib/action/user";
 
-export function Logout({ className }: Readonly<{ className?: string }>) {
+export function Logout() {
   return (
     <form className="flex flex-1" action={logout}>
       <button type="submit" className="p-[6px] flex-1 text-left">

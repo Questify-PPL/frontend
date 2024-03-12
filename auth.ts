@@ -68,7 +68,7 @@ export const authCredentials = {
   },
 };
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   providers: [Credentials(authCredentials)],
 });

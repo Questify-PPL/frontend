@@ -28,4 +28,5 @@ export const BENEFIT = [
 export const URL = {
   login: `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
   profile: `${process.env.NEXT_PUBLIC_API_URL}/user/me`,
+  updateProfile: `${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`,
 };
