@@ -17,7 +17,9 @@ export function Questionnaire() {
     async function fetchRole() {
       const session = await getCurrentSession();
       setCurrentRole(
-        session && session.user.activeRole === UserRoleEnum.Creator ? "CREATOR" : "RESPONDENT",
+        session && session.user.activeRole === UserRoleEnum.Creator
+          ? "CREATOR"
+          : "RESPONDENT",
       );
     }
     fetchRole();

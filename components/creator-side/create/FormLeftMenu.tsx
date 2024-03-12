@@ -21,7 +21,7 @@ const childrenClass = `flex flex-col h-full gap-4 px-5 py-4 items-center`;
 const renderButton = (
   label: string,
   onClick: () => void,
-  isActive: boolean
+  isActive: boolean,
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     <div className="flex flex-row gap-3 pl-5 py-3 items-center">
