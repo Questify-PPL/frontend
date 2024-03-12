@@ -25,7 +25,7 @@ test("renders main feature and open the modal", async () => {
   render(<Create />);
 
   const createButton = screen.getByText(
-    "Create a new Questionnaire"
+    "Create a new Questionnaire",
   ) as HTMLButtonElement;
   fireEvent.click(createButton);
 
@@ -36,7 +36,7 @@ test("open then close (cancel) the modal", async () => {
   render(<Create />);
 
   const createButton = screen.getByText(
-    "Create a new Questionnaire"
+    "Create a new Questionnaire",
   ) as HTMLButtonElement;
   fireEvent.click(createButton);
 
@@ -50,7 +50,7 @@ test("fill the required create modal successfully", async () => {
   render(<Create />);
 
   const createButton = screen.getByText(
-    "Create a new Questionnaire"
+    "Create a new Questionnaire",
   ) as HTMLButtonElement;
   fireEvent.click(createButton);
 
@@ -59,7 +59,7 @@ test("fill the required create modal successfully", async () => {
   expect(screen.getByText("Title")).toBeInTheDocument();
 
   const titleInput = screen.getByPlaceholderText(
-    "Give your Questionnaire a title"
+    "Give your Questionnaire a title",
   ) as HTMLInputElement;
   fireEvent.change(titleInput, {
     target: { value: "Oreo Satisfaction: User Feedback in Indonesia " },
@@ -68,7 +68,7 @@ test("fill the required create modal successfully", async () => {
   expect(screen.getByText("Prize")).toBeInTheDocument();
 
   const prizeInput = screen.getByPlaceholderText(
-    "Decide your prize Credits"
+    "Decide your prize Credits",
   ) as HTMLInputElement;
   fireEvent.change(prizeInput, { target: { value: "1000" } });
 

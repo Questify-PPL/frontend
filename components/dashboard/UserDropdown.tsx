@@ -8,21 +8,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import Image from "next/image";
 import { Logout } from "./Logout";
-import { LuUser } from "react-icons/lu";
+import { LuUserCircle2 } from "react-icons/lu";
+import Link from "next/link";
 
 export function UserDropdownMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <LuUser width={22} height={22} />
+        <LuUserCircle2 className="w-[22px] h-[22px]" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent
+        className="w-56"
+        sideOffset={8}
+        align="end"
+        alignOffset={-10}
+      >
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <Link href="/profile">
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="p-0">

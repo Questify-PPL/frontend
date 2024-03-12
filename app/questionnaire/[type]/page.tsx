@@ -1,4 +1,9 @@
-import { SLText, Checkboxes, MultipleChoice, YesNo } from "@/components/questions";
+import {
+  SLText,
+  Checkboxes,
+  MultipleChoice,
+  YesNo,
+} from "@/components/questions";
 
 interface Props {
   readonly params: {

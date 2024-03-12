@@ -107,7 +107,6 @@ export function MultipleChoice() {
     };
   }, []);
 
-
   return (
     <div
       style={{
@@ -170,7 +169,6 @@ export function MultipleChoice() {
                 color: "#E7328C",
                 fontSize: `${minWidth > 430 ? 12 : minWidth > 400 ? 10 : minWidth > 365 ? 12 : 10}px`,
               }}
-              
               className="font-medium"
             >
               Multiple Choice
@@ -185,7 +183,6 @@ export function MultipleChoice() {
                 }}
                 className="text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-
                 Required
               </span>
               <Switch checked={isChecked} onClick={handleCheckboxChange} />
@@ -197,7 +194,6 @@ export function MultipleChoice() {
             marginLeft: "45px",
             fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
           }}
-          
           className="font-semibold pt-2"
         >
           {isRespondent ? (
@@ -230,7 +226,6 @@ export function MultipleChoice() {
             fontSize: `${minWidth > 430 ? 15 : minWidth > 400 ? 14 : minWidth > 365 ? 13 : 12}px`,
           }}
         >
-
           {isRespondent ? (
             descriptionValue.length != 0 && (
               <div className="pt-2">
@@ -272,7 +267,7 @@ export function MultipleChoice() {
                 checked={index === selectedOptionIndex} // Set the checked state
               />
               <input
-                style={{ borderBottom: "none", width: '170px' }}
+                style={{ borderBottom: "none", width: "170px" }}
                 type="text"
                 value={option}
                 placeholder={`Option ${index + 1}`}

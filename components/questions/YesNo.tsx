@@ -54,7 +54,6 @@ export function YesNo() {
     };
   }, []);
 
-
   return (
     <div
       style={{
@@ -117,7 +116,6 @@ export function YesNo() {
                 color: "#E7328C",
                 fontSize: `${minWidth > 430 ? 16 : minWidth > 400 ? 16 : minWidth > 365 ? 12 : 12}px`,
               }}
-              
               className="font-medium"
             >
               Yes / No
@@ -132,7 +130,6 @@ export function YesNo() {
                 }}
                 className="text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-
                 Required
               </span>
               <Switch checked={isChecked} onClick={handleCheckboxChange} />
@@ -144,7 +141,6 @@ export function YesNo() {
             marginLeft: "45px",
             fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
           }}
-          
           className="font-semibold pt-2"
         >
           {isRespondent ? (

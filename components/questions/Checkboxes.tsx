@@ -85,7 +85,6 @@ export function Checkboxes() {
     };
   }, []);
 
-
   const checkboxTemplate = (
     <div key="template" className="flex items-center self-stretch gap-2 ml-6">
       <input
@@ -166,7 +165,6 @@ export function Checkboxes() {
                 color: "#E7328C",
                 fontSize: `${minWidth > 430 ? 16 : minWidth > 400 ? 14 : minWidth > 365 ? 12 : 10}px`,
               }}
-              
               className="font-medium"
             >
               Checkboxes
@@ -181,7 +179,6 @@ export function Checkboxes() {
                 }}
                 className="text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-
                 Required
               </span>
               <Switch checked={isChecked} onClick={handleCheckboxChange} />
@@ -193,7 +190,6 @@ export function Checkboxes() {
             marginLeft: "45px",
             fontSize: `${minWidth > 430 ? 18 : minWidth > 400 ? 17 : minWidth > 365 ? 16 : 15}px`,
           }}
-          
           className="font-semibold pt-2"
         >
           <textarea
@@ -214,7 +210,6 @@ export function Checkboxes() {
             fontSize: `${minWidth > 430 ? 15 : minWidth > 400 ? 14 : minWidth > 365 ? 13 : 12}px`,
           }}
         >
-
           <textarea
             value={descriptionValue}
             onChange={(event) => handleInputChange(event, setDescriptionValue)}

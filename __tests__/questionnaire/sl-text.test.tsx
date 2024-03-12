@@ -131,10 +131,9 @@ describe("ShortText", () => {
     const answerInput = screen.getByPlaceholderText(
       "Type your answer here",
     ) as HTMLInputElement;
-    
+
     expect(answerInput).toHaveAttribute("maxLength", "70");
   });
-  
 });
 
 describe("LongText", () => {
@@ -149,11 +148,11 @@ describe("LongText", () => {
   it("does not set maxLength when type is not short-text", () => {
     const switchButton = screen.getByText("Switch to Respondent Mode");
     fireEvent.click(switchButton);
-    
+
     const answerInput = screen.getByPlaceholderText(
       "Type your answer here",
     ) as HTMLInputElement;
-    
-    expect(answerInput).not.toHaveAttribute('maxLength');
+
+    expect(answerInput).not.toHaveAttribute("maxLength");
   });
 });

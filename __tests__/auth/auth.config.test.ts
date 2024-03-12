@@ -1,5 +1,5 @@
 import { authConfig, homepageRoute } from "@/auth.config";
-import { UserRole } from "@/lib/types/auth/user";
+import { UserRole, UserRoleEnum } from "@/lib/types/auth/user";
 import { NextURL } from "next/dist/server/web/next-url";
 import { NextRequest } from "next/server";
 
@@ -82,6 +82,7 @@ describe("authConfig", () => {
           isVerified: true,
           isBlocked: false,
           hasCompletedProfile: false,
+          accessToken: "",
         },
         expires: new Date().toISOString(),
       };
@@ -118,6 +119,7 @@ describe("authConfig", () => {
           isVerified: true,
           isBlocked: false,
           hasCompletedProfile: false,
+          accessToken: "",
         },
         expires: new Date().toISOString(),
       };
@@ -158,6 +160,7 @@ describe("authConfig", () => {
           isVerified: true,
           isBlocked: false,
           hasCompletedProfile: false,
+          accessToken: "",
         },
         expires: new Date().toISOString(),
       };
@@ -198,6 +201,7 @@ describe("authConfig", () => {
           isVerified: true,
           isBlocked: false,
           hasCompletedProfile: false,
+          accessToken: "",
         },
         expires: new Date().toISOString(),
       };
@@ -234,6 +238,44 @@ describe("authConfig", () => {
           isVerified: true,
           isBlocked: false,
           hasCompletedProfile: false,
+          accessToken: "",
+        },
+        expires: new Date().toISOString(),
+      };
+
+      expect(
+        authConfig.callbacks.authorized({
+          auth: session,
+          request: nextRequest,
+        }),
+      ).toBeFalsy();
+    });
+    it("should disallow authenticated user with invalid active role", () => {
+      const url = "https://localhost:3000/admin";
+      const nextRequest = new NextRequest(new Request(url), {});
+
+      jest
+        .spyOn(nextRequest, "nextUrl", "get")
+        .mockReturnValue(new NextURL(url));
+
+      const session = {
+        user: {
+          email: "questify@gmail.com",
+          id: "1",
+          roles: ["ADMIN", "CREATOR"] as UserRole[],
+          ssoUsername: null,
+          firstName: null,
+          lastName: null,
+          phoneNumber: null,
+          gender: null,
+          companyName: null,
+          birthDate: null,
+          credit: null,
+          isVerified: true,
+          isBlocked: false,
+          hasCompletedProfile: false,
+          activeRole: UserRoleEnum.Creator,
+          accessToken: "",
         },
         expires: new Date().toISOString(),
       };
@@ -274,12 +316,33 @@ describe("authConfig", () => {
 
       expect(returnedToken.email).toBe(user.email);
     });
+
+    it("should return updated user attribute", async () => {
+      const token = {};
+      const user = {
+        email: "questify@gmail.com",
+      };
+
+      const returnedToken = await authConfig.callbacks.jwt({
+        token: token,
+        user: user,
+        account: null,
+        trigger: "update",
+        session: {
+          user: {
+            activeRole: UserRoleEnum.Respondent,
+          },
+        },
+      });
+
+      expect(returnedToken.activeRole).toBe(UserRoleEnum.Respondent);
+    });
   });
 
   describe("session", () => {
     it("should return session", async () => {
       const session = {
-        user: { name: "", email: "", image: "" },
+        user: { name: "", email: "", image: "", id: "", roles: [] },
         expires: new Date().toISOString(),
       };
       const token = {};
@@ -294,7 +357,7 @@ describe("authConfig", () => {
 
     it("should return session with token attribute", async () => {
       const session = {
-        user: { name: "", email: "", image: "" },
+        user: { name: "", email: "", image: "", id: "", roles: [] },
         expires: new Date().toISOString(),
       };
       const token = {
@@ -309,6 +372,50 @@ describe("authConfig", () => {
 
       // @ts-ignore
       expect(returnedSession.user?.accessToken).toBe(token.accessToken);
+    });
+
+    it("should return session with respondent active role for SSO UI", async () => {
+      const session = {
+        user: { name: "", email: "", image: "", id: "UI" },
+        expires: new Date().toISOString(),
+      };
+      const token = {
+        accessToken: "token",
+      };
+
+      const returnedSession = await authConfig.callbacks.session({
+        // @ts-expect-error
+        session,
+        token,
+      });
+
+      // @ts-ignore
+      expect(returnedSession.user.activeRole).toBe(UserRoleEnum.Respondent);
+    });
+
+    it("should return session with creator active role for Creator", async () => {
+      const session = {
+        user: {
+          name: "",
+          email: "",
+          image: "",
+          id: "",
+          roles: [UserRoleEnum.Creator],
+        },
+        expires: new Date().toISOString(),
+      };
+      const token = {
+        accessToken: "token",
+      };
+
+      const returnedSession = await authConfig.callbacks.session({
+        // @ts-expect-error
+        session,
+        token,
+      });
+
+      // @ts-ignore
+      expect(returnedSession.user.activeRole).toBe(UserRoleEnum.Creator);
     });
   });
 
