@@ -9,11 +9,11 @@ import { Label } from "@/components/ui/label";
 import Terminus from "@/components/respondent-side/Terminus";
 import QuestionBox from "@/components/respondent-side/QuestionBox";
 import QuestionLayout from "@/components/questions/QuestionLayout";
+import QuestionNum from "../questions/QuestionNum";
 import { LuCheck, LuChevronRight, LuCheckCheck } from "react-icons/lu";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AdditionalInfo, FieldName } from "@/lib/schema/additional-info.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import QuestionNum from "../questions/QuestionNum";
 
 const steps = [
   {

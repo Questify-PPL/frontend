@@ -30,6 +30,8 @@ export const BENEFIT = [
 export const URL = {
   login: `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
   profile: `${process.env.NEXT_PUBLIC_API_URL}/user/me`,
+  createForm: `${process.env.NEXT_PUBLIC_API_URL}/form`,
+  getAllCreatorForm: `${process.env.NEXT_PUBLIC_API_URL}/form/creator`,
   updateProfile: `${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`,
 };
 

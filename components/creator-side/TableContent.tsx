@@ -1,6 +1,7 @@
 "use client";
 
 import { BareForm } from "@/lib/types/form.type";
+import { useRouter } from "next/navigation";
 import { LuCoins } from "react-icons/lu";
 
 export function TableContent({ form }: Readonly<{ form: BareForm }>) {
@@ -25,8 +26,17 @@ export function TableContent({ form }: Readonly<{ form: BareForm }>) {
     );
   }
 
+  const router = useRouter();
+
+  function toEdit() {
+    router.push(`/create/form/${form.id}`);
+  }
+
   return (
-    <div className="flex w-full p-3 mt-5">
+    <div
+      className="flex w-full p-3 mt-5 hover:primary/10 rounded-md"
+      onClick={toEdit}
+    >
       <div className="w-3/5 flex flex-row gap-3">
         <div className="min-w-8 h-8 bg-gray-400 rounded-md flex justify-center items-center text-white mt-2">
           {decidePhoto()}

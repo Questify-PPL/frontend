@@ -32,7 +32,7 @@ const QuestionType: React.FC<QuestionTypeProps> = ({
     switch (type) {
       case "Short Text":
       case "Long Text":
-        return "bg-[#D2E4E3] text-[#D2E4E3]";
+        return "bg-[#D2E4E3] text-[#1D7973]";
       case "Multiple Choice":
       case "Checkboxes":
       case "Picture Choice":
