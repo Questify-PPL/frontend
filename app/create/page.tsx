@@ -1,36 +1,28 @@
-"use client";
+import { auth } from "@/auth";
+import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
 
-import React from "react";
-import { useState } from "react";
-import CreatorNav from "@/components/creator-side/CreatorNav";
-import CreateCard from "@/components/creator-side/CreateCard";
-import { Button } from "@/components/ui/button";
+export default async function Create() {
+  const forms = await getCreatedForm();
 
-export default function Create() {
-  const [createCardState, setCreateCardState] = useState("hidden");
+  return <CreateWrapper forms={forms} />;
+}
 
-  const OpenCreateCard = () => {
-    const newClass = createCardState === "hidden" ? "flex" : "hidden";
-    setCreateCardState(newClass);
-  };
+async function getCreatedForm() {
+  const session = await auth();
 
-  return (
-    <main className="flex flex-col h-screen w-full">
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5">
-        <CreatorNav
-          className="absolute md:relative md:flex md:w-[20%]"
-          state="action"
-        ></CreatorNav>
-        <div className="flex flex-col w-full">
-          <Button className="flex w-fit" onClick={OpenCreateCard}>
-            Create a new Questionnaire
-          </Button>
-        </div>
-      </div>
-      <CreateCard
-        className={`${createCardState}`}
-        onCancel={OpenCreateCard}
-      ></CreateCard>
-    </main>
-  );
+  const user = session?.user;
+
+  if (!user) return [];
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/form/creator`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user?.accessToken}`,
+    },
+  });
+
+  const data = await res.json();
+
+  return data.data;
 }

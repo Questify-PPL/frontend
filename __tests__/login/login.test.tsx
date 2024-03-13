@@ -151,7 +151,7 @@ describe("SSOForm", () => {
 describe("Error Page", () => {
   it("should renders without crashing", () => {
     const error = new Error("error");
-    render(ErrorPage({ error, reset: jest.fn() }));
+    render(ErrorPage({ error }));
 
     const message = screen.getByRole("heading", {
       name: "Something went wrong!",

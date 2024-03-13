@@ -6,11 +6,14 @@ import { useFormState } from "react-dom";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export function SSOForm({ accessToken }: Readonly<{ accessToken: string }>) {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const router = useRouter();
 
-  return (
+  return !errorMessage ? (
     <form action={dispatch} className="mx-auto">
       <h1 className="sr-only">SSO Form</h1>
       <Image
@@ -28,6 +31,20 @@ export function SSOForm({ accessToken }: Readonly<{ accessToken: string }>) {
         Loading your SSO information. Hang tight, we&#39;re working on it
       </div>
     </form>
+  ) : (
+    <main className="flex h-screen flex-col items-center justify-center text-base md:text-xl px-8 py-10 md:px-10">
+      <p className="text-center font-bold text-primary text-base md:text-xl mb-4">
+        {errorMessage}
+      </p>
+      <Button
+        type="submit"
+        className="flex bg-primary text-white w-full text-xs font-bold px-[14px] md:text-sm  max-w-[330px] md:mx-auto mb-7 md:mb-8"
+        data-testid="reset"
+        onClick={() => router.replace("/")}
+      >
+        Return to Homepage
+      </Button>
+    </main>
   );
 }
 

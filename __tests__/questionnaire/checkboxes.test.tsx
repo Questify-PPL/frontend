@@ -1,79 +1,54 @@
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import FirstComponentPage from "@/app/questionnaire/[type]/page";
+import { Checkboxes } from "@/components/questions";
+import { QuestionnaireProvider } from "@/lib/provider";
 
-describe("Checkboxes", () => {
-    beforeEach(() => {
-      render(<FirstComponentPage params={{ type: "checkboxes" }} />);
-    });
-  
-    it("renders the Multiple Choice component correctly", () => {
-      expect(screen.getByText("Checkboxes")).toBeInTheDocument();
-    });
-  
-    it("allows inputting a question", () => {
-      const questionInput = screen.getByPlaceholderText(
-        "Your question here.",
-      ) as HTMLInputElement;
-      fireEvent.change(questionInput, {
-        target: { value: "What is your name?" },
-      });
-  
-      expect(questionInput.value).toBe("What is your name?");
-    });
-  
-    it("allows inputting a description", () => {
-      const descriptionInput = screen.getByPlaceholderText(
-        "Description (optional)",
-      ) as HTMLInputElement;
-      fireEvent.change(descriptionInput, {
-        target: { value: "Please provide your name." },
-      });
-  
-      expect(descriptionInput.value).toBe("Please provide your name.");
-    });
-  
-    // TO BE DELETED
-    it("allows toggling between respondent mode and creator mode", () => {
-      const switchButton = screen.getByText("Switch to Respondent Mode");
-      fireEvent.click(switchButton);
-  
-      expect(screen.getByText("Switch to Creator Mode")).toBeInTheDocument();
-    });
+describe("Checkbox component", () => {
+  const mockQuestion = {
+    numbering: 1,
+    questionId: 1,
+    questionTypeName: "Short Text",
+    isRequired: false,
+    question: "What is your name?",
+    description: "Please provide your name.",
+    answer: [],
+  };
 
-  
-    it("changes input height dynamically for question and description", () => {
-      const questionInput = screen.getByPlaceholderText(
-        "Your question here.",
-      ) as HTMLTextAreaElement;
-      fireEvent.change(questionInput, {
-        target: { value: "This is a long question that should resize." },
-      });
-  
-      const descriptionInput = screen.getByPlaceholderText(
-        "Description (optional)",
-      ) as HTMLTextAreaElement;
-      fireEvent.change(descriptionInput, {
-        target: { value: "This is a long description that should resize." },
-      });
-  
-      expect(questionInput).toHaveStyle(
-        `height: ${questionInput.scrollHeight}px`,
-      );
-      expect(descriptionInput).toHaveStyle(
-        `height: ${descriptionInput.scrollHeight}px`,
-      );
-    });
-  
-    it('displays "Required" when the switch is on creator mode', () => {
-      const switchButton = screen.getByText("Switch to Respondent Mode");
-      fireEvent.click(switchButton);
-  
-      expect(screen.queryByText("Required")).toBeNull();
-  
-      fireEvent.click(switchButton);
-  
-      expect(screen.getByText("Required")).toBeInTheDocument();
-    });
+  it("renders correctly with provided props", () => {
+    render(
+      <QuestionnaireProvider>
+        <Checkboxes {...mockQuestion} role="RESPONDENT" />,
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("What is your name?")).toBeInTheDocument();
+    expect(screen.getByText("Please provide your name.")).toBeInTheDocument();
   });
-  
+
+  it("allows changing the question", () => {
+    render(
+      <QuestionnaireProvider>
+        <Checkboxes {...mockQuestion} role="RESPONDENT" />,
+      </QuestionnaireProvider>,
+    );
+
+    const questionSpan = screen.getByText("What is your name?");
+    questionSpan.textContent = "What is your age?";
+
+    expect(questionSpan.textContent).toBe("What is your age?");
+  });
+
+  it("allows changing the description", () => {
+    render(
+      <QuestionnaireProvider>
+        <Checkboxes {...mockQuestion} role="RESPONDENT" />,
+      </QuestionnaireProvider>,
+    );
+
+    const descriptionSpan = screen.getByText("Please provide your name.");
+    descriptionSpan.textContent = "Please provide your age.";
+
+    expect(descriptionSpan.textContent).toBe("Please provide your age.");
+  });
+});

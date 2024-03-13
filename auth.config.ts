@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
-import { UserRole } from "./lib/types/auth/user";
+import { UserRole, UserRoleEnum } from "./lib/types/auth/user";
 
 /**
  * Array to specify public routes. By default, unspecified routes is protected.
@@ -47,6 +47,7 @@ export const authConfig = {
       // Check role
       let requiredRole = false;
       let hasRole = false;
+      let isActiveRole = false;
 
       if (isLoggedIn) {
         const user = auth.user;
@@ -57,15 +58,25 @@ export const authConfig = {
 
             hasRole = user.roles.includes(role as UserRole);
             requiredRole = true;
+            isActiveRole = role === user.activeRole;
           });
         });
       }
 
-      return requiredRole ? hasRole : isLoggedIn;
+      return requiredRole ? hasRole && isActiveRole : isLoggedIn;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         Object.entries(user).forEach(([key, value]) => {
+          token[key] = value;
+        });
+      }
+
+      // Update user data
+      if (trigger === "update" && session?.user) {
+        const updatedUserData = session.user;
+
+        Object.entries(updatedUserData).forEach(([key, value]) => {
           token[key] = value;
         });
       }
@@ -77,6 +88,14 @@ export const authConfig = {
         // @ts-ignore
         session.user[key] = value;
       });
+
+      // Set active role
+      if (!session.user.activeRole && session.user.id.startsWith("UI")) {
+        session.user.activeRole = UserRoleEnum.Respondent;
+      } else if (!session.user.activeRole && session.user.roles.length == 1) {
+        const [role] = session.user.roles;
+        session.user.activeRole = role;
+      }
 
       return session;
     },
@@ -107,4 +126,8 @@ export const authConfig = {
     },
   },
   providers: [],
+  session: {
+    strategy: "jwt",
+    maxAge: 4 * 60 * 60, // 4 hours
+  },
 } satisfies NextAuthConfig;

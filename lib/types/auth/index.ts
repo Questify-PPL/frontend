@@ -1,4 +1,6 @@
 import { JWT } from "./jwt";
-import { User } from "./user";
+import { User, UserRole, UserRoleEnum } from "./user";
 
-export type { JWT, User };
+export type { JWT, User, UserRole };
+
+export { UserRoleEnum };
