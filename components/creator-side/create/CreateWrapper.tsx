@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import CreatorNav from "@/components/creator-side/CreatorNav";
-import CreateCard from "@/components/creator-side/CreateCard";
+import CreateCard from "@/components/creator-side/create/CreateCard";
 import { Button } from "@/components/ui/button";
 import { InfoTable } from "@/components/creator-side/InfoTable";
 import { BareForm } from "@/lib/types/form.type";

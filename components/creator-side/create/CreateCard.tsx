@@ -1,36 +1,55 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LuScroll, LuCoins, LuX } from "react-icons/lu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { createQuestionnaire } from "@/lib/action";
 import { useRouter } from "next/navigation";
 
-interface HomeNavProps {
+interface CreateCardProps {
   className?: string;
   formsRemainder?: number;
   creditsBalance?: number;
   onCancel?: () => void;
 }
 
-const HomeNav: React.FC<HomeNavProps> = ({
+export function CreateCard({
   className = "",
   formsRemainder = 0,
   creditsBalance = 0,
   onCancel = () => {},
-}) => {
+}: CreateCardProps) {
+  const [title, setTitle] = useState("");
+  const [prize, setPrize] = useState(0);
+  const [prizeType, setPrizeType] = useState("EVEN");
+  const [maxWinner, setMaxWinner] = useState<number | undefined>(undefined);
+
   const router = useRouter();
 
-  const toForm = () => {
-    router.push("/create/form");
+  const toForm = async () => {
+    try {
+      const response = await createQuestionnaire(
+        title,
+        prize,
+        prizeType,
+        maxWinner,
+      );
+      const formId = response.data.id;
+      router.push(`/create/form/${formId}`);
+    } catch (error) {
+      console.error("Failed to create questionnaire", error);
+    }
   };
 
   return (
-    <div
+    <form
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
+      action={toForm}
     >
       <Card className="flex flex-col w-[35%] p-5 justify-center items-center gap-6">
         <div className="flex flex-row justify-between items-center w-full">
@@ -64,28 +83,32 @@ const HomeNav: React.FC<HomeNavProps> = ({
             <Input
               type="text"
               id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Give your Questionnaire a title"
-              className={`rounded-[6px] border-[1px] border-solid`}
+              className="rounded-[6px] border-[1px] border-solid"
             />
           </div>
           <div className="flex flex-col gap-2 w-full">
             <Label htmlFor="title">Prize</Label>
             <div className="flex flex-row items-center gap-3 pr-3">
               <Input
-                type="text"
+                type="number"
                 id="prize"
+                value={prize}
+                onChange={(e) => setPrize(Number(e.target.value))}
                 placeholder="Decide your prize Credits"
-                className={`rounded-[6px] border-[1px] border-solid`}
+                className="rounded-[6px] border-[1px] border-solid"
               />
-
               <LuCoins className="min-w-5 min-h-5 text-[#E2B720]"></LuCoins>
             </div>
-            <RadioGroup className="flex flex-col gap-1">
+            <RadioGroup value={prizeType} className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
                 <RadioGroupItem
-                  value="each"
+                  value="EVEN"
                   id="option-one"
                   className="flex h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                  onClick={() => setPrizeType("EVEN")}
                 />
                 <Label className="text-sm font-medium" htmlFor="option-one">
                   for each responder
@@ -93,12 +116,23 @@ const HomeNav: React.FC<HomeNavProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem
-                  value="certain"
+                  value="LUCKY"
                   id="option-two"
                   className="flex h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                  onClick={() => setPrizeType("LUCKY")}
                 />
-                <Label className="text-sm" htmlFor="option-two">
-                  for X responder
+                <Label
+                  className="flex text-sm flex-row items-center gap-1.5"
+                  htmlFor="option-two"
+                >
+                  for
+                  <Input
+                    type="number"
+                    value={maxWinner || ""}
+                    onChange={(e) => setMaxWinner(Number(e.target.value))}
+                    disabled={prizeType !== "LUCKY"}
+                  />
+                  responder(s)
                 </Label>
               </div>
             </RadioGroup>
@@ -108,13 +142,13 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <Button variant="outline" className="w-full" onClick={onCancel}>
             Cancel
           </Button>
-          <Button className="w-full" onClick={toForm}>
+          <Button type="submit" className="w-full">
             Create
           </Button>
         </div>
       </Card>
-    </div>
+    </form>
   );
-};
+}
 
-export default HomeNav;
+export default CreateCard;

@@ -1,3 +1,4 @@
+import { createQuestionnaire } from "./form";
 import {
   authenticate,
   logout,
@@ -6,5 +7,5 @@ import {
   UpdateState,
 } from "./user";
 
-export { authenticate, logout, changeRole, updateProfile };
+export { authenticate, logout, changeRole, updateProfile, createQuestionnaire };
 export type { UpdateState };
