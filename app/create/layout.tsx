@@ -7,7 +7,7 @@ export default function CreateLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="flex flex-col h-screen w-full">
+    <main className="flex flex-col h-screen w-full relative">
       <UserDropdownMenu />
       {children}
     </main>

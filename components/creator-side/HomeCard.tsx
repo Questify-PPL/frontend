@@ -60,9 +60,9 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <div className="flex flex-col">
             <span className="font-bold text-xl">{formsRemainder}</span>
             <div className="flex flex-row gap-1">
-              <span className="font-semibold text-lg leading-5">
-                empty forms
-              </span>
+              <div className="font-semibold w-fit text-lg leading-5 break-words flex wrapper:flex-row flex-col gap-1">
+                empty <span>forms</span>
+              </div>
               <HoverCard>
                 <HoverCardTrigger asChild>
                   <LuInfo className="flex w-4 h-4 text-[#95B0B4]"></LuInfo>
@@ -86,7 +86,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
               <span className="font-semibold text-lg leading-5">credits</span>
               <HoverCard>
                 <HoverCardTrigger asChild>
-                  <LuInfo className="flex w-4 h-4 text-[#95B0B4]"></LuInfo>
+                  <LuInfo className="flex w-4 h-4 text-[#95B0B4] font-extrabold"></LuInfo>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80">
                   <div className="flex justify-between space-x-4">
@@ -106,7 +106,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <span className="flex min-w-6 min-h-6 justify-center bg-[#C036A9] items-center rounded-md">
             <LuShoppingCart className="flex w-3 h-3 text-background"></LuShoppingCart>
           </span>
-          <span className="flex font-medium text-[10px] leading-3 text-left md:text-sm w-full text-wrap text-black">
+          <span className="flex flex-[1_0_0] font-medium text-[10px] leading-[11px] text-left md:text-sm w-full text-wrap text-black">
             Form Shop
           </span>
         </Button>
@@ -114,7 +114,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <span className="flex min-w-6 min-h-6 justify-center bg-[#C036A9] items-center rounded-md">
             <LuTag className="flex w-3 h-3 text-background"></LuTag>
           </span>
-          <span className="flex font-medium text-[10px] leading-3 text-left md:text-sm w-full text-wrap text-black">
+          <span className="flex flex-[1_0_0] font-medium text-[10px] leading-[11px] text-left md:text-sm w-full text-wrap text-black">
             Form Promo
           </span>
         </Button>
@@ -122,7 +122,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <span className="flex min-w-6 min-h-6 justify-center bg-[#E2B720] items-center rounded-md">
             <LuPlusCircle className="flex w-3 h-3 text-background"></LuPlusCircle>
           </span>
-          <span className="flex font-medium text-[10px] leading-3 text-left md:text-sm w-full text-wrap text-black">
+          <span className="flex flex-[1_0_0] font-medium text-[10px] leading-[11px] text-left md:text-sm w-full text-wrap text-black">
             Credit Exchange
           </span>
         </Button>
@@ -130,7 +130,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <span className="flex min-w-6 min-h-6 justify-center bg-[#E2B720] items-center rounded-md">
             <LuDownload className="flex w-3 h-3 text-background"></LuDownload>
           </span>
-          <span className="flex font-medium text-[10px] leading-3 text-left md:text-sm w-full text-wrap text-black">
+          <span className="flex flex-[1_0_0] font-medium text-[10px] leading-3 text-left md:text-sm w-full text-wrap text-black">
             Credit Withdraw
           </span>
         </Button>

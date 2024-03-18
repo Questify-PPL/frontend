@@ -13,7 +13,7 @@ export default async function HomeLayout({
       <header>
         <Navbar session={session} />
       </header>
-      <main>{children}</main>
+      <main className="relative">{children}</main>
     </div>
   );
 }

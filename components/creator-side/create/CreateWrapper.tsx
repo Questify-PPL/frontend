@@ -22,11 +22,8 @@ export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
 
   return (
     <main className="flex flex-col h-screen w-full">
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5">
-        <CreatorNav
-          className="absolute md:relative md:flex md:w-[20%]"
-          state="action"
-        ></CreatorNav>
+      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5 relative">
+        <CreatorNav state="action"></CreatorNav>
         <div className="flex flex-col w-full space-y-4">
           <Button className="flex w-fit" onClick={OpenCreateCard}>
             Create a new Questionnaire

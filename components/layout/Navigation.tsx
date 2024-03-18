@@ -24,7 +24,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean,
+  isActive: boolean
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (
@@ -62,7 +62,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <LuHome className="w-full h-5 text-primary" />,
           "Home",
           onClickHome,
-          state === "home",
+          state === "home"
         )}
         {state === "home" ? (
           <div className="hidden md:flex flex-col h-full">{homeChildren}</div>
@@ -71,7 +71,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <LuClipboardList className="w-full h-5 text-primary" />,
           action,
           onClickAction,
-          state === "action",
+          state === "action"
         )}
         {state === "action" ? (
           <div className="hidden md:flex flex-col h-full">{actionChildren}</div>
@@ -80,7 +80,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <LuHistory className="w-full h-5 text-primary" />,
           "Responses",
           onClickResponses,
-          state === "responses",
+          state === "responses"
         )}
         {state === "responses" ? (
           <div className="hidden md:flex flex-col h-full">
