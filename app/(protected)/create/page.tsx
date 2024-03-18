@@ -5,8 +5,8 @@ export default async function Create() {
   const forms = await getQuestionnairesOwned();
 
   return (
-    <main className="flex flex-col h-full w-full absolute">
-      <CreateWrapper forms={forms.data} />;
-    </main>
+    <section className="flex flex-col h-full w-full absolute">
+      <CreateWrapper forms={forms.data} />
+    </section>
   );
 }
