@@ -161,7 +161,7 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
   }, [selectedOptionsValues]);
 
   return (
-    <div className="w-[84%] md:w-[50%] flex flex-col gap-4">
+    <div className="w-[84%] flex flex-col gap-4">
       <QuestionLayout
         role={role}
         numbering={numbering}

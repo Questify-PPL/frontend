@@ -13,7 +13,7 @@ interface FormLeftMenuProps {
   endingChildren?: React.ReactNode;
 }
 
-const buttonClass = `flex gap-2 h-fit w-full bg-background hover:bg-accent text-[#324B4F] hover:text-[#324B4F]
+const buttonClass = `flex gap-2 h-fit w-full bg-background hover:bg-[#F3F8F9] text-[#324B4F] hover:text-[#324B4F]
   flex-row justify-between p-0 rounded-none`;
 const indicatorClass = `w-1 h-full bg-primary rounded-l-md flex`;
 const childrenClass = `flex flex-col h-full gap-4 px-5 py-4 items-stretch overflow-y-auto`;
@@ -21,7 +21,7 @@ const childrenClass = `flex flex-col h-full gap-4 px-5 py-4 items-stretch overfl
 const renderButton = (
   label: string,
   onClick: () => void,
-  isActive: boolean,
+  isActive: boolean
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     <div className="flex flex-row gap-3 pl-5 py-3 items-center">

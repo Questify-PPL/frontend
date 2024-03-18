@@ -40,23 +40,28 @@ const QuestionLayout: React.FC<QuestionLayoutProps> = ({
           <span className="w-1 h-6 md:w-1.5 bg-transparent rounded-md"></span>
         )}
         {numbering === 0 ? null : (
-          <div className="flex w-6 h-6 bg-secondary rounded-md text-primary justify-center items-center text-[10px] leading-[12px]">
+          <div className="md:hidden flex w-6 h-6 bg-secondary rounded-md text-primary justify-center items-center text-[10px] leading-[12px]">
             {numbering}
           </div>
         )}
       </div>
       <div className="flex flex-col gap-1.5 w-full justify-start">
         {role === "CREATOR" ? (
-          <div className="flex mt-1 h-6 justify-between items-center w-full">
-            <QuestionType type={questionType} noText={false} />
-            <div className="flex flex-row gap-2 font-medium text-[10px] h-fit leading-[12px] items-center">
-              <span>Required</span>
-              <Switch
-                id="required"
-                checked={required}
-                onClick={handleSwitchChange}
-              ></Switch>
+          <div className="flex flex-col w-full md:h-6 md:mt-1.5">
+            <div className="md:hidden flex mt-1 h-6 justify-between items-center w-full">
+              <QuestionType type={questionType} noText={false} />
+              <div className="flex flex-row gap-2 font-medium text-[10px] h-fit leading-[12px] items-center">
+                <span>Required</span>
+                <Switch
+                  id="required"
+                  checked={required}
+                  onClick={handleSwitchChange}
+                ></Switch>
+              </div>
             </div>
+            <span className="flex w-full text-sm font-medium text-primary">
+              Question
+            </span>
           </div>
         ) : null}
         {role === "CREATOR" ? (

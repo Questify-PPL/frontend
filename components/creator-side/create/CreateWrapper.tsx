@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import CreatorNav from "@/components/creator-side/CreatorNav";
-import CreateCard from "@/components/creator-side/create/CreateCard";
+import CreateModal from "@/components/creator-side/create/CreateModal";
 import { Button } from "@/components/ui/button";
 import { InfoTable } from "@/components/creator-side/InfoTable";
 import { BareForm } from "@/lib/types/form.type";
@@ -13,11 +13,11 @@ interface CreateWrapperProps {
 }
 
 export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
-  const [createCardState, setCreateCardState] = useState("hidden");
+  const [createModalState, setCreateModalState] = useState("hidden");
 
-  const OpenCreateCard = () => {
-    const newClass = createCardState === "hidden" ? "flex" : "hidden";
-    setCreateCardState(newClass);
+  const OpenCreateModal = () => {
+    const newClass = createModalState === "hidden" ? "flex" : "hidden";
+    setCreateModalState(newClass);
   };
 
   return (
@@ -25,7 +25,7 @@ export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
       <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5 relative">
         <CreatorNav state="action"></CreatorNav>
         <div className="flex flex-col w-full space-y-4">
-          <Button className="flex w-fit" onClick={OpenCreateCard}>
+          <Button className="flex w-fit" onClick={OpenCreateModal}>
             Create a new Questionnaire
           </Button>
           <InfoTable />
@@ -34,10 +34,10 @@ export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
           ))}
         </div>
       </div>
-      <CreateCard
-        className={`${createCardState}`}
-        onCancel={OpenCreateCard}
-      ></CreateCard>
+      <CreateModal
+        className={`${createModalState}`}
+        onCancel={OpenCreateModal}
+      ></CreateModal>
     </main>
   );
 }
