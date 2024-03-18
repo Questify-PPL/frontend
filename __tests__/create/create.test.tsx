@@ -17,7 +17,7 @@ jest.mock("@/lib/action/form", () => ({
 }));
 
 jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn() };
+  return { useRouter: jest.fn(), usePathname: jest.fn() };
 });
 
 const mockedDispact = jest.fn();
@@ -43,6 +43,20 @@ jest.mock("react-dom", () => {
   };
 });
 
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // Deprecated
+    removeListener: jest.fn(), // Deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
 describe("CreateWrapper Component", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -59,7 +73,7 @@ describe("CreateWrapper Component", () => {
         createdAt: "2024-03-17T12:00:00Z",
         updatedAt: "2024-03-17T12:00:00Z",
         endedAt: "2024-03-18T12:00:00Z",
-        onGoingParticipation: 10,
+        ongoingParticipation: 10,
         completedParticipation: 5,
       },
       {
@@ -71,14 +85,12 @@ describe("CreateWrapper Component", () => {
         createdAt: "2024-03-16T12:00:00Z",
         updatedAt: "2024-03-16T12:00:00Z",
         endedAt: "2024-03-17T12:00:00Z",
-        onGoingParticipation: 15,
+        ongoingParticipation: 15,
         completedParticipation: 8,
       },
     ];
 
-    (getQuestionnairesOwned as jest.Mock).mockResolvedValue({
-      data: mockedForms,
-    });
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
     render(await Create());
     render(<CreateWrapper forms={mockedForms} />);
@@ -95,7 +107,7 @@ describe("CreateWrapper Component", () => {
         createdAt: "2024-03-17T12:00:00Z",
         updatedAt: "2024-03-17T12:00:00Z",
         endedAt: "2024-03-18T12:00:00Z",
-        onGoingParticipation: 10,
+        ongoingParticipation: 10,
         completedParticipation: 5,
       },
       {
@@ -107,14 +119,12 @@ describe("CreateWrapper Component", () => {
         createdAt: "2024-03-16T12:00:00Z",
         updatedAt: "2024-03-16T12:00:00Z",
         endedAt: "2024-03-17T12:00:00Z",
-        onGoingParticipation: 15,
+        ongoingParticipation: 15,
         completedParticipation: 8,
       },
     ];
 
-    (getQuestionnairesOwned as jest.Mock).mockResolvedValue({
-      data: mockedForms,
-    });
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
     render(<CreateWrapper forms={mockedForms} />);
     const createButton = screen.getByText("Create a new Questionnaire");
@@ -127,9 +137,7 @@ describe("CreateWrapper Component", () => {
   });
 
   test("renders with no forms data", async () => {
-    (getQuestionnairesOwned as jest.Mock).mockResolvedValue({
-      data: [],
-    });
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue([]);
 
     render(<CreateWrapper forms={[]} />);
     const createButton = screen.getByText("Create a new Questionnaire");
