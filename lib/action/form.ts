@@ -8,7 +8,7 @@ export async function createQuestionnaire(
   prize: number,
   prizeType: string,
   maxParticipant?: number,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -66,7 +66,7 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   console.log(response.status);
