@@ -8,7 +8,7 @@ export async function createQuestionnaire(
   prize: number,
   prizeType: string,
   maxParticipant?: number,
-  maxWinner?: number,
+  maxWinner?: number
 ) {
   const session = await auth();
   const user = session?.user;
@@ -59,14 +59,14 @@ export async function getQuestionnaire(formId: string) {
   const user = session?.user;
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}?type=creator`,
     {
       headers: {
         Authorization: `Bearer ${user?.accessToken}`,
         "Content-Type": "application/json",
       },
       method: "GET",
-    },
+    }
   );
 
   console.log(response.status);

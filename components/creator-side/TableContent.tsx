@@ -6,7 +6,6 @@ import { LuCoins } from "react-icons/lu";
 
 export function TableContent({ form }: Readonly<{ form: BareForm }>) {
   function decidePhoto() {
-    // Extract 2 first letters from title
     const title = form.title.split(" ");
 
     if (title.length === 1) {
@@ -34,7 +33,7 @@ export function TableContent({ form }: Readonly<{ form: BareForm }>) {
 
   return (
     <div
-      className="flex w-full p-3 mt-5 hover:primary/10 rounded-md"
+      className="flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer"
       onClick={toEdit}
     >
       <div className="w-3/5 flex flex-row gap-3">
@@ -68,19 +67,17 @@ export function TableContent({ form }: Readonly<{ form: BareForm }>) {
         </div>
       </div>
 
-      <div className="flex flex-col mt-2 mb-1 w-1/5 font-bold items-center">
-        30
-      </div>
+      <div className="flex flex-col py-2 w-1/5 font-bold items-center">30</div>
 
-      <div className="flex flex-col mt-2 mb-1 w-1/5 font-bold items-center">
+      <div className="flex flex-col py-2 w-1/5 font-bold items-center">
         {form.completedParticipation}
       </div>
 
-      <div className="flex flex-col mt-2 mb-1 w-1/5 font-bold items-center">
+      <div className="flex flex-col py-2 w-1/5 font-bold items-center">
         {isNaN(caluculatePercentage()) ? 0 : caluculatePercentage().toFixed(2)}%
       </div>
 
-      <div className="flex flex-col mt-2 mb-1 w-1/5 items-center font-bold">
+      <div className="flex flex-col py-2 w-1/5 items-center font-bold">
         {new Date(form.updatedAt).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",

@@ -17,7 +17,7 @@ const QuestionToggle: React.FC<QuestionToggleProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-row gap-1.5 py-2.5 px-2 w-full rounded-md justify-start items-center ${isActive ? "bg-[#F3F8F9] border-2 border-[#D8EAEE]" : "bg-transparent hover:bg-secondary border-2 border-transparent"}`}
+      className={`flex flex-row gap-1.5 py-2.5 px-2 w-full rounded-md justify-start items-center ${isActive ? "bg-[#F3F8F9] border-2 border-[#D8EAEE]" : "bg-transparent hover:bg-[#F3F8F9] cursor-pointer border-2 border-transparent"}`}
       onClick={onSelect}
     >
       <div className="flex-shrink-0 w-6 h-6 bg-[#D8EAEE] rounded-md text-primary flex justify-center items-center text-[10px] leading-3">
