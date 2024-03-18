@@ -9,11 +9,11 @@ export default async function HomeLayout({
   const session = await auth();
 
   return (
-    <div className="grid grid-rows-[auto_1fr] min-h-screen">
+    <div className="flex flex-col min-h-screen relative">
       <header>
         <Navbar session={session} />
       </header>
-      <main className="relative">{children}</main>
+      <main className="relative min-h-full flex-1">{children}</main>
     </div>
   );
 }

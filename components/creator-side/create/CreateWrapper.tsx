@@ -21,7 +21,7 @@ export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
   };
 
   return (
-    <main className="flex flex-col h-screen w-full">
+    <main className="flex flex-col w-full h-full">
       <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5 relative">
         <CreatorNav state="action"></CreatorNav>
         <div className="flex flex-col w-full space-y-4">

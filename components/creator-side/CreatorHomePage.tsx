@@ -11,9 +11,9 @@ export function CreatorHomePage() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col h-full w-full relative">
+    <div className="flex flex-col w-full h-full absolute">
       <div className="absolute block md:hidden w-full h-[170px] bg-[#E5EEF0] flex-shrink-0"></div>
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5 relative">
+      <div className="flex flex-col md:flex-row w-full flex-1 h-full gap-4 p-5 relative ">
         <div className="flex flex-col md:hidden font-semibold text-[10px] items-center gap-2">
           <div className="flex flex-col font-semibold text-[10px] items-center">
             <div className="flex flex-row gap-1">

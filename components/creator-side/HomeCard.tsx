@@ -51,20 +51,22 @@ const HomeNav: React.FC<HomeNavProps> = ({
     "flex flex-row bg-background w-full hover:bg-accent p-0 md:p-2 h-fit gap-2 justify-start";
 
   return (
-    <Card className={`flex flex-col p-3 gap-3 ${className}`}>
+    <Card className={`flex flex-col p-3 gap-3 ${className} overflow-x-auto`}>
       <div className="flex flex-row md:p-2">
         <div className="flex flex-row gap-1.5 w-full">
           <span className="flex w-7 h-7 justify-center bg-[#F9EBF6] items-center rounded-full">
             <LuScroll className="flex w-5 h-5 text-[#C036A9]"></LuScroll>
           </span>
-          <div className="flex flex-col">
-            <span className="font-bold text-xl">{formsRemainder}</span>
-            <div className="flex flex-row gap-1">
-              <div className="font-semibold w-fit text-lg leading-5 break-words flex wrapper:flex-row flex-col gap-1">
-                empty <span>forms</span>
+          <div className="flex flex-col w-full">
+            <span className="font-bold text-[16px] md:text-[20px]">
+              {formsRemainder}
+            </span>
+            <div className="flex flex-row gap-1 w-full">
+              <div className="font-semibold text-[14px] md:text-[17.5px] flex wrapper:flex-row flex-col gap-1">
+                empty forms
               </div>
               <HoverCard>
-                <HoverCardTrigger asChild>
+                <HoverCardTrigger>
                   <LuInfo className="flex w-4 h-4 text-[#95B0B4]"></LuInfo>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80">
@@ -81,11 +83,15 @@ const HomeNav: React.FC<HomeNavProps> = ({
             <LuCoins className="flex w-5 h-5 text-[#E2B720]"></LuCoins>
           </span>
           <div className="flex flex-col">
-            <span className="font-bold text-xl">{creditsBalance}</span>
+            <span className="font-bold  text-[16px] md:text-[20px]">
+              {creditsBalance}
+            </span>
             <div className="flex flex-row gap-1">
-              <span className="font-semibold text-lg leading-5">credits</span>
+              <span className="font-semibold text-[14px] md:text-[17.5px]">
+                credits
+              </span>
               <HoverCard>
-                <HoverCardTrigger asChild>
+                <HoverCardTrigger>
                   <LuInfo className="flex w-4 h-4 text-[#95B0B4] font-extrabold"></LuInfo>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80">
