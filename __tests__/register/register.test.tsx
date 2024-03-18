@@ -55,7 +55,7 @@ describe("Register and RegisterForm", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: undefined } }),
           status: 201,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     render(await Register({ params: "", searchParams: {} }));
@@ -81,14 +81,14 @@ describe("Register and RegisterForm", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: undefined } }),
           status: 201,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     render(
       await Register({
         params: "",
         searchParams: { ticket: "Token" },
-      })
+      }),
     );
 
     const email = screen.getByLabelText("Email");
@@ -112,14 +112,14 @@ describe("Register and RegisterForm", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "Token" } }),
           status: 201,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     render(
       await Register({
         params: "",
         searchParams: { ticket: "Token" },
-      })
+      }),
     );
 
     const ssoLabel = screen.getByTestId("sso-label");
@@ -142,7 +142,7 @@ describe("Register and RegisterForm", () => {
               message: "error",
             }),
           status: 400,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     expect.assertions(1);
@@ -152,7 +152,7 @@ describe("Register and RegisterForm", () => {
         await Register({
           params: "",
           searchParams: { ticket: "Token" },
-        })
+        }),
       );
     } catch (error) {
       // @ts-ignore

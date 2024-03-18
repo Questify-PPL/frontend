@@ -1,25 +1,14 @@
 "use client";
 
-import { BareForm } from "@/lib/types/form.type";
+import { FormAsProps } from "@/lib/types";
+import { decidePhoto } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins } from "react-icons/lu";
 
-export function TableContent({ form }: Readonly<{ form: BareForm }>) {
-  function decidePhoto() {
-    const title = form.title.split(" ");
-
-    if (title.length === 1) {
-      return title[0].slice(0, 2).toUpperCase();
-    }
-
-    return (
-      title[0].slice(0, 1).toUpperCase() + title[1].slice(0, 1).toUpperCase()
-    );
-  }
-
+export function TableContent({ form }: Readonly<FormAsProps>) {
   function caluculatePercentage() {
     return (
-      (form.completedParticipation / form.onGoingParticipation +
+      (form.completedParticipation / form.ongoingParticipation +
         form.completedParticipation) *
       100
     );
@@ -35,10 +24,11 @@ export function TableContent({ form }: Readonly<{ form: BareForm }>) {
     <div
       className="flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer"
       onClick={toEdit}
+      role="none"
     >
       <div className="w-3/5 flex flex-row gap-3">
-        <div className="min-w-8 h-8 bg-gray-400 rounded-md flex justify-center items-center text-white mt-2">
-          {decidePhoto()}
+        <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white mt-2">
+          {decidePhoto(form)}
         </div>
 
         <div className="flex flex-col mb-1 flex-1">

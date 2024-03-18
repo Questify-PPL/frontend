@@ -6,8 +6,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ActiveQuestionnaireList } from "./ActiveQuestionnaireList";
+import { FormsAsProps } from "@/lib/types";
 
-export function CreatorHomePage() {
+export function CreatorHomePage({ forms }: Readonly<FormsAsProps>) {
   const router = useRouter();
 
   return (
@@ -45,7 +46,7 @@ export function CreatorHomePage() {
         <div className="flex flex-col w-full flex-1">
           <HomeCard className="w-full"></HomeCard>
 
-          <ActiveQuestionnaireList />
+          <ActiveQuestionnaireList forms={forms} />
         </div>
       </div>
     </div>

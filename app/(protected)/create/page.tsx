@@ -6,7 +6,7 @@ export default async function Create() {
 
   return (
     <section className="flex flex-col h-full w-full absolute">
-      <CreateWrapper forms={forms.data} />
+      <CreateWrapper forms={forms} />
     </section>
   );
 }

@@ -32,6 +32,7 @@ export const URL = {
   profile: `${process.env.NEXT_PUBLIC_API_URL}/user/me`,
   createForm: `${process.env.NEXT_PUBLIC_API_URL}/form`,
   getAllCreatorForm: `${process.env.NEXT_PUBLIC_API_URL}/form/creator`,
+  getAllRespondentForm: `${process.env.NEXT_PUBLIC_API_URL}/form/respondent`,
   updateProfile: `${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`,
 };
 

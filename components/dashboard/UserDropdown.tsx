@@ -15,7 +15,7 @@ import Link from "next/link";
 export function UserDropdownMenu() {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <LuUserCircle2 className="w-[22px] h-[22px]" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
