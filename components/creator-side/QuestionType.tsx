@@ -1,6 +1,6 @@
-import Image from "next/image";
 import React from "react";
 import {
+  LuMinus,
   LuAlignLeft,
   LuListChecks,
   LuCheckSquare,
@@ -21,8 +21,6 @@ interface QuestionTypeProps {
   type: string;
   noText: boolean;
 }
-
-const shortTextIcon = "/assets/short-text.svg";
 
 const QuestionType: React.FC<QuestionTypeProps> = ({
   type = "Hello",
@@ -58,9 +56,7 @@ const QuestionType: React.FC<QuestionTypeProps> = ({
   const renderIcon = () => {
     switch (type) {
       case "Short Text":
-        return (
-          <Image src={shortTextIcon} alt="Short Text" width={16} height={16} />
-        );
+        return <LuMinus />;
       case "Long Text":
         return <LuAlignLeft />;
       case "Multiple Choice":

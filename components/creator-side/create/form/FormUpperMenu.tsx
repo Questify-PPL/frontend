@@ -13,11 +13,11 @@ const FormUpperMenu: React.FC<FormUpperMenuProps> = ({
   QRETitle = "",
 }) => {
   return (
-    <div className="flex flex-col w-full h-fit px-5 py-3 gap-2 bg-accent rounded-md">
+    <div className="flex flex-col w-full h-fit px-5 py-3 gap-2 bg-[#F3F8F9] rounded-md">
       <div className="flex flex-row justify-between">
         <Button
           variant="secondary"
-          className="p-0 gap-1 h-fit text-[#95B0B4]"
+          className="p-0 gap-1 h-fit text-[#95B0B4] bg-[#F3F8F9]"
           onClick={onBack}
         >
           <LuChevronLeft className="w-4 h-4" />
@@ -25,7 +25,7 @@ const FormUpperMenu: React.FC<FormUpperMenuProps> = ({
         </Button>
         <Button
           variant="secondary"
-          className="p-0 gap-1 h-fit text-[#95B0B4]"
+          className="p-0 gap-1 h-fit text-[#95B0B4] bg-[#F3F8F9]"
           onClick={onSave}
         >
           <LuSave className="w-4 h-4" />
