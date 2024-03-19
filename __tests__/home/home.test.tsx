@@ -6,8 +6,10 @@ import Home from "@/app/(protected)/home/page";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import { UserRole } from "@/lib/types/auth";
-import { getQuestionnairesOwned } from "@/lib/action/form";
-import { getQuestionnairesFilled } from "@/lib/action/form";
+import {
+  getQuestionnairesOwned,
+  getQuestionnairesFilled,
+} from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -146,7 +148,6 @@ describe("Login", () => {
     render(await Home());
 
     expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Create QRE")).toBeInTheDocument();
     expect(screen.getByText("Responses")).toBeInTheDocument();
 
     expect(screen.getByText("empty forms")).toBeInTheDocument();

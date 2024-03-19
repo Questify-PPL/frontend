@@ -1,7 +1,7 @@
 "use client";
 
 import CreatorNav from "@/components/creator-side/CreatorNav";
-import HomeCard from "@/components/creator-side/HomeCard";
+import HomeCard from "@/components/forms/HomeCard";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";

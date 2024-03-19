@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LuScroll, LuCoins, LuX } from "react-icons/lu";
@@ -23,7 +22,7 @@ export function CreateModal({
   formsRemainder = 0,
   creditsBalance = 0,
   onCancel = () => {},
-}: CreateModalProps) {
+}: Readonly<CreateModalProps>) {
   const [title, setTitle] = useState("");
   const [prize, setPrize] = useState(0);
   const [prizeType, setPrizeType] = useState("EVEN");

@@ -34,7 +34,9 @@ const renderButton = (
     )}
     <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
       {icon}
-      <div className="font-bold text-xs md:text-sm text-[#324B4F]">{label}</div>
+      <div className="font-bold text-xs md:text-sm text-[#324B4F] text-wrap md:text-nowrap">
+        {label}
+      </div>
     </div>
     {isActive ? (
       <span className={buttonIndicatorClassMd}></span>
@@ -57,7 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   return (
     <div className={`flex p-4 md:p-0  ${className}`}>
-      <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0">
+      <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
         {renderButton(
           <LuHome className="w-full h-5 text-primary" />,
           "Home",

@@ -2,13 +2,11 @@
 
 import CreatorNav from "@/components/creator-side/CreatorNav";
 import CreateModal from "@/components/creator-side/create/CreateModal";
+import { DraftMobile, InfoTable, TableContent } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/lib/hooks";
 import { FormsAsProps } from "@/lib/types";
 import { useState } from "react";
-import { DraftMobile } from "./DraftMobile";
-import { InfoTable } from "./InfoTable";
-import { TableContent } from "./TableContent";
 
 export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
   const [createModalState, setCreateModalState] = useState("hidden");
@@ -35,12 +33,11 @@ export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
               })}
             </>
           ) : (
-            <>
-              <InfoTable />
+            <InfoTable>
               {forms.map((form) => (
                 <TableContent key={form.id} form={form} />
               ))}
-            </>
+            </InfoTable>
           )}
         </div>
       </div>

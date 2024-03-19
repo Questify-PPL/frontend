@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { CreatorHomePage } from "@/components/creator-side/CreatorHomePage";
+import RespondentHomePage from "@/components/respondent-side/RespondentHomePage";
 import {
   getQuestionnairesFilled,
   getQuestionnairesOwned,
@@ -33,7 +34,7 @@ export default async function Home() {
         <CreatorHomePage forms={forms} />
       )}
       {session.user.activeRole === UserRoleEnum.Respondent && (
-        <div>{UserRoleEnum.Respondent}</div>
+        <RespondentHomePage forms={forms} isRespondent={true} />
       )}
       {session.user.activeRole === UserRoleEnum.Admin && (
         <div>{UserRoleEnum.Admin}</div>

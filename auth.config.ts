@@ -12,8 +12,8 @@ export const homepageRoute = "/home";
  * Array to specify which routes should be accessed with appropritae role
  */
 export const RBACRoutes = {
-  CREATOR: [],
-  RESPONDENT: [],
+  CREATOR: ["/create", "/create/form/[id]"],
+  RESPONDENT: ["/questionnaire"],
   ADMIN: ["/admin"],
 } as Record<UserRole, string[]>;
 
@@ -59,6 +59,8 @@ export const authConfig = {
             hasRole = user.roles.includes(role as UserRole);
             requiredRole = true;
             isActiveRole = role === user.activeRole;
+
+            // Consider if the user has the required role, and the role is active, then return true immediately
           });
         });
       }

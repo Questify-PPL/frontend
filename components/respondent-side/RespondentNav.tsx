@@ -22,7 +22,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
   };
 
   const toJoin = () => {
-    router.push("/join");
+    router.push("/questionnaire");
   };
 
   const toResponses = () => {
@@ -31,7 +31,10 @@ const HomeNav: React.FC<HomeNavProps> = ({
 
   return (
     <Navigation
-      className={className}
+      className={
+        className +
+        " fixed bottom-4 md:top-auto md:bottom-auto md:relative md:flex md:w-[30%] lg:w-[22%] xl:w-[17.5%] w-full !left-0"
+      }
       action="Questionnaire for You"
       state={state}
       onClickHome={toHome}

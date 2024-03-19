@@ -29,6 +29,12 @@ export default function Navbar({
               infoDescription="Responses Page"
             />
           )}
+          {pathname === "/questionnaire" && (
+            <SecondaryNavbar
+              title="QRE For You"
+              infoDescription="Search For Questionnaires Page"
+            />
+          )}
         </>
       ) : (
         <PrimaryNavbar session={session} />

@@ -1,3 +1,4 @@
+import { Session } from "next-auth";
 import { BareForm } from "./form.type";
 
 export type FormsAsProps = {
@@ -6,4 +7,8 @@ export type FormsAsProps = {
 
 export type FormAsProps = {
   form: BareForm;
+};
+
+export type SessionAsProps = {
+  session: Session | null;
 };
