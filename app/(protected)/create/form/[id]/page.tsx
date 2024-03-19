@@ -12,7 +12,7 @@ const Form = ({ params }: Props) => {
   const { id } = params;
 
   return (
-    <div className="flex h-full w-full">
+    <div className="flex h-full w-full absolute">
       <QuestionnaireProvider>
         <QuestionGetter id={id} />
         <FormWrapper />

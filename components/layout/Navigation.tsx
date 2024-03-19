@@ -24,7 +24,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean
+  isActive: boolean,
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (
@@ -34,7 +34,9 @@ const renderButton = (
     )}
     <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
       {icon}
-      <div className="font-bold text-xs md:text-sm text-[#324B4F]">{label}</div>
+      <div className="font-bold text-xs md:text-sm text-[#324B4F] text-wrap md:text-nowrap">
+        {label}
+      </div>
     </div>
     {isActive ? (
       <span className={buttonIndicatorClassMd}></span>
@@ -57,12 +59,12 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   return (
     <div className={`flex p-4 md:p-0  ${className}`}>
-      <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0">
+      <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
         {renderButton(
           <LuHome className="w-full h-5 text-primary" />,
           "Home",
           onClickHome,
-          state === "home"
+          state === "home",
         )}
         {state === "home" ? (
           <div className="hidden md:flex flex-col h-full">{homeChildren}</div>
@@ -71,7 +73,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <LuClipboardList className="w-full h-5 text-primary" />,
           action,
           onClickAction,
-          state === "action"
+          state === "action",
         )}
         {state === "action" ? (
           <div className="hidden md:flex flex-col h-full">{actionChildren}</div>
@@ -80,7 +82,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <LuHistory className="w-full h-5 text-primary" />,
           "Responses",
           onClickResponses,
-          state === "responses"
+          state === "responses",
         )}
         {state === "responses" ? (
           <div className="hidden md:flex flex-col h-full">

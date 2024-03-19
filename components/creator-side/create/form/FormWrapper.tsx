@@ -61,12 +61,12 @@ export default function FormWrapper() {
 
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           return foundQuestion;

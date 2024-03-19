@@ -21,6 +21,7 @@ const config = {
     extend: {
       screens: {
         xs: "320px",
+        wrapper: "390px",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

@@ -31,8 +31,11 @@ const HomeNav: React.FC<HomeNavProps> = ({
 
   return (
     <Navigation
-      className={className}
-      action="Create QRE"
+      className={
+        className +
+        " fixed bottom-4 md:top-auto md:bottom-auto md:relative md:flex md:w-[29%] lg:w-[22%] xl:w-[15%] w-full !left-0"
+      }
+      action="Create Questionnaire"
       state={state}
       onClickHome={toHome}
       onClickAction={toCreate}

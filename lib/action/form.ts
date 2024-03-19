@@ -2,13 +2,14 @@
 
 import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
+import { FetchListForm } from "../types";
 
 export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
   maxParticipant?: number,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -51,7 +52,38 @@ export async function getQuestionnairesOwned() {
     throw new Error("Failed to get questionnaires owned");
   }
 
-  return await response.json();
+  const result: FetchListForm = await response.json();
+
+  if (!result.data) {
+    return [];
+  }
+
+  return result.data;
+}
+
+export async function getQuestionnairesFilled() {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(URL.getAllRespondentForm, {
+    headers: {
+      Authorization: `Bearer ${user?.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to get questionnaires filled");
+  }
+
+  const result: FetchListForm = await response.json();
+
+  if (!result.data) {
+    return [];
+  }
+
+  return result.data;
 }
 
 export async function getQuestionnaire(formId: string) {
@@ -66,10 +98,8 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
-
-  console.log(response.status);
 
   if (response.status !== 200) {
     throw new Error("Failed to get questionnaire");

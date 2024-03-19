@@ -28,7 +28,7 @@ describe("Form Component", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     // Check if QuestionGetter and FormWrapper are rendered
     expect(screen.getByTestId("question-getter")).toBeInTheDocument();

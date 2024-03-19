@@ -59,5 +59,3 @@ const FormRightMenu: React.FC<FormRightMenuProps> = ({
 };
 
 export default FormRightMenu;
-
-

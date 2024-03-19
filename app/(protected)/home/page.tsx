@@ -1,37 +1,44 @@
 import { auth } from "@/auth";
+import { CreatorHomePage } from "@/components/creator-side/CreatorHomePage";
+import RespondentHomePage from "@/components/respondent-side/RespondentHomePage";
+import {
+  getQuestionnairesFilled,
+  getQuestionnairesOwned,
+} from "@/lib/action/form";
 import { UserRoleEnum } from "@/lib/types/auth";
+import { BareForm } from "@/lib/types/form.type";
 import { Session } from "next-auth";
-import CreatorNav from "@/components/creator-side/CreatorNav";
-import HomeCard from "@/components/creator-side/HomeCard";
 
 export default async function Home() {
   const session = (await auth()) as Session;
 
+  const forms = await getForm();
+
+  async function getForm() {
+    let forms: BareForm[] = [];
+
+    if (session.user.activeRole === UserRoleEnum.Creator) {
+      forms = await getQuestionnairesOwned();
+    }
+
+    if (session.user.activeRole === UserRoleEnum.Respondent) {
+      forms = await getQuestionnairesFilled();
+    }
+
+    return forms;
+  }
+
   return (
     <>
-      {session.user.activeRole === UserRoleEnum.Creator && <CreatorHomePage />}
+      {session.user.activeRole === UserRoleEnum.Creator && (
+        <CreatorHomePage forms={forms} />
+      )}
       {session.user.activeRole === UserRoleEnum.Respondent && (
-        <div>{UserRoleEnum.Respondent}</div>
+        <RespondentHomePage forms={forms} isRespondent={true} />
       )}
       {session.user.activeRole === UserRoleEnum.Admin && (
         <div>{UserRoleEnum.Admin}</div>
       )}
     </>
-  );
-}
-
-function CreatorHomePage() {
-  return (
-    <div className="flex flex-col h-full w-full">
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5">
-        <CreatorNav
-          className="absolute md:relative md:flex md:w-[20%]"
-          state="home"
-        ></CreatorNav>
-        <div className="flex flex-col w-full">
-          <HomeCard className="w-full"></HomeCard>
-        </div>
-      </div>
-    </div>
   );
 }

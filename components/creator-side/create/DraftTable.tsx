@@ -17,7 +17,7 @@ export default function DraftTable({
   prizeType,
   maxWinner = 0,
   modified,
-}: DraftTableProps) {
+}: Readonly<DraftTableProps>) {
   const router = useRouter();
 
   function toEdit() {
@@ -28,6 +28,7 @@ export default function DraftTable({
     <div
       className="flex w-full gap-[10px] items-center hover:bg-primary/20 rounded-md  p-[10px] pr-[44px]"
       onClick={toEdit}
+      role="none"
     >
       <div className="flex-shrink-0 w-6 h-6 bg-[#D8EAEE] rounded-md text-primary flex justify-center items-center">
         o
@@ -45,8 +46,7 @@ export default function DraftTable({
           <div className="flex flex-row text-xs">all respondents</div>
         ) : (
           <div className="flex flex-row text-xs">
-            <span className="font-bold">{maxWinner}</span>
-            lucky respondents
+            <span className="font-bold">{maxWinner}</span> lucky respondents
           </div>
         )}
       </div>

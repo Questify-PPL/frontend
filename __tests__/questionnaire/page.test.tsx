@@ -1,16 +1,12 @@
+import HomeLayout from "@/app/(protected)/layout";
+import Questionnaire from "@/app/(protected)/questionnaire/page";
+import { auth } from "@/auth";
+import { getQuestionnairesFilled } from "@/lib/action/form";
+import { BareForm } from "@/lib/types";
+import { UserRole } from "@/lib/types/auth";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import HomeLayout from "@/app/(protected)/layout";
-import React from "react";
-import Home from "@/app/(protected)/home/page";
-import { auth } from "@/auth";
 import { Session } from "next-auth";
-import { UserRole } from "@/lib/types/auth";
-import {
-  getQuestionnairesOwned,
-  getQuestionnairesFilled,
-} from "@/lib/action/form";
-import { BareForm } from "@/lib/types";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -71,90 +67,8 @@ jest.mock("@/auth", () => {
   };
 });
 
-describe("Login", () => {
-  it("renders without crashing", async () => {
-    global.fetch = jest.fn(
-      () =>
-        Promise.resolve({
-          json: () => Promise.resolve({ data: { accessToken: "" } }),
-          status: 201,
-        }) as Promise<Response>,
-    );
-    const props = {
-      children: <div data-testid="div"></div>,
-    };
-
-    render(await HomeLayout(props));
-
-    const mainElement = screen.getByRole("main");
-    expect(mainElement).toBeInTheDocument();
-
-    const div = screen.getByTestId("div");
-    expect(div).toBeInTheDocument();
-  });
-  test("renders home page with no problem", async () => {
-    const session = {
-      user: {
-        email: "questify@gmail.com",
-        id: "1",
-        roles: ["CREATOR"] as UserRole[],
-        ssoUsername: null,
-        firstName: null,
-        lastName: null,
-        phoneNumber: null,
-        gender: null,
-        companyName: null,
-        birthDate: null,
-        credit: null,
-        isVerified: true,
-        isBlocked: false,
-        hasCompletedProfile: false,
-        activeRole: "CREATOR",
-      },
-      expires: new Date().toISOString(),
-    } as Session;
-
-    const mockedForms: BareForm[] = [
-      {
-        id: "1",
-        title: "Mocked Form 1",
-        prize: 100,
-        prizeType: "EVEN",
-        maxWinner: 1,
-        createdAt: "2024-03-17T12:00:00Z",
-        updatedAt: "2024-03-17T12:00:00Z",
-        endedAt: "2024-03-18T12:00:00Z",
-        ongoingParticipation: 10,
-        completedParticipation: 5,
-      },
-      {
-        id: "2",
-        title: "Mocked Form 2",
-        prize: 200,
-        prizeType: "LUCKY",
-        maxWinner: 2,
-        createdAt: "2024-03-16T12:00:00Z",
-        updatedAt: "2024-03-16T12:00:00Z",
-        endedAt: "2024-03-17T12:00:00Z",
-        ongoingParticipation: 15,
-        completedParticipation: 8,
-      },
-    ];
-
-    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
-
-    (auth as jest.Mock).mockResolvedValue(session);
-
-    render(await Home());
-
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Responses")).toBeInTheDocument();
-
-    expect(screen.getByText("empty forms")).toBeInTheDocument();
-    expect(screen.getByText("credits")).toBeInTheDocument();
-  });
-
-  test("renders home page with no problem as respondent", async () => {
+describe("Questionnaire List View Page", () => {
+  test("renders questionnaire list view page with no problem", async () => {
     const session = {
       user: {
         email: "questify@gmail.com",
@@ -207,6 +121,10 @@ describe("Login", () => {
 
     (auth as jest.Mock).mockResolvedValue(session);
 
-    render(await Home());
+    render(await Questionnaire());
+
+    expect(screen.getByText("Home")).toBeInTheDocument();
+
+    expect(screen.getByText("Responses")).toBeInTheDocument();
   });
 });

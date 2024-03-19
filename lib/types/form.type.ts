@@ -7,6 +7,18 @@ export type BareForm = {
   createdAt: string;
   updatedAt: string;
   endedAt: string;
-  onGoingParticipation: number;
+  ongoingParticipation: number;
   completedParticipation: number;
+};
+
+export type FetchListForm = {
+  statusCode: number;
+  message: string;
+  data: BareForm[];
+};
+
+export type FetchIndividualForm = {
+  statusCode: number;
+  message: string;
+  data: BareForm;
 };

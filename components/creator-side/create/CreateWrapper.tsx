@@ -1,19 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
 import CreatorNav from "@/components/creator-side/CreatorNav";
 import CreateModal from "@/components/creator-side/create/CreateModal";
+import { DraftMobile, InfoTable, TableContent } from "@/components/forms";
 import { Button } from "@/components/ui/button";
-import { InfoTable } from "@/components/creator-side/InfoTable";
-import { BareForm } from "@/lib/types/form.type";
-import { TableContent } from "../TableContent";
+import { useMediaQuery } from "@/lib/hooks";
+import { FormsAsProps } from "@/lib/types";
+import { useState } from "react";
 
-interface CreateWrapperProps {
-  forms: BareForm[];
-}
-
-export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
+export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
   const [createModalState, setCreateModalState] = useState("hidden");
+  const isMobile = useMediaQuery(768);
 
   const OpenCreateModal = () => {
     const newClass = createModalState === "hidden" ? "flex" : "hidden";
@@ -21,26 +18,33 @@ export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
   };
 
   return (
-    <main className="flex flex-col h-screen w-full">
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5">
-        <CreatorNav
-          className="absolute md:relative md:flex md:w-[20%]"
-          state="action"
-        ></CreatorNav>
-        <div className="flex flex-col w-full space-y-4">
-          <Button className="flex w-fit" onClick={OpenCreateModal}>
+    <>
+      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5 pt-3 relative">
+        <CreatorNav state="action"></CreatorNav>
+        <div className="flex flex-col w-full space-y-4 flex-1">
+          <Button className="flex md:w-fit w-full" onClick={OpenCreateModal}>
             Create a new Questionnaire
           </Button>
-          <InfoTable />
-          {forms.map((form) => (
-            <TableContent key={form.id} form={form} />
-          ))}
+          <p className="text-[#32636A] text-[10px] font-medium">Drafts</p>
+          {isMobile ? (
+            <>
+              {forms.map((form) => {
+                return <DraftMobile form={form} key={form.id}></DraftMobile>;
+              })}
+            </>
+          ) : (
+            <InfoTable>
+              {forms.map((form) => (
+                <TableContent key={form.id} form={form} />
+              ))}
+            </InfoTable>
+          )}
         </div>
       </div>
       <CreateModal
         className={`${createModalState}`}
         onCancel={OpenCreateModal}
       ></CreateModal>
-    </main>
+    </>
   );
 }
