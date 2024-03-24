@@ -1,10 +1,11 @@
 import { URL } from "@/lib/constant";
 import type { ApiResponse, JWT, User } from "@/lib/types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { LoginSchema, SSOSchema } from "@/lib/schema";
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
+import { ZodError } from "zod";
 
 export async function getUserJwt(
   email: string,
@@ -51,7 +52,10 @@ export const authCredentials = {
         const { SSO } = parserSSOCredentials.data;
         accessToken = SSO;
       } else {
-        return null;
+        throw new ZodError([
+          ...parsedCredentials.error.errors,
+          ...parserSSOCredentials.error.errors,
+        ]);
       }
 
       const profile = await getUserProfile(accessToken);
@@ -63,6 +67,13 @@ export const authCredentials = {
 
       return user;
     } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(`Error: ${error.message}`);
+        console.log(`Detail: ${JSON.stringify(error.response?.data)}`);
+      } else if (error instanceof ZodError) {
+        console.log(`Error: ${error.flatten()}`);
+      }
+
       return null;
     }
   },
