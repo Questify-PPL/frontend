@@ -1,4 +1,10 @@
-import { createQuestionnaire } from "./form";
+import {
+  createQuestionnaire,
+  getQuestionnairesOwned,
+  getQuestionnairesFilled,
+  getQuestionnaire,
+  patchQuestionnaire,
+} from "./form";
 import {
   authenticate,
   logout,
@@ -13,8 +19,12 @@ export {
   logout,
   changeRole,
   updateProfile,
-  createQuestionnaire,
   getInvoices,
   updatePaymentStatus,
+  createQuestionnaire,
+  getQuestionnairesOwned,
+  getQuestionnairesFilled,
+  getQuestionnaire,
+  patchQuestionnaire,
 };
 export type { UpdateState };

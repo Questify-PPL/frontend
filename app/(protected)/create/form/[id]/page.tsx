@@ -1,5 +1,4 @@
 import FormWrapper from "@/components/creator-side/create/form/FormWrapper";
-import QuestionGetter from "@/components/creator-side/create/form/QuestionGetter";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 
 interface Props {
@@ -14,8 +13,7 @@ const Form = ({ params }: Props) => {
   return (
     <div className="flex h-full w-full absolute">
       <QuestionnaireProvider>
-        <QuestionGetter id={id} />
-        <FormWrapper />
+        <FormWrapper id={id} />
       </QuestionnaireProvider>
     </div>
   );

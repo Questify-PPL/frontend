@@ -7,7 +7,7 @@ import { UserRoleEnum } from "@/lib/types/auth";
 import { getCurrentSession } from "@/lib/action/user";
 import { useState, useEffect } from "react";
 
-export function Questionnaire() {
+export function Questionnaire({ status = false }) {
   const { questionnaire, answers } = useQuestionnaireContext();
   const [currentRole, setCurrentRole] = useState<"CREATOR" | "RESPONDENT">(
     "RESPONDENT",
@@ -51,6 +51,7 @@ export function Questionnaire() {
             description={description ?? ""}
             choice={choice ?? []}
             answer={answer as string}
+            status={status}
           />
         ) : questionType === "CHECKBOX" ? (
           <Checkboxes
