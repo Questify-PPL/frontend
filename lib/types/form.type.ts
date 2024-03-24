@@ -1,5 +1,6 @@
 export type BareForm = {
   id: string;
+  creatorId?: string;
   title: string;
   prize: number;
   prizeType: "EVEN" | "LUCKY";
@@ -9,6 +10,11 @@ export type BareForm = {
   endedAt: string;
   ongoingParticipation: number;
   completedParticipation: number;
+  questionFilled?: number;
+  isComplete?: boolean;
+  questionAmount?: number;
+  winningChance?: number;
+  winningStatus?: boolean;  
 };
 
 export type FetchListForm = {
