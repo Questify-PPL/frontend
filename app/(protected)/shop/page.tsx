@@ -4,7 +4,7 @@ import InfoTable from "@/components/shop/InfoTable"
 export default function Shop() {
     return (
 
-        <div className="">
+        <div className="p-2 mt-10">
             <div className="flex flex-col mb-2">
                 <span className="text-[#1D2425] font-semibold text-base">Basic Plans</span>
                 <span className="text-[#95B0B4] font-sm text-xs">The form has no expiry date</span>
@@ -15,7 +15,7 @@ export default function Shop() {
                 <ItemCard label="5 Form" cost="110.000" discCost="135.000" imageUrl=""></ItemCard>
                 <ItemCard label="10 Form" cost="200.000" discCost="270.000" imageUrl=""></ItemCard>
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col mt-10">
                 <span className="text-[#1D2425] font-semibold text-base">Purchase History</span>
                 <span className="text-[#95B0B4] font-sm text-xs">Forms you have bought</span>
             </div>
