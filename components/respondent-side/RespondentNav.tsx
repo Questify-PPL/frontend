@@ -26,7 +26,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
   };
 
   const toResponses = () => {
-    router.push("/home");
+    router.push("/response");
   };
 
   return (
