@@ -22,6 +22,7 @@ export function Navbar({ user }: Readonly<Props>) {
           height={16}
         />
       </Link>
+
       <div className="flex items-center space-x-2 md:space-x-4">
         {!user && (
           <Link href="/login">
@@ -30,6 +31,7 @@ export function Navbar({ user }: Readonly<Props>) {
             </Button>
           </Link>
         )}
+
         <Link href={user ? "/home" : "/register"}>
           <Button className="text-white font-bold sm:text-sm text-xs">
             {user ? "Home" : "Sign Up"}

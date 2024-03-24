@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import FormLeftMenu from "@/components/creator-side/create/form/FormLeftMenu";
-import FormRightMenu from "@/components/creator-side/create/form/FormRightMenu";
-import FormUpperMenu from "@/components/creator-side/create/form/FormUpperMenu";
-import FormLowerMenu from "@/components/creator-side/create/form/FormLowerMenu";
-import QuestionToggle from "@/components/creator-side/create/form/QuestionToggle";
-import SectionToggle from "@/components/creator-side/create/form/SectionToggle";
+import {
+  FormLeftMenu,
+  FormRightMenu,
+  FormUpperMenu,
+  FormLowerMenu,
+  QuestionToggle,
+  SectionToggle,
+  SavedAsDraftModal,
+} from "@/components/creator-side/create/form";
 import { RadioButton, Text, Checkboxes } from "@/components/questions";
 import { Section, DefaultQuestion, Question } from "@/lib/context";
 import { LuPlusSquare } from "react-icons/lu";
@@ -16,10 +19,13 @@ import { useRouter } from "next/navigation";
 import AddQuestionModal from "@/components/creator-side/create/form/AddQuestionModal";
 import { useQuestionnaireContext } from "@/lib/hooks";
 import { QuestionnaireItem } from "@/lib/context";
+import { patchQuestionnaire, getQuestionnaire } from "@/lib/action";
 import { Card } from "@/components/ui/card";
 
-export default function FormWrapper() {
-  const { questionnaire, answers } = useQuestionnaireContext();
+export default function FormWrapper({ id }: { id: string }) {
+  const { questionnaire, answers, setQuestionnaire } =
+    useQuestionnaireContext();
+  const [QRETitle, setQRETitle] = useState("");
   const router = useRouter();
   const [leftMenuState, setLeftMenuState] = useState("opening");
   const [rightMenuState, setRightMenuState] = useState("question");
@@ -27,7 +33,7 @@ export default function FormWrapper() {
   const [activeQuestionId, setActiveQuestionId] = useState(-1);
 
   // Get Specific Question to be displayed
-  const handleQuestionToggleSelect = (questionId: number) => {
+  const handleQuestionToggleSelect = async (questionId: number) => {
     setActiveQuestionId(questionId);
   };
 
@@ -36,6 +42,13 @@ export default function FormWrapper() {
   const OpenAddQuestion = () => {
     const newClass = addQuestionState === "hidden" ? "flex" : "hidden";
     setAddQuestionState(newClass);
+  };
+
+  // Open Saved As Draft Modal
+  const [savedAsDraftState, setSavedAsDraftState] = useState("hidden");
+  const OpenSavedAsDraft = () => {
+    const newClass = savedAsDraftState === "hidden" ? "flex" : "hidden";
+    setSavedAsDraftState(newClass);
   };
 
   // Change Left and Right Menu
@@ -50,8 +63,15 @@ export default function FormWrapper() {
   const handleBack = () => {
     router.push("../");
   };
-  const handleSave = () => {
-    console.log("Save");
+
+  const handleSave = async () => {
+    try {
+      await patchQuestionnaire(id, questionnaire);
+      OpenSavedAsDraft();
+      await fetchQuestionnaire();
+    } catch (error) {
+      console.error("Failed to update questionnaire", error);
+    }
   };
 
   // Mobile Toggle Handler
@@ -59,14 +79,15 @@ export default function FormWrapper() {
     setIsMobile(!isMobile);
   };
 
+  // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number,
+    questionId: number
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
+          (question) => question.questionId === questionId
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -81,6 +102,7 @@ export default function FormWrapper() {
     return undefined;
   }
 
+  // Render Question
   const renderQuestion = (q: Question, index: number) => {
     const {
       questionId,
@@ -139,18 +161,130 @@ export default function FormWrapper() {
 
   const questionToRender = findQuestionById(questionnaire, activeQuestionId);
 
+  const addQuestionHandler = async (newQuestion: any) => {
+    try {
+      await patchQuestionnaire(id, questionnaire);
+      const response = await patchQuestionnaire(id, newQuestion);
+      const updatedQuestionnaire = response.data.questions;
+      setAddQuestionState("hidden");
+      await fetchQuestionnaire();
+      setActiveQuestionId(
+        updatedQuestionnaire[updatedQuestionnaire.length - 1].questionId
+      );
+    } catch (error) {
+      console.error("Failed to update questionnaire", error);
+    }
+  };
+
+  const handleShortTextClick = () => {
+    const shortTextQuestion = [
+      {
+        type: "DEFAULT",
+        question: {
+          questionType: "TEXT",
+          questionTypeName: "Short Text",
+          isRequired: false,
+          question: "",
+        },
+      },
+    ];
+    addQuestionHandler(shortTextQuestion);
+  };
+
+  // Data Types for Fetching
+  interface QuestionGet {
+    sectionId: number | null;
+    questionId: number;
+    questionType: string;
+    questionTypeName: string;
+    isRequired: boolean;
+    question: string;
+    description: string;
+  }
+
+  interface SectionGet {
+    sectionId: number;
+    name: string;
+    description: string;
+    questions: QuestionGet[];
+  }
+
+  type QuestionnaireGetItem = SectionGet | QuestionGet;
+
+  // Transform Data before Fetching
+  function transformData(data: QuestionnaireGetItem[]): QuestionnaireItem[] {
+    return data.map((item) => {
+      if (
+        (item as SectionGet).sectionId !== null &&
+        (item as SectionGet).questions
+      ) {
+        const section = item as SectionGet;
+        const questions = section.questions.map((question) => ({
+          questionId: question.questionId,
+          questionType: question.questionType,
+          questionTypeName: question.questionTypeName,
+          isRequired: question.isRequired,
+          question: question.question,
+          description: question.description,
+          choice: [], // No choice provided in JSON A for now
+        }));
+        return {
+          type: "SECTION",
+          sectionId: section.sectionId,
+          sectionName: section.name,
+          sectionDescription: section.description,
+          questions: questions,
+        } as Section;
+      } else {
+        const question = item as QuestionGet;
+        return {
+          type: "DEFAULT",
+          question: {
+            questionId: question.questionId,
+            questionType: question.questionType,
+            questionTypeName: question.questionTypeName,
+            isRequired: question.isRequired,
+            question: question.question,
+            description: question.description,
+          },
+        } as DefaultQuestion;
+      }
+    });
+  }
+
+  // Questionnaire Fetching
+  const fetchQuestionnaire = async () => {
+    try {
+      const response = await getQuestionnaire(id);
+      const transformed = transformData(response.data.questions);
+      setQuestionnaire(transformed);
+      setQRETitle(response.data.title);
+    } catch (error) {
+      console.error("Failed to get questionnaire", error);
+    }
+  };
+
   return (
     <div className="flex w-full h-full" data-testid="form-wrapper">
       <AddQuestionModal
         className={`${addQuestionState}`}
         onCancel={OpenAddQuestion}
+        onShortTextClick={handleShortTextClick}
       ></AddQuestionModal>
+      <SavedAsDraftModal
+        className={`${savedAsDraftState}`}
+        QRETitle={QRETitle}
+        onCancel={OpenSavedAsDraft}
+      ></SavedAsDraftModal>
       <div className="flex flex-row w-full h-full gap-4 p-5">
         <FormLeftMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
           state={leftMenuState}
           onClickOpening={() => handleLeftMenuChange("opening")}
-          onClickContents={() => handleLeftMenuChange("contents")}
+          onClickContents={() => {
+            handleLeftMenuChange("contents");
+            fetchQuestionnaire();
+          }}
           onClickEnding={() => handleLeftMenuChange("ending")}
           openingChildren={<div>Opening Children</div>}
           contentsChildren={
@@ -186,7 +320,7 @@ export default function FormWrapper() {
                                 activeQuestionId === question.questionId
                               }
                               numbering={sectionNum}
-                              questionType={question.questionTypeName}
+                              questionType={question?.questionTypeName}
                               question={question.question}
                               onSelect={() =>
                                 handleQuestionToggleSelect(question.questionId)

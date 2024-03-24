@@ -6,10 +6,10 @@ interface SectionToggleProps {
   children?: ReactNode;
 }
 
-const SectionToggle: React.FC<SectionToggleProps> = ({
+export function SectionToggle({
   numbering = 0,
   children,
-}) => {
+}: Readonly<SectionToggleProps>) {
   return (
     <div className="flex flex-col w-full gap-1 py-1 px-2.5 rounded-md justify-start bg-transparent border border-transparent">
       <div className="flex w-full items-center gap-1.5">
@@ -21,11 +21,9 @@ const SectionToggle: React.FC<SectionToggleProps> = ({
           <span>Section</span>
         </div>
       </div>
-      <div className="flex flex-col w-full p-2 gap-1 rounded-lg bg-[#F3F8F9/20]">
+      <div className="flex flex-col w-full p-2 gap-1 rounded-lg bg-[#F3F8F9]">
         {children}
       </div>
     </div>
   );
-};
-
-export default SectionToggle;
+}

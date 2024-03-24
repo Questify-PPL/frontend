@@ -13,6 +13,7 @@ describe("Text component", () => {
     question: "What is your name?",
     description: "Please provide your name.",
     answer: "John",
+    status: true,
   };
 
   it("renders correctly with provided props", () => {
@@ -27,16 +28,15 @@ describe("Text component", () => {
     expect(screen.getByDisplayValue("John")).toBeInTheDocument();
   });
 
-  it("displays textarea for answer in respondent mode", () => {
+  it("displays textarea for answer when questionnaire can be modified in respondent mode", () => {
     render(
       <QuestionnaireProvider>
         <Text {...mockQuestion} role="RESPONDENT" />
       </QuestionnaireProvider>,
     );
 
-    expect(
-      screen.getByPlaceholderText("Type your answer here"),
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Type your answer here")).toBeInTheDocument();
+    expect(screen.queryByTestId("answerLabel")).not.toBeInTheDocument();
   });
 
   it("should not display textarea for answer in creator mode", () => {
@@ -251,5 +251,28 @@ describe("Text component", () => {
     expect(
       screen.queryByText("Please enter a valid URL."),
     ).not.toBeInTheDocument();
+  });
+
+  it("displays label for answer when questionnaire can't be modified in respondent mode", () => {
+    render(
+      <QuestionnaireProvider>
+        <Text {...mockQuestion} role="RESPONDENT" status={false} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("John")).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Type your answer here")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("answerLabel")).toBeInTheDocument();
+  });
+
+  it("should not display label for answer in creator mode", () => {
+    render(
+      <QuestionnaireProvider>
+        <Text {...mockQuestion} role="CREATOR" status={false} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.queryByText("John")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("answerLabel")).not.toBeInTheDocument();
   });
 });
