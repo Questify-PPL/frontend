@@ -121,3 +121,7 @@ export function decidePhoto(form: BareForm) {
     title[0].slice(0, 1).toUpperCase() + title[1].slice(0, 1).toUpperCase()
   );
 }
+
+export function isEnded(endedAt: string): boolean {
+  return new Date() > new Date(endedAt);
+}
