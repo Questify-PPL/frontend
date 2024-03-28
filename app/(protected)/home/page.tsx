@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { AdminHomePage } from "@/components/admin-side/AdminHomePage";
 import { CreatorHomePage } from "@/components/creator-side/CreatorHomePage";
 import RespondentHomePage from "@/components/respondent-side/RespondentHomePage";
 import {
@@ -8,6 +9,7 @@ import {
 import { UserRoleEnum } from "@/lib/types/auth";
 import { BareForm } from "@/lib/types/form.type";
 import { Session } from "next-auth";
+import { getInvoices } from "@/lib/action";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -37,7 +39,7 @@ export default async function Home() {
         <RespondentHomePage forms={forms} isRespondent={true} />
       )}
       {session.user.activeRole === UserRoleEnum.Admin && (
-        <div>{UserRoleEnum.Admin}</div>
+        <AdminHomePage invoices={await getInvoices()} />
       )}
     </>
   );

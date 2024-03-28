@@ -210,3 +210,35 @@ describe("Login", () => {
     render(await Home());
   });
 });
+
+describe("Admin", () => {
+  test("renders home page with no problem", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["ADMIN"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "ADMIN",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Home());
+
+    const adminHomepage = screen.getByTestId("admin-homepage");
+    expect(adminHomepage).toBeInTheDocument();
+  });
+});

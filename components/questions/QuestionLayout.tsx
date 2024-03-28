@@ -83,9 +83,9 @@ const QuestionLayout: React.FC<QuestionLayoutProps> = ({
           </div>
         ) : (
           <div className="flex flex-col font-semibold text-base md:text-lg gap-0">
-            <span>{question}</span>
+            <span className="break-all">{question}</span>
             {description !== "" ? (
-              <span className="flex font-normal text-xs md:text-sm text-[#64748B]">
+              <span className="flex break-all font-normal text-xs md:text-sm text-[#64748B]">
                 {description}
               </span>
             ) : null}

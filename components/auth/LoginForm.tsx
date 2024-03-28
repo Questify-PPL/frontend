@@ -40,6 +40,7 @@ function LoginFormControl({
           placeholder="Email"
           className={`rounded-[6px] border-[1px] border-solid text-xs ${errorMessage ? "border-destructive" : "border-[#CDDDE1]"}`}
           disabled={pending}
+          required={true}
         />
       </div>
       <div className="flex flex-col mb-4">
@@ -53,6 +54,7 @@ function LoginFormControl({
           placeholder="Password"
           className={`rounded-[6px] border-[1px] border-solid text-xs ${errorMessage ? "border-destructive" : "border-[#CDDDE1]"}`}
           disabled={pending}
+          required={true}
         />
         {errorMessage && (
           <span className="text-[#DA0A1E] text-xs font-medium">

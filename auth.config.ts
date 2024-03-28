@@ -14,7 +14,7 @@ export const homepageRoute = "/home";
 export const RBACRoutes = {
   CREATOR: ["/create", "/create/form/[id]"],
   RESPONDENT: ["/questionnaire"],
-  ADMIN: ["/admin"],
+  ADMIN: ["/admin", "/reports", "/reviews"],
 } as Record<UserRole, string[]>;
 
 const ssoLogoutUrl = "https://sso.ui.ac.id/cas2/logout";
@@ -45,27 +45,26 @@ export const authConfig = {
       if (isPublic) return true;
 
       // Check role
+      let hasAccess = false;
       let requiredRole = false;
-      let hasRole = false;
-      let isActiveRole = false;
 
       if (isLoggedIn) {
         const user = auth.user;
 
-        Object.entries(RBACRoutes).forEach(([role, routes]) => {
-          routes.forEach((route) => {
-            if (!nextUrl.pathname.startsWith(route)) return;
+        hasAccess = Object.entries(RBACRoutes).some(([role, routes]) => {
+          return routes.some((route) => {
+            if (!nextUrl.pathname.startsWith(route)) return false;
 
-            hasRole = user.roles.includes(role as UserRole);
+            const hasRole = user.roles.includes(role as UserRole);
+            const isActiveRole = role === user.activeRole;
             requiredRole = true;
-            isActiveRole = role === user.activeRole;
 
-            // Consider if the user has the required role, and the role is active, then return true immediately
+            return hasRole && isActiveRole;
           });
         });
       }
 
-      return requiredRole ? hasRole && isActiveRole : isLoggedIn;
+      return requiredRole ? hasAccess : isLoggedIn;
     },
     async jwt({ token, user, trigger, session }) {
       if (user) {

@@ -21,7 +21,7 @@ const childrenClass = `flex flex-col h-full gap-4 px-5 py-4 items-stretch overfl
 const renderButton = (
   label: string,
   onClick: () => void,
-  isActive: boolean,
+  isActive: boolean
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     <div className="flex flex-row gap-3 pl-5 py-3 items-center">
@@ -35,7 +35,7 @@ const renderButton = (
   </Button>
 );
 
-const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
+export function FormLeftMenu ({
   className = "",
   state = "opening",
   onClickOpening = () => {},
@@ -44,7 +44,7 @@ const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
   contentsChildren = null,
   onClickEnding = () => {},
   endingChildren = null,
-}) => {
+}: Readonly<FormLeftMenuProps>) {
   return (
     <div className={`flex p-0  ${className}`}>
       <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
@@ -64,5 +64,3 @@ const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
     </div>
   );
 };
-
-export default FormLeftMenu;

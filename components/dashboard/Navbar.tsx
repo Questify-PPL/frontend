@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import PrimaryNavbar from "./PrimaryNavbar";
 import SecondaryNavbar from "./SecondaryNavbar";
 
+const primaryNavbarPath = ["/home", "/reports", "/reviews"];
+
 export default function Navbar({
   session,
 }: Readonly<{ session: Session | null }>) {
@@ -16,7 +18,9 @@ export default function Navbar({
     <>
       {isMobile ? (
         <>
-          {pathname === "/home" && <PrimaryNavbar session={session} />}
+          {primaryNavbarPath.includes(pathname) && (
+            <PrimaryNavbar session={session} />
+          )}
           {pathname === "/create" && (
             <SecondaryNavbar
               title="Create QRE"

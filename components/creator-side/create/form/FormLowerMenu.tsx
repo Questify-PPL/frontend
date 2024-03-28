@@ -7,7 +7,7 @@ import {
 } from "react-icons/lu";
 import { Card } from "@/components/ui/card";
 
-interface FormUpperMenuProps {
+interface FormLowerMenuProps {
   onChange?: () => void;
   isMobile?: boolean;
 }
@@ -19,10 +19,10 @@ const activeRButton =
 const inactiveButton =
   "flex font-semibold text-sm rounded-sm px-3.5 h-full items-center bg-transparent text-background hover:bg-transparent hover:text-background gap-1";
 
-const FormUpperMenu: React.FC<FormUpperMenuProps> = ({
+export function FormLowerMenu ({
   onChange = () => {},
   isMobile = true,
-}) => {
+}: Readonly<FormLowerMenuProps>)  {
   return (
     <Card className="flex flex-row h-fit justify-between items-center bg-background p-2 w-full">
       <Button
@@ -57,5 +57,3 @@ const FormUpperMenu: React.FC<FormUpperMenuProps> = ({
     </Card>
   );
 };
-
-export default FormUpperMenu;
