@@ -354,11 +354,11 @@ describe("Responder Response", () => {
 
     let filterButton = screen.getByTestId("filter-ended");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     filterButton = screen.getByTestId("filter-all");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     QUESTIONNAIRES_FILLED.forEach((form) => {
       expect(screen.queryByTestId(`mp-content-${form.id}`)).toBeInTheDocument();
@@ -376,7 +376,7 @@ describe("Responder Response", () => {
 
     const filterButton = screen.getByTestId("filter-ongoing");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     const onGoingForms = QUESTIONNAIRES_FILLED.filter(
       (form) => !isEnded(form.endedAt),
@@ -404,7 +404,7 @@ describe("Responder Response", () => {
 
     const filterButton = screen.getByTestId("filter-ended");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     const endedForms = QUESTIONNAIRES_FILLED.filter((form) =>
       isEnded(form.endedAt),
@@ -432,7 +432,7 @@ describe("Responder Response", () => {
 
     const filterButton = screen.getByTestId("filter-all");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     QUESTIONNAIRES_FILLED.forEach((form) => {
       expect(screen.queryByTestId(`mp-content-${form.id}`)).toBeInTheDocument();
@@ -471,7 +471,7 @@ describe("Responder Response", () => {
     // Filter forms by "All"
     let filterButton = screen.getByTestId("filter-all");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     QUESTIONNAIRES_FILLED.forEach((form) => {
       expect(screen.queryByTestId(`mp-content-${form.id}`)).toBeInTheDocument();
@@ -501,7 +501,7 @@ describe("Responder Response", () => {
     // Then by "Ended"
     filterButton = screen.getByTestId("filter-ended");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     let endedForms = queriedForms.filter((form) => isEnded(form.endedAt));
 
@@ -542,7 +542,7 @@ describe("Responder Response", () => {
     // Then by "On Going"
     filterButton = screen.getByTestId("filter-ongoing");
     filterButton.click();
-    await waitFor(() => { });
+    await waitFor(() => {});
 
     queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
       form.title.startsWith("Sample Form 3"),
@@ -575,7 +575,7 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED
+      QUESTIONNAIRES_FILLED,
     );
 
     render(await Response());
@@ -585,7 +585,9 @@ describe("Responder Response", () => {
       expect(screen.queryByTestId(`mp-mobile-${form.id}`)).toBeInTheDocument();
     });
     QUESTIONNAIRES_FILLED.forEach((form) => {
-      expect(screen.queryByTestId(`mp-content-${form.id}`)).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId(`mp-content-${form.id}`),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -602,7 +604,7 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED
+      QUESTIONNAIRES_FILLED,
     );
 
     render(await Response());
@@ -617,7 +619,7 @@ describe("Responder Response", () => {
     searchInput.dispatchEvent(new Event("input"));
 
     const queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      form.title.startsWith("Sample Form 1")
+      form.title.startsWith("Sample Form 1"),
     );
 
     queriedForms.forEach((form) => {
@@ -627,7 +629,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!queriedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-mobile-${form.id}`)
+          screen.queryByTestId(`mp-mobile-${form.id}`),
         ).not.toBeInTheDocument();
       }
     });
@@ -646,7 +648,7 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED
+      QUESTIONNAIRES_FILLED,
     );
 
     render(await Response());
@@ -669,7 +671,9 @@ describe("Responder Response", () => {
 
   it("should not error when failed to fetch", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
-    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(new Error("Failed to get questionnaires filled"));
+    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
+      new Error("Failed to get questionnaires filled"),
+    );
 
     render(await Response());
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
@@ -680,7 +684,9 @@ describe("Responder Response", () => {
 
   it("shows message when failed to fetch in web view", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
-    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(new Error("Failed to get questionnaires filled"));
+    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
+      new Error("Failed to get questionnaires filled"),
+    );
 
     render(await Response());
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
@@ -688,7 +694,9 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("mp-wrapper")).toBeInTheDocument();
     expect(screen.queryByTestId("mp-table")).toBeInTheDocument();
 
-    const errorMessage = screen.queryAllByText("There's an issue with fetching the data");
+    const errorMessage = screen.queryAllByText(
+      "There's an issue with fetching the data",
+    );
     expect(errorMessage.length).toBe(1);
   });
 
@@ -704,7 +712,9 @@ describe("Responder Response", () => {
       dispatchEvent: jest.fn(),
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
-    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(new Error("Failed to get questionnaires filled"));
+    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
+      new Error("Failed to get questionnaires filled"),
+    );
 
     render(await Response());
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
@@ -712,7 +722,9 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("mp-wrapper")).toBeInTheDocument();
     expect(screen.queryByTestId("mp-table")).not.toBeInTheDocument();
 
-    const errorMessage = screen.queryAllByText("There's an issue with fetching the data");
+    const errorMessage = screen.queryAllByText(
+      "There's an issue with fetching the data",
+    );
     expect(errorMessage.length).toBe(2);
   });
 });

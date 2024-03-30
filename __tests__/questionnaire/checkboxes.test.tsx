@@ -13,7 +13,7 @@ describe("Checkbox component", () => {
     question: "What is your name?",
     description: "Please provide your name.",
     answer: [],
-    status: true
+    status: true,
   };
 
   it("renders correctly with provided props", () => {
