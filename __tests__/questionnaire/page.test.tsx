@@ -1,4 +1,3 @@
-import HomeLayout from "@/app/(protected)/layout";
 import Questionnaire from "@/app/(protected)/questionnaire/page";
 import { auth } from "@/auth";
 import { getQuestionnairesFilled } from "@/lib/action/form";
@@ -123,8 +122,7 @@ describe("Questionnaire List View Page", () => {
 
     render(await Questionnaire());
 
-    expect(screen.getByText("Home")).toBeInTheDocument();
-
-    expect(screen.getByText("Responses")).toBeInTheDocument();
+    expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
   });
 });

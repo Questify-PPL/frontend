@@ -78,7 +78,7 @@ describe("Login", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "" } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
     const props = {
       children: <div data-testid="div"></div>,
@@ -147,8 +147,8 @@ describe("Login", () => {
 
     render(await Home());
 
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Responses")).toBeInTheDocument();
+    expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
 
     expect(screen.getByText("empty forms")).toBeInTheDocument();
     expect(screen.getByText("credits")).toBeInTheDocument();
