@@ -1,5 +1,8 @@
 import { MPWrapper } from "@/components/respondent-side/my-participation";
-import { getQuestionnairesFilled } from "@/lib/action/form";
+import {
+  getQuestionnairesFilled,
+  getQuestionnairesOwned,
+} from "@/lib/action/form";
 import { auth } from "@/auth";
 import { UserRoleEnum } from "@/lib/types/auth";
 import { Session } from "next-auth";
@@ -17,6 +20,10 @@ export default async function Response() {
       if (session.user.activeRole === UserRoleEnum.Respondent) {
         return await getQuestionnairesFilled();
       }
+
+      if (session.user.activeRole === UserRoleEnum.Creator) {
+        return await getQuestionnairesOwned("PUBLISHED");
+      }
     } catch (error) {
       console.log((error as Error).message);
       isError = true;
@@ -29,7 +36,9 @@ export default async function Response() {
       {session.user.activeRole === UserRoleEnum.Respondent && (
         <MPWrapper forms={forms} isError={isError} />
       )}
-      {session.user.activeRole === UserRoleEnum.Creator && <ResponseWrapper />}
+      {session.user.activeRole === UserRoleEnum.Creator && (
+        <ResponseWrapper forms={forms} />
+      )}
     </section>
   );
 }
