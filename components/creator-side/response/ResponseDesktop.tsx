@@ -40,7 +40,7 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
       </div>
 
       <>
-        <div className="flex flex-col mb-1 mt-2 w-[14.375%]">
+        <div className="flex flex-col mb-1 mt-2 md:w-[17.96875%] lg:w-[14.375%]">
           <div className="flex flex-row w-full">
             <div className="flex flex-row text-xs font-bold text-[#685B2D]">
               <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
@@ -57,24 +57,24 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
           </div>
         </div>
 
-        <div className="flex flex-col py-2 w-[14.375%] font-bold">
+        <div className="flex flex-col py-2 md:w-[17.96875%] lg:w-[14.375%] font-bold">
           {form.questionAmount}
         </div>
 
-        <div className="flex flex-col py-2 w-[14.375%] font-bold">
+        <div className="flex flex-col py-2 md:w-[17.96875%] lg:w-[14.375%] font-bold">
           {form.completedParticipation}
         </div>
 
-        <div className="flex flex-col py-2 w-[14.375%] font-bold">
+        <div className="flex flex-col py-2 md:hidden lg:flex w-[14.375%] font-bold">
           {(form.completedParticipation /
             (form.completedParticipation + form.ongoingParticipation)) *
             100}
           %
         </div>
 
-        <div className="flex flex-col py-2 w-[14.375%] font-bold">
-          {form.endedAt
-            ? new Date(form.endedAt).toLocaleDateString("en-GB", {
+        <div className="flex flex-col py-2 md:w-[17.96875%] lg:w-[14.375%] font-bold">
+          {form.updatedAt
+            ? new Date(form.updatedAt).toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",

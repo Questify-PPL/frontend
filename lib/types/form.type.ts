@@ -11,7 +11,7 @@ export type BareForm = {
   ongoingParticipation: number;
   completedParticipation: number;
   questionFilled?: number;
-  isComplete?: boolean;
+  isCompleted?: boolean;
   questionAmount?: number;
   winningChance?: number;
   winningStatus?: boolean;

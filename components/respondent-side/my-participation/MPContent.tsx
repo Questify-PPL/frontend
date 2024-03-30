@@ -69,7 +69,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
-                  },
+                  }
                 )}`
                   .split("/")
                   .map((part, index, arr) => (
@@ -177,7 +177,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
         </div>
       </td>
       <td className="flex flex-col py-2 w-[14%] font-bold justify-center">
-        {form.isComplete ? (
+        {form.isCompleted ? (
           <span>Done</span>
         ) : (
           <span>

@@ -59,7 +59,7 @@ export function MPMobile({
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
-                    },
+                    }
                   )}`
                     .split("/")
                     .map((part, index, arr) => (
@@ -121,7 +121,7 @@ export function MPMobile({
         </div>
       </div>
       <div className="flex flex-col py-2 w-[14%] font-bold justify-center items-end">
-        {form.isComplete ? (
+        {form.isCompleted ? (
           <span>Done</span>
         ) : (
           <span>
