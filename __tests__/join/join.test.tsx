@@ -28,7 +28,7 @@ test("renders main feature and open the modal", async () => {
   render(<Join />);
 
   const createButton = screen.getByText(
-    "Create a new Questionnaire"
+    "Create a new Questionnaire",
   ) as HTMLButtonElement;
   fireEvent.click(createButton);
 
@@ -39,7 +39,7 @@ test("open then close (cancel) the modal", async () => {
   render(<Join />);
 
   const createButton = screen.getByText(
-    "Create a new Questionnaire"
+    "Create a new Questionnaire",
   ) as HTMLButtonElement;
   fireEvent.click(createButton);
 
@@ -53,7 +53,7 @@ test("can respond to the popup modal successfully", async () => {
   render(<Join />);
 
   const createButton = screen.getByText(
-    "Create a new Questionnaire"
+    "Create a new Questionnaire",
   ) as HTMLButtonElement;
   fireEvent.click(createButton);
 
@@ -63,7 +63,7 @@ test("can respond to the popup modal successfully", async () => {
   expect(screen.getByText("Prize")).toBeInTheDocument();
   expect(screen.getByText("Estimated Time")).toBeInTheDocument();
   expect(
-    screen.getByText("Creator will collect these data from you:")
+    screen.getByText("Creator will collect these data from you:"),
   ).toBeInTheDocument();
 
   const respondButton = screen.getByText("Respond") as HTMLButtonElement;

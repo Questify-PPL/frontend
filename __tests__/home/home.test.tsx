@@ -78,7 +78,7 @@ describe("Login", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "" } }),
           status: 201,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
     const props = {
       children: <div data-testid="div"></div>,
