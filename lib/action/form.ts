@@ -37,11 +37,15 @@ export async function createQuestionnaire(
   return await response.json();
 }
 
-export async function getQuestionnairesOwned() {
+export async function getQuestionnairesOwned(type?: string) {
   const session = await auth();
   const user = session?.user;
 
-  const response = await fetch(URL.getAllCreatorForm, {
+  const url = type
+    ? `${URL.getAllCreatorForm}?type=${type}`
+    : URL.getAllCreatorForm;
+
+  const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${user?.accessToken}`,
       "Content-Type": "application/json",

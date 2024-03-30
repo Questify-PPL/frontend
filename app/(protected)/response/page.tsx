@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { UserRoleEnum } from "@/lib/types/auth";
 import { Session } from "next-auth";
 import { BareForm } from "@/lib/types";
+import { ResponseWrapper } from "@/components/creator-side/response/ResponseWrapper";
 
 export default async function Response() {
   const session = (await auth()) as Session;
@@ -20,14 +21,15 @@ export default async function Response() {
       console.log((error as Error).message);
       isError = true;
     }
-    return []
-  };
+    return [];
+  }
 
   return (
     <section className="flex flex-col h-full w-full absolute">
       {session.user.activeRole === UserRoleEnum.Respondent && (
         <MPWrapper forms={forms} isError={isError} />
       )}
+      {session.user.activeRole === UserRoleEnum.Creator && <ResponseWrapper />}
     </section>
   );
 }

@@ -28,11 +28,11 @@ export function TableContent({
   }
 
   return (
-    <tr
-      className="flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer"
+    <div
+      className="md:flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer hidden"
       onClick={toEdit}
     >
-      <td className="w-1/4 flex flex-row gap-3">
+      <div className="w-1/4 flex flex-row gap-3">
         <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white mt-2">
           {decidePhoto(form)}
         </div>
@@ -46,11 +46,11 @@ export function TableContent({
             {form.title}
           </div>
         </div>
-      </td>
+      </div>
 
       {isRespondent ? (
         <>
-          <td className="flex flex-col mb-1 mt-2 w-[23.958%]">
+          <div className="flex flex-col mb-1 mt-2 w-[23.958%]">
             <div className="flex flex-row w-full">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
                 <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
@@ -65,11 +65,11 @@ export function TableContent({
                 ? "all participants"
                 : `${form.maxWinner} lucky respondents`}
             </div>
-          </td>
+          </div>
 
-          <td className="flex flex-col py-2 w-[23.958%] font-bold">30</td>
+          <div className="flex flex-col py-2 w-[23.958%] font-bold">30</div>
 
-          <td className="flex flex-col py-2 w-[23.958%] font-bold">
+          <div className="flex flex-col py-2 w-[23.958%] font-bold">
             {form.endedAt
               ? new Date(form.endedAt).toLocaleDateString("en-GB", {
                   day: "2-digit",
@@ -77,9 +77,9 @@ export function TableContent({
                   year: "numeric",
                 })
               : "TBA"}
-          </td>
+          </div>
 
-          <td className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
+          <div className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
@@ -90,11 +90,11 @@ export function TableContent({
                 <DropdownMenuItem>Respond</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </td>
+          </div>
         </>
       ) : (
         <>
-          <td className="flex flex-col mb-1 mt-2 w-[17.96875%]">
+          <div className="flex flex-col mb-1 mt-2 w-[17.96875%]">
             <div className="flex flex-row w-full">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
                 <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
@@ -109,23 +109,23 @@ export function TableContent({
                 ? "all participants"
                 : `${form.maxWinner} lucky respondents`}
             </div>
-          </td>
+          </div>
 
-          <td className="flex flex-col py-2 w-[17.96875%] font-bold">30</td>
+          <div className="flex flex-col py-2 w-[17.96875%] font-bold">30</div>
 
-          <td className="flex flex-col py-2 w-[17.96875%] font-bold">
+          <div className="flex flex-col py-2 w-[17.96875%] font-bold">
             {form.completedParticipation}
-          </td>
+          </div>
 
-          <td className="flex flex-col py-2 w-[17.96875%] font-bold">
+          <div className="flex flex-col py-2 w-[17.96875%] font-bold">
             {new Date(form.updatedAt).toLocaleDateString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",
             })}
-          </td>
+          </div>
 
-          <td className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
+          <div className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
@@ -137,9 +137,9 @@ export function TableContent({
                 <DropdownMenuItem>Summary</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </td>
+          </div>
         </>
       )}
-    </tr>
+    </div>
   );
 }

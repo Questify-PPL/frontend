@@ -76,13 +76,13 @@ export function InfoTable({
   }
 
   return (
-    <table className={`flex flex-col`}>
-      <thead>
-        <tr className="flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3">
+    <div className={`flex flex-col`}>
+      <div>
+        <div className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 hidden">
           {isRespondent == false && (
             <>
               {tableColumnsCreator.map((column, index) => (
-                <th
+                <div
                   key={`column-${index + 1}`}
                   className={` ${
                     index === 0 ? "pl-4" : ""
@@ -90,7 +90,7 @@ export function InfoTable({
                 >
                   {column.icon}
                   {column.name}
-                </th>
+                </div>
               ))}
             </>
           )}
@@ -98,7 +98,7 @@ export function InfoTable({
             <>
               {tableColumnsRespondent.map((column, index) => {
                 return (
-                  <th
+                  <div
                     key={`column-${index + 1}`}
                     className={` ${
                       index === 0 ? "pl-4" : ""
@@ -106,14 +106,14 @@ export function InfoTable({
                   >
                     {column.icon}
                     {column.name}
-                  </th>
+                  </div>
                 );
               })}
             </>
           )}
-        </tr>
-      </thead>
-      <tbody>{children}</tbody>
-    </table>
+        </div>
+      </div>
+      <div>{children}</div>
+    </div>
   );
 }
