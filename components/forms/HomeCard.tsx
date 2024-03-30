@@ -56,7 +56,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
     <>
       {!isRespondent && (
         <Card
-          className={`flex flex-col p-3 gap-3 ${className} overflow-x-auto`}
+          className={`flex flex-col p-3 gap-3 ${className} overflow-x-auto flex-shrink-0`}
         >
           <div className="flex flex-row md:p-2">
             <div className="flex flex-row gap-1.5 w-full">
