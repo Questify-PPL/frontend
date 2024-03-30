@@ -16,7 +16,7 @@ export function useResponsesContext() {
 
   if (!context) {
     throw new Error(
-      "useResponsesContext must be used within a ResponsesProvider"
+      "useResponsesContext must be used within a ResponsesProvider",
     );
   }
 

@@ -22,7 +22,7 @@ export function ResponsesProvider({
         keys: ["title", "prize", "questionAmount"],
         includeMatches: true,
       }),
-    [forms]
+    [forms],
   );
 
   const filteredForms = useMemo(() => {
