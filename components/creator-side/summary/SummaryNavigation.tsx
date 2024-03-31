@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useSummaryContext } from "@/lib/context/SummaryContext";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { Fragment } from "react";
 import { LuGlasses, LuHelpCircle, LuUser } from "react-icons/lu";
@@ -13,7 +14,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean,
+  isActive: boolean
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (
@@ -35,42 +36,44 @@ const renderButton = (
   </Button>
 );
 
-export function SummaryNavigation({
-  className = "",
-  state = "summary",
-  onClickSummary = () => {},
-  onClickQuestion = () => {},
-  onClickIndividual = () => {},
-}) {
+export function SummaryNavigation({ className = "" }) {
+  const { activeTab, setActiveTab } = useSummaryContext();
+
   const NAVIGATION_CONST = [
     {
       icon: <LuGlasses className="w-full h-5 text-primary" />,
       label: "Summary",
-      onClick: onClickSummary,
-      isActive: state === "summary",
+      onClick: () => {
+        setActiveTab("summary");
+      },
+      isActive: activeTab === "summary",
     },
     {
       icon: <LuHelpCircle className="w-full h-5 text-primary" />,
       label: "Question",
-      onClick: onClickQuestion,
-      isActive: state === "question",
+      onClick: () => {
+        setActiveTab("question");
+      },
+      isActive: activeTab === "question",
     },
     {
       icon: <LuUser className="w-full h-5 text-primary" />,
-      label: "Responses",
-      onClick: onClickIndividual,
-      isActive: state === "responses",
+      label: "Individual",
+      onClick: () => {
+        setActiveTab("individual");
+      },
+      isActive: activeTab === "individual",
     },
   ];
 
   function decideState(state: string) {
     switch (state) {
-      case "Home":
-        return "home";
-      case "Responses":
-        return "responses";
+      case "Summary":
+        return "summary";
+      case "Question":
+        return "question";
       default:
-        return "action";
+        return "individual";
     }
   }
 
@@ -84,7 +87,7 @@ export function SummaryNavigation({
                 className="w-full md:block hidden"
                 initial={{
                   opacity: 0,
-                  y: state === decideState(nav.label) ? 400 : 0,
+                  y: activeTab === decideState(nav.label) ? 400 : 0,
                 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 400 }}

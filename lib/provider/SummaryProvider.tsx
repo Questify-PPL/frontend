@@ -12,7 +12,12 @@ export function SummaryProvider({
   questionsWithAnswers,
   allIndividuals,
 }: Readonly<SummaryProviderProps>) {
+  const [activeTab, setActiveTab] = useState<
+    "summary" | "question" | "individual"
+  >("summary");
+
   const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const returns = useMemo(() => {
     return {
@@ -21,8 +26,20 @@ export function SummaryProvider({
       allIndividuals,
       graphType,
       setGraphType,
+      activeTab,
+      setActiveTab,
+      currentPage,
+      setCurrentPage,
+      questionDetails: questionsWithAnswers[currentPage - 1],
     };
-  }, [formStatistics, questionsWithAnswers, allIndividuals, graphType]);
+  }, [
+    formStatistics,
+    questionsWithAnswers,
+    allIndividuals,
+    graphType,
+    activeTab,
+    currentPage,
+  ]);
 
   return (
     <SummaryContext.Provider value={returns}>

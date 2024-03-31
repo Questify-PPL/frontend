@@ -56,23 +56,28 @@ export type QuestionStatistic = {
   statistics: string[] | RadioStatistic;
 };
 
-type Answer = {
-  [key: string]: number;
-};
-
-export type QuestionsWithAnswer = {
-  sectionId?: number;
+export type QuestionAnswer = {
+  sectionId: number | null;
   questionId: number;
   questionType: "TEXT" | "RADIO" | "CHECKBOX";
   questionTypeName: string;
   isRequired: boolean;
   question: string;
   description: string;
-  answers: Answer;
+  occurence: {
+    [key: string]: number;
+  };
+};
+
+export type QuestionWithAnswerSection = {
+  sectionId: number | null;
+  name: string;
+  description: string;
+  questions: QuestionAnswer[];
 };
 
 export type SummarizeFormAsProps = {
   formStatistics: SummarizeForm;
-  questionsWithAnswers: QuestionsWithAnswer;
+  questionsWithAnswers: QuestionAnswer[] | QuestionWithAnswerSection[];
   allIndividuals: string[];
 };
