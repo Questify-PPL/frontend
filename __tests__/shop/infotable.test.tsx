@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import InfoTable from '@/components/shop/InfoTable';
+import ShopInfoTable from '@/components/shop/ShopInfoTable';
 import "@testing-library/jest-dom";
 
 describe('InfoTable', () => {
   test('renders item and date labels', () => {
-    render(<InfoTable />);
+    render(<ShopInfoTable />);
 
     // Assert that the "Item" label is rendered
     const itemLabel = screen.getByText(/Item/i);
