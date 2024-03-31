@@ -41,7 +41,7 @@ export default async function Summary({ params }: Readonly<Props>) {
           formTitle={
             session.user.activeRole === UserRoleEnum.Respondent
               ? form.title
-              : form?.formStatistics.title
+              : form?.formStatistics?.title
           }
         />
       </header>
