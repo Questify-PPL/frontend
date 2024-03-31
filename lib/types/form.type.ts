@@ -28,3 +28,33 @@ export type FetchIndividualForm = {
   message: string;
   data: BareForm;
 };
+
+export type RadioStatistic = {
+  choices: string[];
+  amounts: number[];
+};
+
+export type SummarizeForm = BareForm & {
+  statistics: string[] | RadioStatistic;
+};
+
+type Answer = {
+  [key: string]: number;
+};
+
+export type QuestionsWithAnswer = {
+  sectionId?: number;
+  questionId: number;
+  questionType: "TEXT" | "RADIO" | "CHECKBOX";
+  questionTypeName: string;
+  isRequired: boolean;
+  question: string;
+  description: string;
+  answers: Answer;
+};
+
+export type SummarizeFormAsProps = {
+  formStatistics: SummarizeForm;
+  questionsWithAnswers: QuestionsWithAnswer;
+  allIndividuals: string[];
+};

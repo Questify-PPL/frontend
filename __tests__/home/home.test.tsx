@@ -209,6 +209,37 @@ describe("Login", () => {
 
     render(await Home());
   });
+
+  test("renders with problem when fetching", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "CREATOR",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error(""));
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Home());
+
+    expect(screen.getByText("empty forms")).toBeInTheDocument();
+  });
 });
 
 describe("Admin", () => {

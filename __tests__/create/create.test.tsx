@@ -161,6 +161,15 @@ describe("CreateWrapper Component", () => {
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
+
+  test("renders create with error when fetching", async () => {
+    (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
+
+    render(await Create());
+
+    const createButton = screen.getByText("Create a new Questionnaire");
+    expect(createButton).toBeInTheDocument();
+  });
 });
 
 describe("CreateModal Component", () => {

@@ -125,4 +125,38 @@ describe("Questionnaire List View Page", () => {
     expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
     expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
   });
+
+  it("renders with error when fetching", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
+      new Error("error"),
+    );
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Questionnaire());
+
+    expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
+  });
 });

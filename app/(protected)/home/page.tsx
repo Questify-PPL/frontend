@@ -19,13 +19,15 @@ export default async function Home() {
   async function getForm() {
     let forms: BareForm[] = [];
 
-    if (session.user.activeRole === UserRoleEnum.Creator) {
-      forms = await getQuestionnairesOwned();
-    }
+    try {
+      if (session.user.activeRole === UserRoleEnum.Creator) {
+        forms = await getQuestionnairesOwned();
+      }
 
-    if (session.user.activeRole === UserRoleEnum.Respondent) {
-      forms = await getQuestionnairesFilled();
-    }
+      if (session.user.activeRole === UserRoleEnum.Respondent) {
+        forms = await getQuestionnairesFilled();
+      }
+    } catch (error) {}
 
     return forms;
   }
