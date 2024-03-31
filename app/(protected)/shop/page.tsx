@@ -1,5 +1,5 @@
 import ItemCard from "@/components/shop/ItemCard" 
-import InfoTable from "@/components/shop/InfoTable" 
+import ShopInfoTable from "@/components/shop/ShopInfoTable" 
 import PurchaseCard from "@/components/shop/PurchaseCard";
 import { LuCheck } from "react-icons/lu";
 
@@ -22,7 +22,7 @@ export default function Shop() {
                 <span className="text-[#95B0B4] font-sm text-xs">Forms you have bought</span>
             </div>
 
-            <InfoTable></InfoTable>
+            <ShopInfoTable></ShopInfoTable>
 
             <PurchaseCard balance={0} promo={0} price={0}></PurchaseCard>
 
