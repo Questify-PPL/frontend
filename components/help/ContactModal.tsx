@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { LuX } from "react-icons/lu";
 import { Label } from "@/components/ui/label";
 import { handleTextAreaHeight } from "@/lib/utils";
+import { ContactData } from "@/lib/types";
+import { sendContactForm } from "@/lib/action/contact";
+import { useToast } from "../ui/use-toast";
 
 interface ContactModalProps {
   className: string;
@@ -16,6 +19,7 @@ interface ContactModalProps {
 
 export function ContactModal(contactModalProps: Readonly<ContactModalProps>) {
   const { name, email, className, closeModal } = contactModalProps;
+  const { toast } = useToast();
 
   const initState = {
     values: {
@@ -77,11 +81,23 @@ export function ContactModal(contactModalProps: Readonly<ContactModalProps>) {
 
     if (!nameError && !subjectError && !messageError) {
       try {
-        // const contactData: ContactData = state.values;
-        // const response = await sendContactForm(contactData);
+        const contactData: ContactData = {
+          subject,
+          message,
+        };
+        const response = await sendContactForm(contactData);
+        toast({
+          title: "Success",
+          description: response.message,
+        });
         handleCloseModal();
       } catch (error) {
-        console.error("Failed to send message", error);
+        console.error(error);
+        toast({
+          title: "Failed",
+          description: "Internal server error",
+          variant: "destructive",
+        });
       }
     }
   };
@@ -92,7 +108,7 @@ export function ContactModal(contactModalProps: Readonly<ContactModalProps>) {
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
       onSubmit={handleSubmit}
     >
-      <Card className="flex flex-col w-[35%] p-5 justify-center items-center gap-6">
+      <Card className="flex flex-col xl:w-[35%] lg:w-[50%] w-[80%] p-5 justify-center items-center gap-6">
         <div className="flex flex-row justify-end w-full">
           <LuX
             className="w-5 h-5"
