@@ -35,7 +35,9 @@ describe("Text component", () => {
       </QuestionnaireProvider>,
     );
 
-    expect(screen.getByPlaceholderText("Type your answer here")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Type your answer here"),
+    ).toBeInTheDocument();
     expect(screen.queryByTestId("answerLabel")).not.toBeInTheDocument();
   });
 
@@ -261,7 +263,9 @@ describe("Text component", () => {
     );
 
     expect(screen.getByText("John")).toBeInTheDocument();
-    expect(screen.queryByPlaceholderText("Type your answer here")).not.toBeInTheDocument();
+    expect(
+      screen.queryByPlaceholderText("Type your answer here"),
+    ).not.toBeInTheDocument();
     expect(screen.queryByTestId("answerLabel")).toBeInTheDocument();
   });
 

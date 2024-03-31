@@ -23,6 +23,10 @@ jest.mock("@/lib/action/form", () => ({
   getQuestionnairesFilled: jest.fn(),
 }));
 
+jest.mock("@/lib/action", () => ({
+  getInvoices: jest.fn().mockResolvedValue([]),
+}));
+
 jest.mock("next/navigation", () => {
   return { useRouter: jest.fn(), usePathname: jest.fn() };
 });

@@ -26,6 +26,7 @@ import { Invoice, InvoiceStatus } from "@/lib/types";
 import { useTransition } from "react";
 import { updatePaymentStatus } from "@/lib/action";
 import { useToast } from "../ui/use-toast";
+import { InvoiceStatusEnum } from "@/lib/types/admin";
 
 export default function PaymentTable({
   data,
@@ -38,18 +39,16 @@ export default function PaymentTable({
   const handleStatusChange = (invoice: Invoice, value: InvoiceStatus) => {
     startTransition(async () => {
       const response = await updatePaymentStatus(invoice, value);
-
-      if (response) {
-        toast({
-          title: "Failed to update payment status",
-          description:
-            "Please try again in a few minutes or contact our support team",
-        });
-      }
-
-      toast({
-        title: "Success to update payment status",
-      });
+      const notificationMessage = response
+        ? {
+            title: "Failed to update payment status",
+            description:
+              "Please try again in a few minutes or contact our support team",
+          }
+        : {
+            title: "Success to update payment status",
+          };
+      toast(notificationMessage);
     });
   };
 
@@ -62,7 +61,7 @@ export default function PaymentTable({
               Name
             </TableHead>
             <TableHead className="h-auto px-[5px] py-[10px] w-[100px]">
-              Exhange
+              Exchange
             </TableHead>
             <TableHead className="h-auto px-[5px] py-[10px] w-[100px]">
               Amount
@@ -82,7 +81,7 @@ export default function PaymentTable({
           {data.map((invoice) => (
             <TableRow key={invoice.id}>
               <TableCell className="h-auto px-[5px] py-[10px] pl-[20px] font-bold">
-                {invoice.name}
+                {invoice.creatorName}
               </TableCell>
               <TableCell className="h-auto px-[5px] py-[10px] text-[10px]">
                 <span className="flex gap-[10px] items-center">
@@ -108,9 +107,12 @@ export default function PaymentTable({
                 {invoice.payment}
               </TableCell>
               <TableCell className="h-auto px-[5px] py-[10px]">
-                {(invoice.proof && (
-                  <a href={`https://${invoice.proof}`} className="underline">
-                    {invoice.proof}
+                {(invoice.buktiPembayaranUrl && (
+                  <a
+                    href={`https://${invoice.buktiPembayaranUrl}`}
+                    className="underline"
+                  >
+                    {invoice.buktiPembayaranUrl}
                   </a>
                 )) ||
                   invoice.accountNumber}
@@ -124,28 +126,32 @@ export default function PaymentTable({
                   }
                 >
                   <SelectTrigger
-                    className="w-[140px] h-[38px] px-3 py-2"
-                    disabled={isPending}
+                    className="w-[150px] h-[38px] px-3 py-2"
+                    disabled={
+                      isPending ||
+                      invoice.status === InvoiceStatusEnum.REJECTED ||
+                      invoice.status === InvoiceStatusEnum.APPROVED
+                    }
                   >
                     <div
                       className={`rounded-xl px-[9px] py-[3px] flex gap-[3px] items-center ${clsx(
                         {
                           "bg-[#FDF8EA] text-[#E2B720]":
-                            invoice.status === "Pending",
+                            invoice.status === InvoiceStatusEnum.PENDING,
                           "bg-[#FDEDEA] text-[#E24F20]":
-                            invoice.status === "Rejected",
+                            invoice.status === InvoiceStatusEnum.REJECTED,
                           "bg-[#DDFAD6]  text-[#39A014]":
-                            invoice.status === "Approved",
+                            invoice.status === InvoiceStatusEnum.APPROVED,
                         },
                       )}`}
                     >
-                      {invoice.status === "Pending" && (
+                      {invoice.status === InvoiceStatusEnum.PENDING && (
                         <LuClock3 className="w-[15px] h-[15px]" />
                       )}
-                      {invoice.status === "Rejected" && (
+                      {invoice.status === InvoiceStatusEnum.REJECTED && (
                         <LuXCircle className="w-[15px] h-[15px]" />
                       )}
-                      {invoice.status === "Approved" && (
+                      {invoice.status === InvoiceStatusEnum.APPROVED && (
                         <LuCheckCircle2 className="w-[15px] h-[15px]" />
                       )}
                       {invoice.status}
@@ -153,19 +159,19 @@ export default function PaymentTable({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem
-                      value="Pending"
+                      value={InvoiceStatusEnum.PENDING}
                       className=" text-[#E2B720] rounded-xl"
                     >
                       Pending
                     </SelectItem>
                     <SelectItem
-                      value="Rejected"
+                      value={InvoiceStatusEnum.REJECTED}
                       className="text-[#E24F20] rounded-xl"
                     >
                       Rejected
                     </SelectItem>
                     <SelectItem
-                      value="Approved"
+                      value={InvoiceStatusEnum.APPROVED}
                       className="  text-[#39A014] rounded-xl"
                     >
                       Approved

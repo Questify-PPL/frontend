@@ -10,7 +10,7 @@ export async function createQuestionnaire(
   prize: number,
   prizeType: string,
   maxParticipant?: number,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -99,7 +99,7 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -111,7 +111,7 @@ export async function getQuestionnaire(formId: string) {
 
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[]
+  data: any[] | QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -128,7 +128,7 @@ export async function patchQuestionnaire(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    }
+    },
   );
 
   if (response.status !== 200) {

@@ -14,7 +14,7 @@ export type BareForm = {
   isComplete?: boolean;
   questionAmount?: number;
   winningChance?: number;
-  winningStatus?: boolean;  
+  winningStatus?: boolean;
 };
 
 export type FetchListForm = {

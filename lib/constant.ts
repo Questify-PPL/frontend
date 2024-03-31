@@ -35,6 +35,8 @@ export const URL = {
   getAllCreatorForm: `${process.env.NEXT_PUBLIC_API_URL}/form/creator`,
   getAllRespondentForm: `${process.env.NEXT_PUBLIC_API_URL}/form/respondent`,
   updateProfile: `${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`,
+  topUpInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/all`,
+  validateInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/validate`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [

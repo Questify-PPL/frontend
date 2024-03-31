@@ -8,31 +8,36 @@ import { fireEvent, render, screen } from "@testing-library/react";
 describe("PaymentInfo Component", () => {
   const invoices: Invoice[] = [
     {
-      id: 1,
-      name: "Deny",
+      id: "1",
+      creatorName: "Deny",
       exchange: "Top Up",
       amount: 100000,
       payment: "Debit BCA",
-      proof: "www.cloudinary.com/Integerfinibusnam",
+      buktiPembayaranUrl: "www.cloudinary.com/Integerfinibusnam",
       status: "Pending",
+      createdAt: "2024-03-28T15:18:58.606Z",
     },
     {
-      id: 2,
-      name: "Budy",
+      id: "2",
+      creatorName: "Budy",
       exchange: "Withdraw",
       amount: 100000,
       payment: "Debit BCA",
+      buktiPembayaranUrl: "www.cloudinary.com/Integerfinibusnam",
       accountNumber: "00890897262",
       status: "Approved",
+      createdAt: "2024-03-28T15:18:58.606Z",
     },
     {
-      id: 3,
-      name: "WR Supratman",
+      id: "3",
+      creatorName: "WR Supratman",
       exchange: "Withdraw",
       amount: 100000,
       payment: "Debit BCA",
+      buktiPembayaranUrl: "www.cloudinary.com/Integerfinibusnam",
       accountNumber: "00890897262",
       status: "Approved",
+      createdAt: "2024-03-28T15:18:58.606Z",
     },
   ];
 
