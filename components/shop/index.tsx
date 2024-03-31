@@ -1,3 +1,3 @@
 export * from "./ItemCard"
-export * from "./InfoTable"
+export * from "./ShopInfoTable"
 export * from './PurchaseCard'
