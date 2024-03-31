@@ -1,5 +1,7 @@
 import ItemCard from "@/components/shop/ItemCard" 
 import InfoTable from "@/components/shop/InfoTable" 
+import PurchaseCard from "@/components/shop/PurchaseCard";
+import { LuCheck } from "react-icons/lu";
 
 export default function Shop() {
     return (
@@ -21,8 +23,13 @@ export default function Shop() {
             </div>
 
             <InfoTable></InfoTable>
+
+            <PurchaseCard balance={0} promo={0} price={0}></PurchaseCard>
+
+
+
         
         </div>
 
       );
-} 
+}
