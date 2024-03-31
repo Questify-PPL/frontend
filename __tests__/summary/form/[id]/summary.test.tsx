@@ -89,21 +89,68 @@ describe("Summary Page", () => {
       expires: new Date().toISOString(),
     } as Session;
 
-    const mockedForms: BareForm = {
-      id: "1",
-      title: "Mocked Form 1",
-      prize: 100,
+    const formStatistics = {
+      id: "8bb53ce4-0aa5-4ed4-a109-5b99b51e796e",
+      creatorId: "4ec14456-88ed-41b0-b961-164e23506335",
+      title: "Form 1",
+      prize: 20000,
+      isDraft: false,
+      isPublished: true,
+      maxParticipant: null,
       prizeType: "EVEN",
-      maxWinner: 1,
-      createdAt: "2024-03-17T12:00:00Z",
-      updatedAt: "2024-03-17T12:00:00Z",
-      endedAt: "2024-03-18T12:00:00Z",
-      ongoingParticipation: 10,
-      completedParticipation: 5,
+      maxWinner: null,
+      createdAt: "2024-03-12T16:00:29.167Z",
+      updatedAt: "2024-03-31T08:05:08.662Z",
+      endedAt: null,
+      questionsStatistics: [
+        {
+          sectionId: 60,
+          name: "ASOKDKOASDOKSADOKSAD",
+          description: "Austin",
+          questions: [
+            {
+              sectionId: 60,
+              questionId: 161,
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: true,
+              question: "Question 2",
+              description: "Bebek",
+              statistics: ["Hi Bas"],
+            },
+            {
+              sectionId: 60,
+              questionId: 162,
+              questionType: "RADIO",
+              questionTypeName: "Radio",
+              isRequired: true,
+              question: "Question 2",
+              description: "Bebek",
+              statistics: {
+                choices: ["A", "B", "C", "D"],
+                amounts: [1, 0, 0, 0],
+              },
+            },
+          ],
+        },
+        {
+          sectionId: null,
+          questionId: 163,
+          questionType: "CHECKBOX",
+          questionTypeName: "Radio",
+          isRequired: true,
+          question: "Question 4",
+          description: "Bebek",
+          statistics: {
+            choices: ["A", "B", "C", "D", "E"],
+            amounts: [1, 1, 1, 0, 0],
+          },
+        },
+      ],
     };
 
     (getSummaries as jest.Mock).mockResolvedValue({
-      formStatistics: mockedForms,
+      formStatistics: formStatistics,
       questionsWithAnswers: [],
       allIndividuals: [],
     });
@@ -115,7 +162,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
   });
 
@@ -155,7 +202,7 @@ describe("Summary Page", () => {
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
-      mockedForms,
+      mockedForms
     );
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -165,7 +212,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
   });
 
@@ -192,7 +239,7 @@ describe("Summary Page", () => {
     } as Session;
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch"),
+      new Error("Failed to fetch")
     );
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -202,7 +249,154 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
+  });
+
+  it("should show bar graph when there is data", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "CREATOR",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    const formStatistics = {
+      id: "8bb53ce4-0aa5-4ed4-a109-5b99b51e796e",
+      creatorId: "4ec14456-88ed-41b0-b961-164e23506335",
+      title: "Form 1",
+      prize: 20000,
+      isDraft: false,
+      isPublished: true,
+      maxParticipant: null,
+      prizeType: "EVEN",
+      maxWinner: null,
+      createdAt: "2024-03-12T16:00:29.167Z",
+      updatedAt: "2024-03-31T08:05:08.662Z",
+      endedAt: null,
+      questionsStatistics: [
+        {
+          sectionId: 60,
+          name: "ASOKDKOASDOKSADOKSAD",
+          description: "Austin",
+          questions: [
+            {
+              sectionId: 60,
+              questionId: 161,
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: true,
+              question: "Question 2",
+              description: "Bebek",
+              statistics: ["Hi Bas"],
+            },
+            {
+              sectionId: 60,
+              questionId: 162,
+              questionType: "RADIO",
+              questionTypeName: "Radio",
+              isRequired: true,
+              question: "Question 2",
+              description: "Bebek",
+              statistics: {
+                choices: ["A", "B", "C", "D"],
+                amounts: [1, 0, 0, 0],
+              },
+            },
+          ],
+        },
+        {
+          sectionId: null,
+          questionId: 163,
+          questionType: "CHECKBOX",
+          questionTypeName: "Radio",
+          isRequired: true,
+          question: "Question 4",
+          description: "Bebek",
+          statistics: {
+            choices: ["A", "B", "C", "D", "E"],
+            amounts: [1, 1, 1, 0, 0],
+          },
+        },
+      ],
+    };
+
+    const questionsWithAnswers = [
+      {
+        sectionId: 60,
+        questions: [
+          {
+            questionId: 161,
+            questionType: "TEXT",
+            questionTypeName: "Short Text",
+            isRequired: true,
+            question: "Question 2",
+            description: "Bebek",
+            occurences: {
+              "Hi Bas": 1,
+            },
+          },
+          {
+            questionId: 162,
+            questionType: "RADIO",
+            questionTypeName: "Radio",
+            isRequired: true,
+            question: "Question 2",
+            description: "Bebek",
+            occurences: {
+              A: 1,
+            },
+          },
+        ],
+      },
+      {
+        sectionId: null,
+        questionId: 163,
+        questionType: "CHECKBOX",
+        questionTypeName: "Radio",
+        isRequired: true,
+        question: "Question 4",
+        description: "Bebek",
+        occurences: {
+          A: 1,
+          B: 1,
+          C: 1,
+        },
+      },
+    ];
+
+    (getSummaries as jest.Mock).mockResolvedValue({
+      formStatistics,
+      questionsWithAnswers,
+      allIndividuals: [],
+    });
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(
+      await Summary({
+        params: {
+          id: "1",
+        },
+      })
+    );
+
+    expect(screen.getAllByText("Question 2")[0]).toBeInTheDocument();
+
+    expect(screen.getAllByText("Question 4")[0]).toBeInTheDocument();
   });
 });

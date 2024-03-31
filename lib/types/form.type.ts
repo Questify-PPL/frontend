@@ -35,6 +35,24 @@ export type RadioStatistic = {
 };
 
 export type SummarizeForm = BareForm & {
+  questionsStatistics: SectionGrouped[] | QuestionStatistic[];
+};
+
+export type SectionGrouped = {
+  sectionId: number;
+  name: string;
+  description: string;
+  questions: QuestionStatistic[];
+};
+
+export type QuestionStatistic = {
+  sectionId: number | null;
+  questionId: number;
+  questionType: "TEXT" | "RADIO" | "CHECKBOX";
+  questionTypeName: string;
+  isRequired: boolean;
+  question: string;
+  description: string;
   statistics: string[] | RadioStatistic;
 };
 
