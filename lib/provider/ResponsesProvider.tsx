@@ -22,7 +22,7 @@ export function ResponsesProvider({
         keys: ["title", "prize", "questionAmount"],
         includeMatches: true,
       }),
-    [forms],
+    [forms]
   );
 
   const filteredForms = useMemo(() => {
@@ -38,16 +38,18 @@ export function ResponsesProvider({
     });
   }, [tag, title, fuse, forms]);
 
+  const returns = useMemo(() => {
+    return {
+      tag,
+      setTag,
+      forms: filteredForms,
+      title,
+      setTitle,
+    };
+  }, [tag, title, filteredForms]);
+
   return (
-    <ResponsesContext.Provider
-      value={{
-        tag,
-        setTag,
-        forms: filteredForms,
-        title,
-        setTitle,
-      }}
-    >
+    <ResponsesContext.Provider value={returns}>
       {children}
     </ResponsesContext.Provider>
   );

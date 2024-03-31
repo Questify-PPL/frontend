@@ -34,6 +34,11 @@ export function QuestionRender({
                     {
                       label: "Amount",
                       data: (question.statistics as RadioStatistic).amounts,
+                      backgroundColor: (
+                        question.statistics as RadioStatistic
+                      ).choices.map((_, index) => {
+                        return `hsl(${(index * 360) / (question.statistics as RadioStatistic).choices.length}, 100%, 45%)`;
+                      }),
                     },
                   ],
                 }}
@@ -55,7 +60,7 @@ export function QuestionRender({
                       backgroundColor: (
                         question.statistics as RadioStatistic
                       ).choices.map((_, index) => {
-                        return `hsl(${(index * 360) / (question.statistics as RadioStatistic).choices.length}, 100%, 50%)`;
+                        return `hsl(${(index * 360) / (question.statistics as RadioStatistic).choices.length}, 100%, 45%)`;
                       }),
                     },
                   ],

@@ -12,7 +12,7 @@ export function SummaryProvider({
   questionsWithAnswers,
   allIndividuals,
 }: Readonly<SummaryProviderProps>) {
-  const [graphType, setGraphType] = useState<"bar" | "pie">("bar");
+  const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
 
   const returns = useMemo(() => {
     return {
