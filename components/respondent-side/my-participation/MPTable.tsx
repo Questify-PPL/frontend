@@ -30,9 +30,7 @@ const tableColumns = [
   },
   {
     name: "Status",
-    icon: (
-      <LuActivity className="w-4 h-4 mr-1 text-[#32636A]"></LuActivity>
-    ),
+    icon: <LuActivity className="w-4 h-4 mr-1 text-[#32636A]"></LuActivity>,
   },
   {
     name: "Earned",
@@ -44,10 +42,17 @@ const tableColumns = [
   },
 ];
 
-export function MPTable({
-  children,
-}: Readonly<MPTable>) {
-  const columnWidth: string[] = ["21.75%", "11.25%", "13.75%", "13.75%", "14%", "11.25%", "11.25%", "3.125%"]
+export function MPTable({ children }: Readonly<MPTable>) {
+  const columnWidth: string[] = [
+    "21.75%",
+    "11.25%",
+    "13.75%",
+    "13.75%",
+    "14%",
+    "11.25%",
+    "11.25%",
+    "3.125%",
+  ];
 
   return (
     <table className="flex flex-col" data-testid="mp-table">
@@ -57,8 +62,9 @@ export function MPTable({
             {tableColumns.map((column, index) => (
               <th
                 key={`column-${index + 1}`}
-                className={` ${index === 0 ? "pl-11" : ""
-                  } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center w-[${columnWidth[index]}]`}
+                className={` ${
+                  index === 0 ? "pl-11" : ""
+                } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center w-[${columnWidth[index]}]`}
               >
                 {column.icon}
                 {column.name}

@@ -1,12 +1,19 @@
 export type Invoice = {
-  id: number;
-  name: string;
+  id: string;
+  creatorName: string;
   exchange: string;
   amount: number;
   payment: string;
   status: string;
-  proof?: string;
+  buktiPembayaranUrl?: string;
   accountNumber?: string;
+  createdAt: string;
 };
 
-export type InvoiceStatus = "Approved" | "Pending" | "Rejected";
+export type InvoiceStatus = "APPROVED" | "PENDING" | "REJECTED";
+
+export enum InvoiceStatusEnum {
+  APPROVED = "APPROVED",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
+}

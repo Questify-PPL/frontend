@@ -4,7 +4,7 @@ import { LuCoins } from "react-icons/lu";
 
 export function MPMobile({
   form,
-  className = '',
+  className = "",
 }: Readonly<
   FormAsProps & {
     className?: string;
@@ -54,35 +54,36 @@ export function MPMobile({
                 )}
               {!isEnded(form.endedAt)
                 ? `started on ${new Date(form.createdAt).toLocaleDateString(
-                  "en-GB",
-                  {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  },
-                )}`
-                  .split("/")
-                  .map((part, index, arr) => (
-                    <div key={index}>
-                      {part}
-                      {index !== arr.length - 1 && "/"}
-                    </div>
-                  ))
-                : `prized on ${form.endedAt
-                  ? new Date(form.endedAt).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
-                  : "TBA"
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    },
+                  )}`
+                    .split("/")
+                    .map((part, index, arr) => (
+                      <div key={index}>
+                        {part}
+                        {index !== arr.length - 1 && "/"}
+                      </div>
+                    ))
+                : `prized on ${
+                    form.endedAt
+                      ? new Date(form.endedAt).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                      : "TBA"
                   }`
-                  .split("/")
-                  .map((part, index, arr) => (
-                    <div key={index}>
-                      {part}
-                      {index !== arr.length - 1 && "/"}
-                    </div>
-                  ))}
+                    .split("/")
+                    .map((part, index, arr) => (
+                      <div key={index}>
+                        {part}
+                        {index !== arr.length - 1 && "/"}
+                      </div>
+                    ))}
             </div>
             <div className="text-left text-wrap w-full font-bold break-all">
               {form.title}

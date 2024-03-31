@@ -32,7 +32,13 @@ export function Text(textProps: TextProps) {
     setErrorStatus,
   } = useQuestionnaireContext();
   const { role, numbering, questionId, questionTypeName } = textProps;
-  const { isRequired, question, description, answer, status = true } = textProps;
+  const {
+    isRequired,
+    question,
+    description,
+    answer,
+    status = true,
+  } = textProps;
 
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
@@ -88,7 +94,10 @@ export function Text(textProps: TextProps) {
     } else {
       if (!status) {
         return (
-          <label className="flex break-all font-normal text-xs md:text-sm text-[#64748B]" data-testid="answerLabel">
+          <label
+            className="flex break-all font-normal text-xs md:text-sm text-[#64748B]"
+            data-testid="answerLabel"
+          >
             {answerValue}
           </label>
         );
@@ -118,7 +127,9 @@ export function Text(textProps: TextProps) {
             )}
             {answerError !== null && (
               <div>
-                <p className="text-red-500 font-normal text-xs">{answerError}</p>
+                <p className="text-red-500 font-normal text-xs">
+                  {answerError}
+                </p>
               </div>
             )}
           </div>

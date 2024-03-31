@@ -20,14 +20,21 @@ interface CheckboxProps {
   description?: string;
   choice?: string[];
   answer: string[];
-  status?:boolean;
+  status?: boolean;
 }
 
 export function Checkboxes(checkboxProps: CheckboxProps) {
   const { questionnaire, answers, setQuestionnaire, setAnswers } =
     useQuestionnaireContext();
   const { role, numbering, questionId, questionTypeName } = checkboxProps;
-  const { isRequired, question, description, choice, answer, status = true } = checkboxProps;
+  const {
+    isRequired,
+    question,
+    description,
+    choice,
+    answer,
+    status = true,
+  } = checkboxProps;
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
     description || "",
@@ -54,20 +61,19 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
     newOptions[index] = value;
     setOptions(newOptions);
   };
-  
 
   console.log(selectedOptionsValues);
-  console.log('====================================');
+  console.log("====================================");
   const handleOptionToggle = (index: number, optionValue: string) => {
     if (selectedOptionsValues.includes(optionValue)) {
-      setSelectedOptionsValues(selectedOptionsValues.filter((option) => option !== optionValue))
+      setSelectedOptionsValues(
+        selectedOptionsValues.filter((option) => option !== optionValue),
+      );
     } else {
-      setSelectedOptionsValues([...selectedOptionsValues, optionValue])
+      setSelectedOptionsValues([...selectedOptionsValues, optionValue]);
     }
-    
-
   };
-  
+
   const handleSwitchChange = () => {
     setRequiredValue(!requiredValue);
   };
@@ -104,37 +110,35 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
   const handleOption = () => {
     return (
       <div>
-        {choice && choice.map((option, index) => (
-          <div key={index} className="flex items-center self-stretch gap-2">
-            <input
-              type="checkbox"
-              className=""
-              checked={selectedOptionsValues.includes(option)} // Check if the option is in the answer list
-              onChange={() => handleOptionToggle(index, option)}
-              disabled={!status} // Disable checkbox if status is false
-            />
-  
-            <input
-              style={{ borderBottom: "none" }}
-              type="text"
-              value={option}
-              placeholder={`Option ${index + 1}`}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              className="text-sm outline-none border-b border-gray-300 focus:border-primary"
-              readOnly={role === "RESPONDENT"}
-            />
-            {role === "CREATOR" && (
-              <button onClick={() => deleteOption(index)}>&times;</button>
-            )}
-          </div>
-        ))}
+        {choice &&
+          choice.map((option, index) => (
+            <div key={index} className="flex items-center self-stretch gap-2">
+              <input
+                type="checkbox"
+                className=""
+                checked={selectedOptionsValues.includes(option)} // Check if the option is in the answer list
+                onChange={() => handleOptionToggle(index, option)}
+                disabled={!status} // Disable checkbox if status is false
+              />
+
+              <input
+                style={{ borderBottom: "none" }}
+                type="text"
+                value={option}
+                placeholder={`Option ${index + 1}`}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                className="text-sm outline-none border-b border-gray-300 focus:border-primary"
+                readOnly={role === "RESPONDENT"}
+              />
+              {role === "CREATOR" && (
+                <button onClick={() => deleteOption(index)}>&times;</button>
+              )}
+            </div>
+          ))}
         {role === "CREATOR" && checkboxTemplate}
       </div>
     );
   };
-  
-  
-  
 
   useEffect(() => {
     const updatedQuestionnaire = updateQuestionnaire(

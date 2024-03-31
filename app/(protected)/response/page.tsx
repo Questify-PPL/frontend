@@ -20,8 +20,8 @@ export default async function Response() {
       console.log((error as Error).message);
       isError = true;
     }
-    return []
-  };
+    return [];
+  }
 
   return (
     <section className="flex flex-col h-full w-full absolute">
