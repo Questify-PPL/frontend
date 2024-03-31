@@ -1,8 +1,15 @@
 import { FormAsProps } from "@/lib/types";
 import { decidePhoto } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { LuCoins, LuSend } from "react-icons/lu";
 
 export function ResponseMobile({ form }: Readonly<FormAsProps>) {
+  const router = useRouter();
+
+  function toSummary() {
+    router.push(`/summary/form/${form.id}`);
+  }
+
   return (
     <div className="flex flex-row justify-between items-center md:hidden">
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
@@ -34,9 +41,12 @@ export function ResponseMobile({ form }: Readonly<FormAsProps>) {
           </div>
         </div>
       </div>
-      <div className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white">
+      <button
+        className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white cursor-pointer"
+        onClick={toSummary}
+      >
         <LuSend className="w-[16px] h-[16px] text-[#32636A]" />
-      </div>
+      </button>
     </div>
   );
 }

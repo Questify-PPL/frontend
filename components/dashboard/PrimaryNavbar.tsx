@@ -6,9 +6,12 @@ import { Session } from "next-auth";
 
 export default function PrimaryNavbar({
   session,
-}: Readonly<{ session: Session | null }>) {
+  className,
+}: Readonly<{ session: Session | null; className?: string }>) {
   return (
-    <div className="w-full bg-[#E5EEF0] flex px-[15px] py-[10px] justify-between items-center gap-[10px]">
+    <div
+      className={`w-full bg-[#E5EEF0] flex px-[15px] py-[10px] justify-between items-center gap-[10px] ${className ? className : ""}`}
+    >
       <Link href={"/home"}>
         <Image
           src="/assets/Questify.svg"

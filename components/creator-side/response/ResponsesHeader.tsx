@@ -62,19 +62,17 @@ export function ResponsesHeader({
           className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 hidden"
           data-testid="response-table"
         >
-          <>
-            {columns.map((column, index) => (
-              <div
-                key={`column-${index + 1}`}
-                className={`${index === 4 ? "md:hidden lg:flex" : ""} ${
-                  index === 0 ? "pl-4" : ""
-                } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center ${decidePercentage(index)}`}
-              >
-                {column.icon}
-                {column.name}
-              </div>
-            ))}
-          </>
+          {columns.map((column, index) => (
+            <div
+              key={`column-${index + 1}`}
+              className={`${index === 4 ? "md:hidden lg:flex" : ""} ${
+                index === 0 ? "pl-4" : ""
+              } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center ${decidePercentage(index)}`}
+            >
+              {column.icon}
+              {column.name}
+            </div>
+          ))}
         </div>
       </div>
       <div>{children}</div>

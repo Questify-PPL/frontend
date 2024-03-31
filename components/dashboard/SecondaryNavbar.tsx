@@ -15,7 +15,7 @@ export default function SecondaryNavbar({
 }>) {
   return (
     <>
-      <div className="w-full flex px-[15px] py-[10px] justify-between items-center gap-[10px]">
+      <div className="w-full flex px-[15px] py-[10px] justify-between items-center gap-[10px] md:hidden">
         <div className="text-[20px] font-semibold text-center flex flex-row gap-1 items-center flex-1">
           <span className="text-[#32636A]">{title}</span>
           <HoverCard>
@@ -31,7 +31,7 @@ export default function SecondaryNavbar({
         </div>
         <UserDropdownMenu />
       </div>
-      <div className="w-[92.5%] h-[2px] bg-[#d4dddf]"></div>
+      <div className="w-[92.5%] h-[2px] bg-[#d4dddf] md:hidden block"></div>
     </>
   );
 }

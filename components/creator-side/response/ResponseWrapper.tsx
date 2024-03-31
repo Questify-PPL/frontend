@@ -7,7 +7,7 @@ import { FilterSection } from "./FilterSection";
 import { ResponsesHeader } from "./ResponsesHeader";
 import { ResponsesBody } from "./ResponsesBody";
 
-export function ResponseWrapper({ forms }: FormsAsProps) {
+export function ResponseWrapper({ forms }: Readonly<FormsAsProps>) {
   return (
     <div
       className="flex flex-col md:flex-row w-full h-full gap-4 p-5 pt-3 relative"
