@@ -61,16 +61,18 @@ const Navigation: React.FC<NavigationProps> = ({
     <div className={`flex p-4 md:p-0  ${className}`}>
       <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
         {renderButton(
-          <LuHome className="w-full h-5 text-primary" />,
+          <LuHome className="w-full h-min-5 text-primary" />,
           "Home",
           onClickHome,
           state === "home",
         )}
         {state === "home" ? (
-          <div className="hidden md:flex flex-col h-full">{homeChildren}</div>
+          <div className="hidden md:flex flex-col h-full">
+            {homeChildren}
+          </div>
         ) : null}
         {renderButton(
-          <LuClipboardList className="w-full h-5 text-primary" />,
+          <LuClipboardList className="w-full h-min-5 text-primary" />,
           action,
           onClickAction,
           state === "action",
@@ -79,7 +81,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <div className="hidden md:flex flex-col h-full">{actionChildren}</div>
         ) : null}
         {renderButton(
-          <LuHistory className="w-full h-5 text-primary" />,
+          <LuHistory className="w-full h-min-5 text-primary" />,
           "Responses",
           onClickResponses,
           state === "responses",

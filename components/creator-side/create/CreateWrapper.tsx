@@ -19,7 +19,10 @@ export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5 pt-3 relative">
+      <div
+        className="flex flex-col md:flex-row w-full h-full gap-4 p-5 relative"
+        data-testid="table-content"
+      >
         <CreatorNav state="action"></CreatorNav>
         <div className="flex flex-col w-full space-y-4 flex-1">
           <Button className="flex md:w-fit w-full" onClick={OpenCreateModal}>
