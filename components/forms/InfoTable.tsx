@@ -130,7 +130,7 @@ export function InfoTable({
           )}
         </div>
       </div>
-      <div>{children}</div>
+      <div className="overflow-y-scroll">{children}</div>
     </div>
   );
 }

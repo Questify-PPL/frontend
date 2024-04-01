@@ -5,7 +5,8 @@ import Create from "@/app/(protected)/create/page";
 import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
 import { deleteQuestionnaire, getQuestionnairesOwned } from "@/lib/action/form";
 import { BareForm } from "@/lib/types/form.type";
-import { InfoTable, TableContent } from "@/components/forms";
+import { InfoTable } from "@/components/forms";
+import { DraftContent } from "@/components/creator-side/create/DraftContent";
 import { useRouter } from "next/navigation";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -215,56 +216,56 @@ describe("CreateWrapper Component", () => {
 
     render(
       <InfoTable>
-        <TableContent form={mockedForms[0]}></TableContent>
-      </InfoTable>,
+        <DraftContent form={mockedForms[0]}></DraftContent>
+      </InfoTable>
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
   });
 
-  // test("can access more button", async () => {
-  //   const mockedForms: BareForm[] = [
-  //     {
-  //       id: "1",
-  //       title: "Mocked Form 1",
-  //       prize: 100,
-  //       prizeType: "EVEN",
-  //       maxWinner: 1,
-  //       createdAt: "2024-03-17T12:00:00Z",
-  //       updatedAt: "2024-03-17T12:00:00Z",
-  //       endedAt: "2024-03-18T12:00:00Z",
-  //       ongoingParticipation: 10,
-  //       completedParticipation: 5,
-  //     },
-  //   ];
+  test("can access more button", async () => {
+    const mockedForms: BareForm[] = [
+      {
+        id: "1",
+        title: "Mocked Form 1",
+        prize: 100,
+        prizeType: "EVEN",
+        maxWinner: 1,
+        createdAt: "2024-03-17T12:00:00Z",
+        updatedAt: "2024-03-17T12:00:00Z",
+        endedAt: "2024-03-18T12:00:00Z",
+        ongoingParticipation: 10,
+        completedParticipation: 5,
+      },
+    ];
 
-  //   (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
-  //   render(
-  //     <InfoTable>
-  //       <TableContent form={mockedForms[0]}></TableContent>
-  //     </InfoTable>,
-  //   );
-  //   expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
-  //   const moreButton = screen.getByRole("button", {
-  //     name: "More",
-  //   }) as HTMLButtonElement;
-  //   fireEvent.pointerDown(
-  //     moreButton,
-  //     new PointerEvent("pointerdown", {
-  //       ctrlKey: false,
-  //       button: 0,
-  //     }),
-  //   );
+    render(
+      <InfoTable>
+        <DraftContent form={mockedForms[0]}></DraftContent>
+      </InfoTable>
+    );
+    expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
+    const moreButton = screen.getByRole("button", {
+      name: "More",
+    }) as HTMLButtonElement;
+    fireEvent.pointerDown(
+      moreButton,
+      new PointerEvent("pointerdown", {
+        ctrlKey: false,
+        button: 0,
+      })
+    );
 
-  //   await screen.findByText("Delete");
+    await screen.findByText("Delete");
 
-  //   const deleteButton = screen.getByText("Delete");
-  //   deleteButton.click();
+    const deleteButton = screen.getByText("Delete");
+    deleteButton.click();
 
-  //   expect(deleteQuestionnaire).toHaveBeenCalledWith("1");
+    expect(deleteQuestionnaire).toHaveBeenCalledWith("1");
 
-  //   expect(useRouter().refresh).toHaveBeenCalled();
-  // });
+    expect(useRouter().refresh).toHaveBeenCalled();
+  });
 });
 
 describe("CreateModal Component", () => {
