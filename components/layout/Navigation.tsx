@@ -25,7 +25,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean,
+  isActive: boolean
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (
@@ -60,19 +60,19 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const NAVIGATION_CONST = [
     {
-      icon: <LuHome className="w-full h-5 text-primary" />,
+      icon: <LuHome className="w-full h-min-5 h-5 text-primary" />,
       label: "Home",
       onClick: onClickHome,
       isActive: state === "home",
     },
     {
-      icon: <LuClipboardList className="w-full h-5 text-primary" />,
+      icon: <LuClipboardList className="w-full h-min-5 h-5 text-primary" />,
       label: action,
       onClick: onClickAction,
       isActive: state === "action",
     },
     {
-      icon: <LuHistory className="w-full h-5 text-primary" />,
+      icon: <LuHistory className="w-full h-min-5 h-5 text-primary" />,
       label: "Responses",
       onClick: onClickResponses,
       isActive: state === "responses",

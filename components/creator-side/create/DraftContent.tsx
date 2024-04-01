@@ -13,9 +13,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
-export function TableContent({
+export function DraftContent({
   form,
   isRespondent = false,
 }: Readonly<
@@ -48,12 +48,12 @@ export function TableContent({
 
   return (
     <div
-      className="md:flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer hidden"
+      className="flex w-full p-[10px] gap-[10px] hover:cursor-pointer border-b border-[#E5EEF0] items-center hover:bg-[#F3F8F9]"
       onClick={toEdit}
-      role="none"
+      data-testid="table-content"
     >
-      <div className="w-1/4 flex flex-row gap-3">
-        <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white mt-2">
+      <div className="w-[30%] flex flex-row gap-[10px] mt-1">
+        <div className="min-w-7 h-7 bg-[#95B0B4] rounded-md flex justify-center items-center text-white text-xs text-bold">
           {decidePhoto(form)}
         </div>
 
@@ -70,6 +70,7 @@ export function TableContent({
 
       {isRespondent ? (
         <>
+          {/* Prize */}
           <div className="flex flex-col mb-1 mt-2 w-[23.958%]">
             <div className="flex flex-row w-full">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
@@ -87,8 +88,7 @@ export function TableContent({
             </div>
           </div>
 
-          <div className="flex flex-col py-2 w-[23.958%] font-bold">30</div>
-
+          {/* Prize */}
           <div className="flex flex-col py-2 w-[23.958%] font-bold">
             {form.endedAt
               ? new Date(form.endedAt).toLocaleDateString("en-GB", {
@@ -114,7 +114,8 @@ export function TableContent({
         </>
       ) : (
         <>
-          <div className="flex flex-col mb-1 mt-2 w-[17.96875%]">
+          {/* Prize */}
+          <div className="flex flex-col px-2 py-[6px] w-[15%] bg-[#FCF8E9] rounded-md">
             <div className="flex flex-row w-full">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
                 <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
@@ -131,24 +132,34 @@ export function TableContent({
             </div>
           </div>
 
-          <div className="flex flex-col py-2 w-[17.96875%] font-bold">30</div>
-
-          <div className="flex flex-col py-2 w-[17.96875%] font-bold">
-            {form.completedParticipation}
+          {/* Updated At */}
+          <div className="text-xs flex flex-col w-[10%] font-medium">
+            {new Date(form.updatedAt).toLocaleDateString("en-GB")}
           </div>
 
-          <div className="flex flex-col py-2 w-[17.96875%] font-bold">
-            {new Date(form.updatedAt).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
+          {/* Questions */}
+          <div className="text-xs flex w-[10%] font-bold">N/A</div>
+
+          {/* Time */}
+          <div className="text-xs flex w-[10%] font-bold">N/A mins</div>
+
+          {/* Theme */}
+          <div className="text-xs flex flex-row gap-1 w-[10%] font-bold">
+            <div className="w-4 h-4 bg-slate-600 rounded-full border-2 border-neutral-800" />
+            <div className="w-4 h-4 bg-white rounded-full border-2 border-neutral-800" />
           </div>
 
-          <div className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
+          {/* Font */}
+          <div className="text-xs flex flex-col w-[10%] font-bold">Aa</div>
+
+          {/* Action */}
+          <div className="flex flex-shrink-0 flex-grow-0 w-[24px] h-[24px] items-center justify-center font-bold rounded-sm border">
+            <DropdownMenu data-testid="more-button">
+              <DropdownMenuTrigger data-testid="trigger">
+                <LuMoreHorizontal
+                  className="w-4 h-4 cursor-pointer"
+                  aria-label="More"
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="right-0 absolute"
