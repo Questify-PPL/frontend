@@ -4,6 +4,7 @@ import Help from "@/app/help/page";
 import { UserRole } from "@/lib/types/auth";
 import { Session } from "next-auth";
 import { auth } from "@/auth";
+import { sendContactForm } from "@/lib/action/contact";
 
 jest.mock("@/auth", () => {
   return {
@@ -11,6 +12,10 @@ jest.mock("@/auth", () => {
     auth: jest.fn(),
   };
 });
+
+jest.mock("@/lib/action/contact", () => ({
+  sendContactForm: jest.fn(),
+}));
 
 const mockSession = {
   user: {
@@ -33,6 +38,11 @@ const mockSession = {
   expires: new Date().toISOString(),
 } as Session;
 
+const mockResponse = {
+  statusCode: 201,
+  message: "Email successfully sent to Questify",
+};
+
 jest.mock("next/navigation", () => {
   return { useRouter: jest.fn(), usePathname: jest.fn() };
 });
@@ -41,7 +51,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("Contact Us", () => {
+describe("Contact Modal", () => {
   it("renders contact modal correctly", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
 
@@ -245,8 +255,9 @@ describe("Contact Us", () => {
     expect(inputMessage.value).toBe("");
   });
 
-  it('submits form when fields are valid, resets, and closes modal when "Send" button is clicked', async () => {
+  it("resets and closes modal upon successful email sending", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
+    (sendContactForm as jest.Mock).mockResolvedValue(mockResponse);
 
     render(await Help());
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
@@ -269,6 +280,14 @@ describe("Contact Us", () => {
     expect(submitButton).toBeInTheDocument();
 
     fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(sendContactForm).toHaveBeenCalledTimes(1);
+      expect(sendContactForm).toHaveBeenCalledWith({
+        subject: "Test Subject",
+        message: "Test Message",
+      });
+    });
     expect(contactModal).toHaveClass("hidden");
 
     fireEvent.click(contactButton);
@@ -277,5 +296,75 @@ describe("Contact Us", () => {
     expect(screen.getByText("questify@gmail.com")).toBeInTheDocument();
     expect(inputSubject.value).toBe("");
     expect(inputMessage.value).toBe("");
+  });
+
+  it("should not reset or close modal upon failed email sending", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (sendContactForm as jest.Mock).mockRejectedValue(
+      new Error("Internal server error"),
+    );
+
+    render(await Help());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    const contactButton = screen.getByTestId("button-contact");
+    fireEvent.click(contactButton);
+
+    const contactModal = screen.getByTestId("contact-modal");
+    expect(contactModal).not.toHaveClass("hidden");
+
+    const inputSubject = screen.getByTestId("subject") as HTMLTextAreaElement;
+    fireEvent.change(inputSubject, { target: { value: "Test Subject" } });
+    expect(inputSubject.value).toBe("Test Subject");
+
+    const inputMessage = screen.getByTestId("message") as HTMLTextAreaElement;
+    fireEvent.change(inputMessage, { target: { value: "Test Message" } });
+    expect(inputMessage.value).toBe("Test Message");
+
+    const submitButton = screen.getByText("Send");
+    expect(submitButton).toBeInTheDocument();
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(sendContactForm).toHaveBeenCalledTimes(1);
+      expect(sendContactForm).toHaveBeenCalledWith({
+        subject: "Test Subject",
+        message: "Test Message",
+      });
+    });
+
+    expect(contactModal).not.toHaveClass("hidden");
+    expect(inputSubject.value).toBe("Test Subject");
+    expect(inputMessage.value).toBe("Test Message");
+  });
+});
+
+describe("FAQ Section", () => {
+  it("should render FAQ section", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+
+    render(await Help());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    expect(screen.getByText("Frequently Asked Questions")).toBeInTheDocument();
+    expect(screen.getByTestId("faq-1")).toBeInTheDocument();
+    expect(screen.getByTestId("faq-trigger-1")).toBeInTheDocument();
+    expect(screen.getByTestId("faq-content-1")).toBeInTheDocument();
+  });
+
+  it("expands FAQ content when clicked", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+
+    render(await Help());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    const firstTrigger = screen.getByTestId("faq-trigger-1");
+
+    expect(await screen.findByTestId("faq-content-1")).not.toBeVisible();
+
+    firstTrigger.click();
+
+    expect(await screen.findByTestId("faq-content-1")).toBeVisible();
   });
 });

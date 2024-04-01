@@ -12,7 +12,7 @@ import {
   updateProfile,
   UpdateState,
 } from "./user";
-import { getInvoices, updatePaymentStatus } from "./admin";
+import { getInvoices, updateTopupInvoiceStatus } from "./admin";
 
 export {
   authenticate,
@@ -20,7 +20,7 @@ export {
   changeRole,
   updateProfile,
   getInvoices,
-  updatePaymentStatus,
+  updateTopupInvoiceStatus as updatePaymentStatus,
   createQuestionnaire,
   getQuestionnairesOwned,
   getQuestionnairesFilled,

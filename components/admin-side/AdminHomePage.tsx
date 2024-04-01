@@ -3,7 +3,7 @@ import AdminNav from "./AdminNav";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import PaymentTable from "../admin/PaymentTable";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Fuse from "fuse.js";
 import { Invoice } from "@/lib/types/admin";
 import clsx from "clsx";
@@ -35,8 +35,14 @@ export function PaymentInfo({ invoices }: Readonly<{ invoices: Invoice[] }>) {
     selectedFilter === "all"
       ? data
       : data.filter((item) => item.exchange.toLowerCase() === selectedFilter);
+  const searchQuery = useRef("");
+
+  useEffect(() => {
+    searchItem(searchQuery.current);
+  }, [invoices]);
 
   function searchItem(query: string) {
+    searchQuery.current = query;
     if (!query) {
       setData(invoices);
       return;
@@ -44,7 +50,7 @@ export function PaymentInfo({ invoices }: Readonly<{ invoices: Invoice[] }>) {
 
     const fuse = new Fuse(invoices, {
       threshold: 0.1,
-      keys: ["name"],
+      keys: ["creatorName"],
     });
     const result = fuse.search(query).map((item) => item.item);
     setData(result.length !== 0 ? result : []);
