@@ -9,7 +9,7 @@ export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -218,7 +218,7 @@ export async function deleteQuestionnaire(formId: string) {
         Authorization: `Bearer ${user?.accessToken}`,
       },
       method: "DELETE",
-    }
+    },
   );
 
   if (response.status !== 200) {
