@@ -11,11 +11,11 @@ interface AddQuestionModalProps {
   onShortTextClick?: () => void;
 }
 
-export default function AddQuestionModal({
+export function AddQuestionModal({
   className = "",
   onCancel,
   onShortTextClick = () => {},
-}: AddQuestionModalProps) {
+}: Readonly<AddQuestionModalProps>) {
   const QuestionTypeList = ({ types }: { types: string[] }) => (
     <>
       {types.map((type) => (

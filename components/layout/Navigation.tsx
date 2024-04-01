@@ -25,7 +25,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean,
+  isActive: boolean
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (

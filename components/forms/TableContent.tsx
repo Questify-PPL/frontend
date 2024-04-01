@@ -31,6 +31,7 @@ export function TableContent({
     <div
       className="md:flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer hidden"
       onClick={toEdit}
+      role="none"
     >
       <div className="w-1/4 flex flex-row gap-3">
         <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white mt-2">

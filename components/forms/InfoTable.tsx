@@ -1,4 +1,10 @@
-import { LuClipboardCheck, LuHelpCircle, LuTimer } from "react-icons/lu";
+import {
+  LuClipboardCheck,
+  LuDroplets,
+  LuFunctionSquare,
+  LuHelpCircle,
+  LuTimer,
+} from "react-icons/lu";
 
 interface InfoTableProps {
   children: React.ReactNode;
@@ -15,18 +21,25 @@ const tableColumnsCreator = [
     icon: <></>,
   },
   {
+    name: "Modified",
+  },
+  {
     name: "Questions",
     icon: <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A]"></LuHelpCircle>,
   },
   {
-    name: "Completed",
-    icon: (
-      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A]"></LuClipboardCheck>
-    ),
+    name: "Time",
+    icon: <LuTimer className="w-4 h-4 mr-1 text-[#32636A]"></LuTimer>,
   },
   {
-    name: "Updated",
-    icon: <LuTimer className="w-4 h-4 mr-1 text-[#32636A]"></LuTimer>,
+    name: "Theme",
+    icon: <LuDroplets className="w-4 h-4 mr-1 text-[#32636A]"></LuDroplets>,
+  },
+  {
+    name: "Font",
+    icon: (
+      <LuFunctionSquare className="w-4 h-4 mr-1 text-[#32636A]"></LuFunctionSquare>
+    ),
   },
   {
     name: "",
@@ -65,14 +78,18 @@ export function InfoTable({
 }: Readonly<InfoTableProps>) {
   function decidePercentage(index: number, tableColumns: any) {
     if (index === 0) {
-      return "w-[25%]";
+      return "w-[30%]";
+    }
+
+    if (index === 1) {
+      return "w-[15%]";
     }
 
     if (index == tableColumns.length - 1) {
-      return "w-[3.125%]";
+      return "w-[40px]";
     }
 
-    return isRespondent ? `w-[23.958%]` : `w-[17.96875%]`;
+    return isRespondent ? `w-[23.958%]` : `w-[10%]`;
   }
 
   return (
@@ -85,8 +102,8 @@ export function InfoTable({
                 <div
                   key={`column-${index + 1}`}
                   className={` ${
-                    index === 0 ? "pl-4" : ""
-                  } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)}`}
+                    index === 0 ? "pl-9" : ""
+                  } flex text-[#32636A] justify-start text-[10px] leading-3 text-left font-normal md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)}`}
                 >
                   {column.icon}
                   {column.name}

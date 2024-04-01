@@ -9,8 +9,7 @@ export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
-  maxParticipant?: number,
-  maxWinner?: number,
+  maxWinner?: number
 ) {
   const session = await auth();
   const user = session?.user;
@@ -25,7 +24,6 @@ export async function createQuestionnaire(
       title,
       prize,
       prizeType,
-      maxParticipant,
       maxWinner,
     }),
   });
@@ -207,6 +205,23 @@ export async function patchQuestionnaire(
   if (response.status !== 200) {
     throw new Error("Failed to update questionnaire");
   }
+}
 
-  return await response.json();
+export async function deleteQuestionnaire(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+      },
+      method: "DELETE",
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to delete questionnaire");
+  }
 }
