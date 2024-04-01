@@ -46,7 +46,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
     router.push("/home");
   };
   const toCreditWithdraw = () => {
-    router.push("/home");
+    router.push("/withdraw");
   };
 
   const button =
