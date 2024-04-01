@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import {
   FormLeftMenu,
   FormRightMenu,
@@ -9,17 +10,22 @@ import {
   QuestionToggle,
   SectionToggle,
   SavedAsDraftModal,
+  AddQuestionModal,
 } from "@/components/creator-side/create/form";
 import { RadioButton, Text, Checkboxes } from "@/components/questions";
-import { Section, DefaultQuestion, Question } from "@/lib/context";
+import {
+  Section,
+  DefaultQuestion,
+  Question,
+  QuestionnaireItem,
+} from "@/lib/context";
+import { useQuestionnaireContext } from "@/lib/hooks";
+import { patchQuestionnaire, getQuestionnaire } from "@/lib/action";
 import { LuPlusSquare } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useRouter } from "next/navigation";
-import AddQuestionModal from "@/components/creator-side/create/form/AddQuestionModal";
-import { useQuestionnaireContext } from "@/lib/hooks";
-import { QuestionnaireItem } from "@/lib/context";
-import { patchQuestionnaire, getQuestionnaire } from "@/lib/action";
 import { Card } from "@/components/ui/card";
 
 export default function FormWrapper({ id }: { id: string }) {
@@ -61,7 +67,7 @@ export default function FormWrapper({ id }: { id: string }) {
 
   // Back and Save Handler
   const handleBack = () => {
-    router.push("../");
+    router.push("../../create");
   };
 
   const handleSave = async () => {
@@ -164,13 +170,10 @@ export default function FormWrapper({ id }: { id: string }) {
   const addQuestionHandler = async (newQuestion: any) => {
     try {
       await patchQuestionnaire(id, questionnaire);
-      const response = await patchQuestionnaire(id, newQuestion);
-      const updatedQuestionnaire = response.data.questions;
+      await patchQuestionnaire(id, newQuestion);
       setAddQuestionState("hidden");
       await fetchQuestionnaire();
-      setActiveQuestionId(
-        updatedQuestionnaire[updatedQuestionnaire.length - 1].questionId,
-      );
+      setActiveQuestionId(questionnaire.length - 1);
     } catch (error) {
       console.error("Failed to update questionnaire", error);
     }
@@ -252,7 +255,6 @@ export default function FormWrapper({ id }: { id: string }) {
     });
   }
 
-  // Questionnaire Fetching
   const fetchQuestionnaire = async () => {
     try {
       const response = await getQuestionnaire(id);
@@ -263,6 +265,29 @@ export default function FormWrapper({ id }: { id: string }) {
       console.error("Failed to get questionnaire", error);
     }
   };
+
+  // Questionnaire Fetching
+  useEffect(() => {
+    fetchQuestionnaire();
+  }, [id]);
+
+  const CreatorInfo = [
+    "First Name",
+    "Last Name",
+    "Gender",
+    "Email",
+    "Phone Number",
+    "Company",
+  ] as const;
+
+  const RespondentInfo = [
+    "First Name",
+    "Last Name",
+    "Gender",
+    "Email",
+    "Phone Number",
+    "Company",
+  ] as const;
 
   return (
     <div className="flex w-full h-full" data-testid="form-wrapper">
@@ -280,13 +305,54 @@ export default function FormWrapper({ id }: { id: string }) {
         <FormLeftMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
           state={leftMenuState}
-          onClickOpening={() => handleLeftMenuChange("opening")}
+          onClickOpening={() => {
+            handleLeftMenuChange("opening");
+            patchQuestionnaire(id, questionnaire);
+          }}
           onClickContents={() => {
             handleLeftMenuChange("contents");
-            fetchQuestionnaire();
+            patchQuestionnaire(id, questionnaire);
           }}
-          onClickEnding={() => handleLeftMenuChange("ending")}
-          openingChildren={<div>Opening Children</div>}
+          onClickEnding={() => {
+            handleLeftMenuChange("ending");
+            patchQuestionnaire(id, questionnaire);
+          }}
+          openingChildren={
+            <form className="flex flex-col w-full h-full gap-2">
+              <span className="flex flex-col font-bold text-xs text-wrap">
+                Specify your personal details disclosure
+              </span>
+              <div className="flex flex-col gap-1">
+                {CreatorInfo.map((item, index) => (
+                  <div key={index} className="flex flex-row gap-1.5 w-full">
+                    <Checkbox id={item} className="text-xs" />
+                    <Label htmlFor={item} className="font-medium text-xs">
+                      {item}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+              <Separator className="bg-[#E5EEF0]"></Separator>
+              <div className="flex flex-col gap-0">
+                <span className="flex flex-col font-bold text-xs text-wrap">
+                  Specify the required respondent data
+                </span>
+                <span className="flex flex-col font-normal text-[#95B0B4] text-[10px] leading-3 text-wrap">
+                  If you add another, the question will expect a short answer.
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                {RespondentInfo.map((item, index) => (
+                  <div key={index} className="flex flex-row gap-1.5 w-full">
+                    <Checkbox id={item} className="text-xs" />
+                    <Label htmlFor={item} className="font-medium text-xs">
+                      {item}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </form>
+          }
           contentsChildren={
             <div className="flex flex-col w-full h-full gap-4">
               <Button
@@ -361,7 +427,7 @@ export default function FormWrapper({ id }: { id: string }) {
           <FormUpperMenu
             onBack={handleBack}
             onSave={handleSave}
-            QRETitle="Oreo Satisfaction: User Feedback in Indonesia"
+            QRETitle={QRETitle}
           />
           <Card className="flex w-[50%] h-full rounded-md p-5">
             {activeQuestionId !== -1 && questionToRender

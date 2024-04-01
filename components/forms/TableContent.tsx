@@ -4,6 +4,8 @@ import { FormAsProps } from "@/lib/types";
 import { decidePhoto } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
+import { deleteQuestionnaire } from "@/lib/action/form";
+import { useCallback } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,29 +29,48 @@ export function TableContent({
     router.push(`/create/form/${form.id}`);
   }
 
+  const handleEditClick = useCallback(
+    (event: { stopPropagation: () => void }) => {
+      event.stopPropagation();
+      router.push(`/create/form/${form.id}`);
+    },
+    [form.id, router]
+  );
+
+  const handleDeleteClick = useCallback(
+    (event: { stopPropagation: () => void }) => {
+      event.stopPropagation();
+      deleteQuestionnaire(form.id);
+      router.refresh();
+    },
+    [form.id, router]
+  );
+
   return (
     <tr
-      className="flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer"
+      className="flex w-full p-[10px] gap-[10px] hover:cursor-pointer border-b border-[#E5EEF0] items-center hover:bg-[#F3F8F9]"
       onClick={toEdit}
+      data-testid="table-content"
     >
-      <td className="w-1/4 flex flex-row gap-3">
-        <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white mt-2">
+      <td className="w-[30%] flex flex-row gap-[10px] mt-1">
+        <div className="min-w-7 h-7 bg-[#95B0B4] rounded-md flex justify-center items-center text-white text-xs text-bold">
           {decidePhoto(form)}
         </div>
 
-        <div className="flex flex-col mb-1 flex-1">
-          <div className="text-xs text-teal-900">
-            Created on {new Date(form.createdAt).toDateString()}
-          </div>
+        <div className="flex flex-col flex-1">
+          <span className="text-[10px] leading-3 text-primary">
+            Created on {new Date(form.createdAt).toLocaleDateString("en-GB")}
+          </span>
 
-          <div className="text-left text-wrap w-full font-bold ">
+          <span className="text-left text-wrap w-full font-bold text-sm">
             {form.title}
-          </div>
+          </span>
         </div>
       </td>
 
       {isRespondent ? (
         <>
+          {/* Prize */}
           <td className="flex flex-col mb-1 mt-2 w-[23.958%]">
             <div className="flex flex-row w-full">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
@@ -67,8 +88,7 @@ export function TableContent({
             </div>
           </td>
 
-          <td className="flex flex-col py-2 w-[23.958%] font-bold">30</td>
-
+          {/* Prize */}
           <td className="flex flex-col py-2 w-[23.958%] font-bold">
             {form.endedAt
               ? new Date(form.endedAt).toLocaleDateString("en-GB", {
@@ -94,7 +114,8 @@ export function TableContent({
         </>
       ) : (
         <>
-          <td className="flex flex-col mb-1 mt-2 w-[17.96875%]">
+          {/* Prize */}
+          <td className="flex flex-col px-2 py-[6px] w-[15%] bg-[#FCF8E9] rounded-md">
             <div className="flex flex-row w-full">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
                 <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
@@ -106,35 +127,56 @@ export function TableContent({
             </div>
             <div className="flex flex-row text-xs font-medium text-[#685B2D]">
               {form.prizeType === "EVEN"
-                ? "all participants"
+                ? "each participants"
                 : `${form.maxWinner} lucky respondents`}
             </div>
           </td>
 
-          <td className="flex flex-col py-2 w-[17.96875%] font-bold">30</td>
-
-          <td className="flex flex-col py-2 w-[17.96875%] font-bold">
-            {form.completedParticipation}
+          {/* Updated At */}
+          <td className="text-xs flex flex-col w-[10%] font-medium">
+            {new Date(form.updatedAt).toLocaleDateString("en-GB")}
           </td>
 
-          <td className="flex flex-col py-2 w-[17.96875%] font-bold">
-            {new Date(form.updatedAt).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })}
+          {/* Questions */}
+          <td className="text-xs flex w-[10%] font-bold">N/A</td>
+
+          {/* Time */}
+          <td className="text-xs flex w-[10%] font-bold">N/A mins</td>
+
+          {/* Theme */}
+          <td className="text-xs flex flex-row gap-1 w-[10%] font-bold">
+            <div className="w-4 h-4 bg-slate-600 rounded-full border-2 border-neutral-800" />
+            <div className="w-4 h-4 bg-white rounded-full border-2 border-neutral-800" />
           </td>
 
-          <td className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
+          {/* Font */}
+          <td className="text-xs flex flex-col w-[10%] font-bold">Aa</td>
+
+          {/* Action */}
+          <td className="flex flex-shrink-0 flex-grow-0 w-[24px] h-[24px] items-center justify-center font-bold rounded-sm border">
+            <DropdownMenu data-testid="more-button">
+              <DropdownMenuTrigger data-testid="trigger">
+                <LuMoreHorizontal
+                  className="w-4 h-4 cursor-pointer"
+                  aria-label="More"
+                />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="right-0 absolute">
+              <DropdownMenuContent
+                className="right-0 absolute"
+                data-testid="content-menu"
+              >
                 <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Summary</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleEditClick}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-[#E24F20] focus:text-[#E24F20] focus:bg-[#FDEDEA]"
+                  onClick={handleDeleteClick}
+                  data-testid="delete-button"
+                >
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </td>
