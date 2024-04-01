@@ -50,7 +50,7 @@ export function QuestionsContent() {
                   <p className="text-[14px] font-semibold leading-normal"></p>
                 </div>
               </div>
-            )
+            ),
           )}
         </>
       ) : (
@@ -83,7 +83,7 @@ export function QuestionsContent() {
                   </PaginationLink>
                 </PaginationItem>
               );
-            }
+            },
           )}
 
           <PaginationItem>
