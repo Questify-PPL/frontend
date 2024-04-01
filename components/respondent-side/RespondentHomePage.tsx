@@ -61,21 +61,19 @@ export default function RespondentHomePage({
               <div className="text-[#32636A] text-[10px] font-semibold my-4">
                 Here are your on-going answered questionnaire(s)
               </div>
-              <>
-                <InfoTable isRespondent={isRespondent}>
-                  {forms.map((form) => {
-                    return (
-                      <Fragment key={form.id}>
-                        <DraftMobile
-                          form={form}
-                          isRespondent={isRespondent}
-                        ></DraftMobile>
-                        <TableContent form={form} isRespondent={isRespondent} />
-                      </Fragment>
-                    );
-                  })}
-                </InfoTable>
-              </>
+              <InfoTable isRespondent={isRespondent}>
+                {forms.map((form) => {
+                  return (
+                    <Fragment key={form.id}>
+                      <DraftMobile
+                        form={form}
+                        isRespondent={isRespondent}
+                      ></DraftMobile>
+                      <TableContent form={form} isRespondent={isRespondent} />
+                    </Fragment>
+                  );
+                })}
+              </InfoTable>
             </>
           )}
         </div>

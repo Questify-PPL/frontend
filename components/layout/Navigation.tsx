@@ -25,7 +25,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean
+  isActive: boolean,
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (
@@ -33,7 +33,7 @@ const renderButton = (
     ) : (
       <span className={`${buttonIndicatorClassSm} bg-transparent`}></span>
     )}
-    <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
+    <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:pr-4 lg:pr-6  md:items-center">
       {icon}
       <div className="font-bold text-xs md:text-sm text-[#324B4F] text-wrap md:text-nowrap">
         {label}
@@ -108,7 +108,7 @@ const Navigation: React.FC<NavigationProps> = ({
           {NAVIGATION_CONST.map((nav) => (
             <Fragment key={nav.label}>
               <motion.div
-                className="w-full md:block hidden"
+                className="w-full lg:block hidden"
                 initial={{
                   opacity: 0,
                   y: state === decideState(nav.label) ? 400 : 0,
@@ -118,6 +118,25 @@ const Navigation: React.FC<NavigationProps> = ({
                 transition={{ duration: 0.5, type: "tween" }}
               >
                 {renderButton(nav.icon, nav.label, nav.onClick, nav.isActive)}
+              </motion.div>
+              <motion.div
+                className="w-full md:block lg:hidden hidden"
+                initial={{
+                  opacity: 0,
+                  y: state === decideState(nav.label) ? 400 : 0,
+                }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 400 }}
+                transition={{ duration: 0.5, type: "tween" }}
+              >
+                {renderButton(
+                  nav.icon,
+                  nav.label == "Create Questionnaire"
+                    ? "Create QRE"
+                    : nav.label,
+                  nav.onClick,
+                  nav.isActive,
+                )}
               </motion.div>
               <motion.div
                 className="w-full md:hidden block"

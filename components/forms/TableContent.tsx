@@ -34,7 +34,7 @@ export function TableContent({
       event.stopPropagation();
       router.push(`/create/form/${form.id}`);
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   const handleDeleteClick = useCallback(
@@ -43,7 +43,7 @@ export function TableContent({
       deleteQuestionnaire(form.id);
       router.refresh();
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   return (
@@ -114,8 +114,8 @@ export function TableContent({
         </>
       ) : (
         <>
-          <div className="flex flex-col mb-1 mt-2 w-[17.96875%]">
-            <div className="flex flex-row w-full">
+          <div className="flex flex-col px-2 py-[6px] md:w-[14.375%] lg:w-[11.97916667%] bg-[#FCF8E9] rounded-md overflow-x-scroll">
+            <div className="flex flex-row w-full flex-wrap min-w-fit">
               <div className="flex flex-row text-xs font-bold text-[#685B2D]">
                 <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
                 {form.prize}
@@ -124,20 +124,22 @@ export function TableContent({
                 for
               </div>
             </div>
-            <div className="flex flex-row text-xs font-medium text-[#685B2D]">
+            <div className="flex flex-row text-xs font-medium text-[#685B2D] min-w-fit">
               {form.prizeType === "EVEN"
                 ? "each participants"
                 : `${form.maxWinner} lucky respondents`}
             </div>
           </div>
 
-          <div className="flex flex-col py-2 w-[17.96875%] font-bold">30</div>
+          <div className="flex flex-col py-2 w-[11.97916667%] font-bold">
+            30
+          </div>
 
-          <div className="flex flex-col py-2 w-[17.96875%] font-bold">
+          <div className="flex flex-col py-2 w-[11.97916667%] font-bold">
             {form.completedParticipation}
           </div>
 
-          <div className="flex flex-col py-2 w-[17.96875%] font-bold">
+          <div className="flex flex-col py-2 w-[11.97916667%] font-bold">
             {new Date(form.updatedAt).toLocaleDateString("en-GB", {
               day: "2-digit",
               month: "2-digit",

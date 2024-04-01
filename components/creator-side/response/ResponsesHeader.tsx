@@ -16,21 +16,27 @@ const columns = [
   },
   {
     name: "Questions",
-    icon: <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A]"></LuHelpCircle>,
+    icon: (
+      <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuHelpCircle>
+    ),
   },
   {
     name: "Completed",
     icon: (
-      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A]"></LuClipboardCheck>
+      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuClipboardCheck>
     ),
   },
   {
     name: "Compl Rate",
-    icon: <LuPercent className="w-4 h-4 mr-1 text-[#32636A]"></LuPercent>,
+    icon: (
+      <LuPercent className="w-4 h-4 mr-1 text-[#32636A]  md:hidden lg:block"></LuPercent>
+    ),
   },
   {
     name: "Updated",
-    icon: <LuTimer className="w-4 h-4 mr-1 text-[#32636A]"></LuTimer>,
+    icon: (
+      <LuTimer className="w-4 h-4 mr-1 text-[#32636A]  md:hidden lg:block"></LuTimer>
+    ),
   },
   {
     name: "",

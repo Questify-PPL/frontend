@@ -40,20 +40,22 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
         </div>
       </div>
 
-      <div className="flex flex-col mb-1 mt-2 md:w-[17.96875%] lg:w-[14.375%]">
-        <div className="flex flex-row w-full">
-          <div className="flex flex-row text-xs font-bold text-[#685B2D]">
-            <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
-            {form.prize}
+      <div className="flex flex-col md:w-[17.96875%] lg:w-[14.375%]">
+        <div className="flex flex-wrap px-2 py-[6px] flex-col justify-center items-center max-w-fit rounded-md overflow-x-scroll bg-[#FCF8E9]">
+          <div className="flex flex-row w-full flex-wrap min-w-fit">
+            <div className="flex flex-row text-xs font-bold text-[#685B2D]">
+              <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
+              {form.prize}
+            </div>
+            <div className="ml-1 flex flex-row text-xs font-medium text-[#685B2D]">
+              for
+            </div>
           </div>
-          <div className="ml-1 flex flex-row text-xs font-medium text-[#685B2D]">
-            for
+          <div className="flex flex-row text-xs font-medium text-[#685B2D] min-w-fit">
+            {form.prizeType === "EVEN"
+              ? "each respondents"
+              : `${form.maxWinner} lucky respondents`}
           </div>
-        </div>
-        <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-          {form.prizeType === "EVEN"
-            ? "each respondents"
-            : `${form.maxWinner} lucky respondents`}
         </div>
       </div>
 
