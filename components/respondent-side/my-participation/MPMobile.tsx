@@ -1,6 +1,6 @@
 import { FormAsProps } from "@/lib/types";
 import { decidePhoto, isEnded } from "@/lib/utils";
-import { LuCoins } from "react-icons/lu";
+import { LuCoins, LuDices } from "react-icons/lu";
 
 export function MPMobile({
   form,
@@ -112,12 +112,28 @@ export function MPMobile({
           <div className="flex flex-row text-xs font-medium text-[#685B2D]">
             {form.prizeType === "LUCKY" && <span className="mr-1">lucky</span>}
           </div>
-          <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-            respon
+          <div className="flex flex-row text-xs font-medium text-[#685B2D] break-all">
+            respondents
           </div>
-          <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-            dents
-          </div>
+        </div>
+        <div className="flex flex-wrap bg-[#F9EBF6] rounded-xl px-3 py-1 mt-2 ml-[46px]">
+          {form.winningChance ? (
+            <>
+              <div className="flex flex-wrap mb-1 flex-1">
+                <div className="flex flex-wrap text-xs font-bold text-[#804877] mr-1">
+                  <LuDices className="mr-1 text-[#C036A9]"></LuDices>
+                  {form.winningChance}%
+                </div>
+                <div className="text-xs font-medium text-[#804877] break-all">
+                  winning chance
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-row text-xs font-bold text-[#804877]">
+              TBA
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col py-2 w-[14%] font-bold justify-center items-end">

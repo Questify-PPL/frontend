@@ -144,11 +144,8 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
           <div className="flex flex-row text-xs font-medium text-[#685B2D]">
             {form.prizeType === "LUCKY" && <span className="mr-1">lucky</span>}
           </div>
-          <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-            respon
-          </div>
-          <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-            dents
+          <div className="flex flex-row text-xs font-medium text-[#685B2D] break-all">
+            respondents
           </div>
         </div>
       </td>
@@ -161,12 +158,9 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
                   <LuDices className="mr-1 text-[#C036A9]"></LuDices>
                   {form.winningChance}%
                 </div>
-                <div className="text-xs font-medium text-[#804877]">win</div>
-                <div className="text-xs font-medium text-[#804877] mr-1">
-                  ning
+                <div className="text-xs font-medium text-[#804877] break-all">
+                  winning chance
                 </div>
-                <div className="text-xs font-medium text-[#804877]">cha</div>
-                <div className="text-xs font-medium text-[#804877]">nce</div>
               </div>
             </>
           ) : (
