@@ -177,7 +177,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
         </div>
       </td>
       <td className="flex flex-col py-2 w-[14%] font-bold justify-center">
-        {form.isComplete ? (
+        {form.isCompleted ? (
           <span>Done</span>
         ) : (
           <span>

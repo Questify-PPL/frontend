@@ -24,9 +24,7 @@ export function HelpWrapper({ user }: Readonly<{ user: User }>) {
             <div className="font-bold flex text-2xl justify-center text-center pb-4">
               Frequently Asked Questions
             </div>
-            <FAQSection>
-
-            </FAQSection>
+            <FAQSection></FAQSection>
           </div>
           <div className="flex flex-col md:w-[40%] sm:w-[50%] w-[80%] gap-3 pb-5">
             <Button

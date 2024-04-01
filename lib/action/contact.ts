@@ -1,8 +1,8 @@
 "use server";
 
-import { auth } from '@/auth';
+import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
-import { ContactData } from '../types';
+import { ContactData } from "../types";
 
 export async function sendContactForm(contactData: ContactData) {
   const session = await auth();

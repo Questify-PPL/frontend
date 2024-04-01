@@ -9,7 +9,7 @@ export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -35,11 +35,15 @@ export async function createQuestionnaire(
   return await response.json();
 }
 
-export async function getQuestionnairesOwned() {
+export async function getQuestionnairesOwned(type?: string) {
   const session = await auth();
   const user = session?.user;
 
-  const response = await fetch(URL.getAllCreatorForm, {
+  const url = type
+    ? `${URL.getAllCreatorForm}?type=${type}`
+    : URL.getAllCreatorForm;
+
+  const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${user?.accessToken}`,
       "Content-Type": "application/json",
@@ -107,6 +111,75 @@ export async function getQuestionnaire(formId: string) {
   return await response.json();
 }
 
+export async function getCompletedQuestionnaireForRespondent(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}?type=respondent`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to get questionnaire");
+  }
+
+  return await response.json();
+}
+
+export async function getSummaries(formId: string) {
+  const session = await auth();
+
+  const user = session?.user;
+
+  const [
+    formStatisticsResponse,
+    questionsWithAnswersResponse,
+    allIndividualsResponse,
+  ] = await Promise.all([
+    fetch(`${URL.summaryURL}/${formId}/statistics`, {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }),
+    fetch(`${URL.summaryURL}/${formId}/questions`, {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }),
+    fetch(`${URL.summaryURL}/${formId}/individual`, {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }),
+  ]);
+
+  const [formStatistics, questionsWithAnswers, allIndividuals] =
+    await Promise.all([
+      formStatisticsResponse.json(),
+      questionsWithAnswersResponse.json(),
+      allIndividualsResponse.json(),
+    ]);
+
+  return {
+    formStatistics: formStatistics.data,
+    questionsWithAnswers: questionsWithAnswers.data,
+    allIndividuals: allIndividuals.data,
+  };
+}
+
 export async function patchQuestionnaire(
   formId: string,
   data: any[] | QuestionnaireItem[],
@@ -145,7 +218,7 @@ export async function deleteQuestionnaire(formId: string) {
         Authorization: `Bearer ${user?.accessToken}`,
       },
       method: "DELETE",
-    }
+    },
   );
 
   if (response.status !== 200) {

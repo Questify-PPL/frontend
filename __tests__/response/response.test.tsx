@@ -5,7 +5,10 @@ import { UserRole, UserRoleEnum } from "@/lib/types/auth";
 import { auth } from "@/auth";
 import Response from "@/app/(protected)/response/page";
 import { QUESTIONNAIRES_FILLED } from "@/lib/constant";
-import { getQuestionnairesFilled } from "@/lib/action/form";
+import {
+  getQuestionnairesFilled,
+  getQuestionnairesOwned,
+} from "@/lib/action/form";
 import { isEnded } from "@/lib/utils";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -16,6 +19,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 jest.mock("@/lib/action/form", () => ({
   getQuestionnairesFilled: jest.fn(),
+  getQuestionnairesOwned: jest.fn(),
 }));
 
 jest.mock("next/navigation", () => {
@@ -89,8 +93,64 @@ describe("Responder Response", () => {
     expires: new Date().toISOString(),
   } as Session;
 
+  const mockCreatorSession = {
+    user: {
+      email: "questify@gmail.com",
+      id: "1",
+      roles: ["CREATOR", "RESPONDENT"] as UserRole[],
+      ssoUsername: null,
+      firstName: null,
+      lastName: null,
+      phoneNumber: null,
+      gender: null,
+      companyName: null,
+      birthDate: null,
+      credit: null,
+      isVerified: true,
+      isBlocked: false,
+      hasCompletedProfile: false,
+      activeRole: "CREATOR",
+    },
+    expires: new Date().toISOString(),
+  };
+
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  it("renders ResponsesWrapper with form data when user is a creator with forms", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockCreatorSession);
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED,
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    expect(screen.queryByTestId("response-wrapper")).toBeInTheDocument();
+  });
+
+  it("should not render ResponsesWrapper when user is not a creator", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED,
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    expect(screen.queryByTestId("response-wrapper")).not.toBeInTheDocument();
+  });
+
+  it("renders ResponsesWrapper without form data when user is a creator with empty forms", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockCreatorSession);
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue([]);
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    expect(screen.queryByTestId("response-wrapper")).toBeInTheDocument();
+    expect(screen.queryByTestId("response-table")).toBeInTheDocument();
   });
 
   it("renders MPWrapper with form data when user is a respondent with forms", async () => {
@@ -233,7 +293,7 @@ describe("Responder Response", () => {
   });
 
   it('renders "Done" when the form is complete', async () => {
-    const form = { ...QUESTIONNAIRES_FILLED[0], isComplete: true };
+    const form = { ...QUESTIONNAIRES_FILLED[0], isCompleted: true };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
 
@@ -248,7 +308,7 @@ describe("Responder Response", () => {
       ...QUESTIONNAIRES_FILLED[0],
       questionFilled: 5,
       questionAmount: 15,
-      isComplete: false,
+      isCompleted: false,
     };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
