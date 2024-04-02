@@ -25,9 +25,7 @@ export function InfoTable({ children }: Readonly<InfoTableProps>) {
 
     if (index === 3) {
       return "w-[30%]";
-    }
-
-    else {
+    } else {
       return "w-[25%]";
     }
   }

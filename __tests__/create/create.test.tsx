@@ -156,7 +156,7 @@ describe("CreateWrapper Component", () => {
     expect(createButton).toBeInTheDocument();
 
     mockedForms.forEach((form) => {
-      const formElement = screen.getByText(form.title);
+      const formElement = screen.getAllByText(form.title)[0];
       expect(formElement).toBeInTheDocument();
     });
   });
@@ -217,7 +217,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>
+      </InfoTable>,
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
   });
@@ -243,7 +243,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>
+      </InfoTable>,
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
     const moreButton = screen.getByRole("button", {
@@ -254,7 +254,7 @@ describe("CreateWrapper Component", () => {
       new PointerEvent("pointerdown", {
         ctrlKey: false,
         button: 0,
-      })
+      }),
     );
 
     await screen.findByText("Delete");

@@ -6,7 +6,7 @@ import { DraftMobile, InfoTable } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/lib/hooks";
 import { FormsAsProps } from "@/lib/types";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { DraftContent } from "./DraftContent";
 
 export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
@@ -30,19 +30,14 @@ export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
             Create a new Questionnaire
           </Button>
           <p className="text-[#32636A] text-[10px] font-medium">Drafts</p>
-          {isMobile ? (
-            <>
-              {forms.map((form) => {
-                return <DraftMobile form={form} key={form.id}></DraftMobile>;
-              })}
-            </>
-          ) : (
-            <InfoTable>
-              {forms.map((form) => (
-                <DraftContent key={form.id} form={form} />
-              ))}
-            </InfoTable>
-          )}
+          <InfoTable>
+            {forms.map((form) => (
+              <Fragment key={form.id}>
+                <DraftMobile form={form} key={form.id} />
+                <DraftContent form={form} />
+              </Fragment>
+            ))}
+          </InfoTable>
         </div>
       </div>
       <CreateModal

@@ -25,20 +25,26 @@ const tableColumnsCreator = [
   },
   {
     name: "Questions",
-    icon: <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A]"></LuHelpCircle>,
+    icon: (
+      <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuHelpCircle>
+    ),
   },
   {
     name: "Time",
-    icon: <LuTimer className="w-4 h-4 mr-1 text-[#32636A]"></LuTimer>,
+    icon: (
+      <LuTimer className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuTimer>
+    ),
   },
   {
     name: "Theme",
-    icon: <LuDroplets className="w-4 h-4 mr-1 text-[#32636A]"></LuDroplets>,
+    icon: (
+      <LuDroplets className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuDroplets>
+    ),
   },
   {
     name: "Font",
     icon: (
-      <LuFunctionSquare className="w-4 h-4 mr-1 text-[#32636A]"></LuFunctionSquare>
+      <LuFunctionSquare className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuFunctionSquare>
     ),
   },
   {
@@ -59,7 +65,7 @@ const tableColumnsRespondent = [
   {
     name: "Questions",
     icon: (
-      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A]"></LuClipboardCheck>
+      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuClipboardCheck>
     ),
   },
   {
@@ -78,32 +84,28 @@ export function InfoTable({
 }: Readonly<InfoTableProps>) {
   function decidePercentage(index: number, tableColumns: any) {
     if (index === 0) {
-      return "w-[30%]";
-    }
-
-    if (index === 1) {
-      return "w-[15%]";
+      return "w-[25%]";
     }
 
     if (index == tableColumns.length - 1) {
-      return "w-[40px]";
+      return "w-[3.125%]";
     }
 
-    return isRespondent ? `w-[23.958%]` : `w-[10%]`;
+    return isRespondent ? `w-[23.958%]` : `md:w-[14.375%] lg:w-[11.97916667%]`;
   }
 
   return (
     <div className={`flex flex-col`}>
       <div>
         <div className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 hidden">
-          {isRespondent == false && (
+          {!isRespondent && (
             <>
               {tableColumnsCreator.map((column, index) => (
                 <div
                   key={`column-${index + 1}`}
                   className={` ${
-                    index === 0 ? "pl-9" : ""
-                  } flex text-[#32636A] justify-start text-[10px] leading-3 text-left font-normal md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)}`}
+                    index === 0 ? "pl-4" : ""
+                  } flex text-[#32636A] justify-start text-[10px] leading-3 text-left font-normal md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)} ${index == 5 ? "md:hidden lg:flex" : ""}`}
                 >
                   {column.icon}
                   {column.name}

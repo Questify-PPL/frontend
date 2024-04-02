@@ -34,7 +34,7 @@ export function DraftContent({
       event.stopPropagation();
       router.push(`/create/form/${form.id}`);
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   const handleDeleteClick = useCallback(
@@ -43,16 +43,17 @@ export function DraftContent({
       deleteQuestionnaire(form.id);
       router.refresh();
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   return (
     <div
-      className="flex w-full p-[10px] gap-[10px] hover:cursor-pointer border-b border-[#E5EEF0] items-center hover:bg-[#F3F8F9]"
+      className="hidden md:flex w-full p-[10px] gap-[10px] hover:cursor-pointer border-b border-[#E5EEF0] items-center hover:bg-[#F3F8F9]"
       onClick={toEdit}
       data-testid="table-content"
+      role="none"
     >
-      <div className="w-[30%] flex flex-row gap-[10px] mt-1">
+      <div className="w-1/4 flex flex-row gap-[10px] mt-1">
         <div className="min-w-7 h-7 bg-[#95B0B4] rounded-md flex justify-center items-center text-white text-xs text-bold">
           {decidePhoto(form)}
         </div>
@@ -115,45 +116,53 @@ export function DraftContent({
       ) : (
         <>
           {/* Prize */}
-          <div className="flex flex-col px-2 py-[6px] w-[15%] bg-[#FCF8E9] rounded-md">
-            <div className="flex flex-row w-full">
-              <div className="flex flex-row text-xs font-bold text-[#685B2D]">
-                <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
-                {form.prize}
+          <div className="flex flex-col md:w-[14.375%] lg:w-[11.97916667%]">
+            <div className="flex flex-col px-2 py-[6px] max-w-fit bg-[#FCF8E9] rounded-md flex-wrap">
+              <div className="flex flex-row w-full flex-wrap min-w-fit">
+                <div className="flex flex-row text-xs font-bold text-[#685B2D]">
+                  <LuCoins className="mr-1 text-[#E2B720]"></LuCoins>
+                  {form.prize}
+                </div>
+                <div className="ml-1 flex flex-row text-xs font-medium text-[#685B2D]">
+                  for
+                </div>
               </div>
-              <div className="ml-1 flex flex-row text-xs font-medium text-[#685B2D]">
-                for
+              <div className="flex flex-row text-xs font-medium text-[#685B2D] min-w-fit">
+                {form.prizeType === "EVEN"
+                  ? "each participants"
+                  : `${form.maxWinner} lucky respondents`}
               </div>
-            </div>
-            <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-              {form.prizeType === "EVEN"
-                ? "each participants"
-                : `${form.maxWinner} lucky respondents`}
             </div>
           </div>
 
           {/* Updated At */}
-          <div className="text-xs flex flex-col w-[10%] font-medium">
+          <div className="text-xs flex flex-col md:w-[14.375%] lg:w-[11.97916667%] font-medium">
             {new Date(form.updatedAt).toLocaleDateString("en-GB")}
           </div>
 
           {/* Questions */}
-          <div className="text-xs flex w-[10%] font-bold">N/A</div>
+          <div className="text-xs flex md:w-[14.375%] lg:w-[11.97916667%] font-bold">
+            N/A
+          </div>
 
           {/* Time */}
-          <div className="text-xs flex w-[10%] font-bold">N/A mins</div>
+          <div className="text-xs flex md:w-[14.375%] lg:w-[11.97916667%] font-bold">
+            N/A mins
+          </div>
 
           {/* Theme */}
-          <div className="text-xs flex flex-row gap-1 w-[10%] font-bold">
+          <div className="text-xs lg:flex flex-row gap-1 md:w-[14.375%] lg:w-[11.97916667%] font-bold md:hidden">
             <div className="w-4 h-4 bg-slate-600 rounded-full border-2 border-neutral-800" />
             <div className="w-4 h-4 bg-white rounded-full border-2 border-neutral-800" />
           </div>
 
           {/* Font */}
-          <div className="text-xs flex flex-col w-[10%] font-bold">Aa</div>
+          <div className="text-xs flex flex-col md:w-[14.375%] lg:w-[11.97916667%] font-bold">
+            Aa
+          </div>
 
           {/* Action */}
-          <div className="flex flex-shrink-0 flex-grow-0 w-[24px] h-[24px] items-center justify-center font-bold rounded-sm border">
+          <div className="flex flex-shrink-0 flex-grow-0 w-[3.125%] items-center justify-center font-bold rounded-sm border">
             <DropdownMenu data-testid="more-button">
               <DropdownMenuTrigger data-testid="trigger">
                 <LuMoreHorizontal
