@@ -55,7 +55,7 @@ const PurchaseCard: React.FC<CardProps> = ({ balance, promo, price }) => {
           <div className="flex flex-col">
             <div className="text-[#95B0B4] font-light text-sm">Total</div>
             <div className="flex flex-row">
-              <div className="text-xs text-[#32636A]">You've saved </div>
+              <div className="text-xs text-[#32636A]">You &apos;ve saved </div>
               <div className="w-4 h-4 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10 ml-1">
                 <LuCoins className="text-[#E2B720] p-0.5"></LuCoins>
               </div>
