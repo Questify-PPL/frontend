@@ -1,14 +1,15 @@
+"use client";
 import ItemCard from "@/components/shop/ItemCard";
-import InfoTable from "@/components/shop/InfoTable";
-import ItemCard from "@/components/shop/ItemCard" 
-import ShopInfoTable from "@/components/shop/ShopInfoTable" 
+import ShopInfoTable from "@/components/shop/ShopInfoTable";
 import PurchaseCard from "@/components/shop/PurchaseCard";
-import { LuCheck } from "react-icons/lu";
+import PurchasedModal from "@/components/shop/PurchasedModal";
+import PurchaseConfirmationModal from "@/components/shop/PurchaseConfirmationModal";
+import React, { useState } from "react";
 
 export default function Shop() {
   return (
     <div className="p-2 mt-10">
-      <div className="flex flex-col mb-2">
+      <div className="flex flex-col mb-2 md:items-center">
         <span className="text-[#1D2425] font-semibold text-base">
           Basic Plans
         </span>
@@ -16,7 +17,7 @@ export default function Shop() {
           The form has no expiry date
         </span>
       </div>
-      <div className="flex flex-row h-full w-full  gap-2">
+      <div className="flex flex-row h-full w-full md:flex-row md:justify-center md:gap-5  gap-2">
         <ItemCard
           label="1 Form"
           cost="25.000"
@@ -42,7 +43,7 @@ export default function Shop() {
           imageUrl=""
         ></ItemCard>
       </div>
-      <div className="flex flex-col mt-10">
+      <div className="flex flex-col mt-10 md:items-center">
         <span className="text-[#1D2425] font-semibold text-base">
           Purchase History
         </span>
@@ -51,19 +52,9 @@ export default function Shop() {
         </span>
       </div>
 
-      <InfoTable></InfoTable>
+      <div className="md:justify-center md:flex-row md:items-center flex flex-row h-full w-full">
+        <ShopInfoTable></ShopInfoTable>
+      </div>
     </div>
   );
-}
-
-            <ShopInfoTable></ShopInfoTable>
-
-            <PurchaseCard balance={0} promo={0} price={0}></PurchaseCard>
-
-
-
-        
-        </div>
-
-      );
 }
