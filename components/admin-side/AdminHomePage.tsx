@@ -50,7 +50,7 @@ export function PaymentInfo({ invoices }: Readonly<{ invoices: Invoice[] }>) {
 
     const fuse = new Fuse(invoices, {
       threshold: 0.1,
-      keys: ["creatorName"],
+      keys: ["creatorName", "userName"],
     });
     const result = fuse.search(query).map((item) => item.item);
     setData(result.length !== 0 ? result : []);
