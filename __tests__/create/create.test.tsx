@@ -1,10 +1,13 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Create from "@/app/(protected)/create/page";
 import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
-import { getQuestionnairesOwned } from "@/lib/action/form";
+import { deleteQuestionnaire, getQuestionnairesOwned } from "@/lib/action/form";
 import { BareForm } from "@/lib/types/form.type";
+import { InfoTable } from "@/components/forms";
+import { DraftContent } from "@/components/creator-side/create/DraftContent";
+import { useRouter } from "next/navigation";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -14,11 +17,33 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 jest.mock("@/lib/action/form", () => ({
   getQuestionnairesOwned: jest.fn(),
+  deleteQuestionnaire: jest.fn(),
 }));
 
 jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn(), usePathname: jest.fn() };
+  return {
+    useRouter: jest.fn().mockReturnValue({
+      push: jest.fn(),
+      refresh: jest.fn(),
+    }),
+    usePathname: jest.fn(),
+  };
 });
+
+class MockPointerEvent extends Event {
+  button: number;
+  ctrlKey: boolean;
+  pointerType: string;
+
+  constructor(type: string, props: PointerEventInit) {
+    super(type, props);
+    this.button = props.button || 0;
+    this.ctrlKey = props.ctrlKey || false;
+    this.pointerType = props.pointerType || "mouse";
+  }
+}
+
+window.PointerEvent = MockPointerEvent as any;
 
 const mockedDispact = jest.fn();
 
@@ -131,7 +156,7 @@ describe("CreateWrapper Component", () => {
     expect(createButton).toBeInTheDocument();
 
     mockedForms.forEach((form) => {
-      const formElement = screen.getByText(form.title);
+      const formElement = screen.getAllByText(form.title)[0];
       expect(formElement).toBeInTheDocument();
     });
   });
@@ -160,6 +185,86 @@ describe("CreateWrapper Component", () => {
     render(<CreateWrapper forms={[]} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
+  });
+
+  test("renders create with error when fetching", async () => {
+    (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
+
+    render(await Create());
+
+    const createButton = screen.getByText("Create a new Questionnaire");
+    expect(createButton).toBeInTheDocument();
+  });
+
+  test("renders infotable", async () => {
+    const mockedForms: BareForm[] = [
+      {
+        id: "1",
+        title: "Mocked Form 1",
+        prize: 100,
+        prizeType: "EVEN",
+        maxWinner: 1,
+        createdAt: "2024-03-17T12:00:00Z",
+        updatedAt: "2024-03-17T12:00:00Z",
+        endedAt: "2024-03-18T12:00:00Z",
+        ongoingParticipation: 10,
+        completedParticipation: 5,
+      },
+    ];
+
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
+
+    render(
+      <InfoTable>
+        <DraftContent form={mockedForms[0]}></DraftContent>
+      </InfoTable>,
+    );
+    expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
+  });
+
+  test("can access more button", async () => {
+    const mockedForms: BareForm[] = [
+      {
+        id: "1",
+        title: "Mocked Form 1",
+        prize: 100,
+        prizeType: "EVEN",
+        maxWinner: 1,
+        createdAt: "2024-03-17T12:00:00Z",
+        updatedAt: "2024-03-17T12:00:00Z",
+        endedAt: "2024-03-18T12:00:00Z",
+        ongoingParticipation: 10,
+        completedParticipation: 5,
+      },
+    ];
+
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
+
+    render(
+      <InfoTable>
+        <DraftContent form={mockedForms[0]}></DraftContent>
+      </InfoTable>,
+    );
+    expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
+    const moreButton = screen.getByRole("button", {
+      name: "More",
+    }) as HTMLButtonElement;
+    fireEvent.pointerDown(
+      moreButton,
+      new PointerEvent("pointerdown", {
+        ctrlKey: false,
+        button: 0,
+      }),
+    );
+
+    await screen.findByText("Delete");
+
+    const deleteButton = screen.getByText("Delete");
+    deleteButton.click();
+
+    expect(deleteQuestionnaire).toHaveBeenCalledWith("1");
+
+    expect(useRouter().refresh).toHaveBeenCalled();
   });
 });
 

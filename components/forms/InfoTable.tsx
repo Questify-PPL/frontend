@@ -1,4 +1,10 @@
-import { LuClipboardCheck, LuHelpCircle, LuTimer } from "react-icons/lu";
+import {
+  LuClipboardCheck,
+  LuDroplets,
+  LuFunctionSquare,
+  LuHelpCircle,
+  LuTimer,
+} from "react-icons/lu";
 
 interface InfoTableProps {
   children: React.ReactNode;
@@ -15,18 +21,31 @@ const tableColumnsCreator = [
     icon: <></>,
   },
   {
-    name: "Questions",
-    icon: <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A]"></LuHelpCircle>,
+    name: "Modified",
   },
   {
-    name: "Completed",
+    name: "Questions",
     icon: (
-      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A]"></LuClipboardCheck>
+      <LuHelpCircle className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuHelpCircle>
     ),
   },
   {
-    name: "Updated",
-    icon: <LuTimer className="w-4 h-4 mr-1 text-[#32636A]"></LuTimer>,
+    name: "Time",
+    icon: (
+      <LuTimer className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuTimer>
+    ),
+  },
+  {
+    name: "Theme",
+    icon: (
+      <LuDroplets className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuDroplets>
+    ),
+  },
+  {
+    name: "Font",
+    icon: (
+      <LuFunctionSquare className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuFunctionSquare>
+    ),
   },
   {
     name: "",
@@ -46,7 +65,7 @@ const tableColumnsRespondent = [
   {
     name: "Questions",
     icon: (
-      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A]"></LuClipboardCheck>
+      <LuClipboardCheck className="w-4 h-4 mr-1 text-[#32636A] md:hidden lg:block"></LuClipboardCheck>
     ),
   },
   {
@@ -72,25 +91,25 @@ export function InfoTable({
       return "w-[3.125%]";
     }
 
-    return isRespondent ? `w-[23.958%]` : `w-[17.96875%]`;
+    return isRespondent ? `w-[23.958%]` : `md:w-[14.375%] lg:w-[11.97916667%]`;
   }
 
   return (
-    <table className={`flex flex-col`}>
-      <thead>
-        <tr className="flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3">
-          {isRespondent == false && (
+    <div className={`flex flex-col`}>
+      <div>
+        <div className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 hidden">
+          {!isRespondent && (
             <>
               {tableColumnsCreator.map((column, index) => (
-                <th
+                <div
                   key={`column-${index + 1}`}
                   className={` ${
                     index === 0 ? "pl-4" : ""
-                  } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)}`}
+                  } flex text-[#32636A] justify-start text-[10px] leading-3 text-left font-normal md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)} ${index == 5 ? "md:hidden lg:flex" : ""}`}
                 >
                   {column.icon}
                   {column.name}
-                </th>
+                </div>
               ))}
             </>
           )}
@@ -98,7 +117,7 @@ export function InfoTable({
             <>
               {tableColumnsRespondent.map((column, index) => {
                 return (
-                  <th
+                  <div
                     key={`column-${index + 1}`}
                     className={` ${
                       index === 0 ? "pl-4" : ""
@@ -106,14 +125,14 @@ export function InfoTable({
                   >
                     {column.icon}
                     {column.name}
-                  </th>
+                  </div>
                 );
               })}
             </>
           )}
-        </tr>
-      </thead>
-      <tbody>{children}</tbody>
-    </table>
+        </div>
+      </div>
+      <div className="overflow-y-scroll">{children}</div>
+    </div>
   );
 }

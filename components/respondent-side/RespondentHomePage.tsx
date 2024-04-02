@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import RespondentNav from "./RespondentNav";
-import { useMediaQuery } from "@/lib/hooks";
 import { DraftMobile, InfoTable, TableContent } from "../forms";
 import HomeCard from "../forms/HomeCard";
+import { Fragment } from "react";
 
 export default function RespondentHomePage({
   forms,
@@ -19,7 +19,6 @@ export default function RespondentHomePage({
   }
 >) {
   const router = useRouter();
-  const isMobile = useMediaQuery(768);
 
   return (
     <div className="flex flex-col w-full h-full absolute">
@@ -62,29 +61,19 @@ export default function RespondentHomePage({
               <div className="text-[#32636A] text-[10px] font-semibold my-4">
                 Here are your on-going answered questionnaire(s)
               </div>
-              {isMobile ? (
-                <>
-                  {forms.map((form) => {
-                    return (
+              <InfoTable isRespondent={isRespondent}>
+                {forms.map((form) => {
+                  return (
+                    <Fragment key={form.id}>
                       <DraftMobile
                         form={form}
-                        key={form.id}
                         isRespondent={isRespondent}
                       ></DraftMobile>
-                    );
-                  })}
-                </>
-              ) : (
-                <InfoTable isRespondent={isRespondent}>
-                  {forms.map((form) => (
-                    <TableContent
-                      key={form.id}
-                      form={form}
-                      isRespondent={isRespondent}
-                    />
-                  ))}
-                </InfoTable>
-              )}
+                      <TableContent form={form} isRespondent={isRespondent} />
+                    </Fragment>
+                  );
+                })}
+              </InfoTable>
             </>
           )}
         </div>

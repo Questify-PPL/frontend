@@ -19,9 +19,9 @@ jest.mock("next/navigation", () => ({
 test("renders navigation pane with no problem", () => {
   render(<Join />);
 
-  expect(screen.getByText("Home")).toBeInTheDocument();
-  expect(screen.getByText("Questionnaire for You")).toBeInTheDocument();
-  expect(screen.getByText("Responses")).toBeInTheDocument();
+  expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
+  expect(screen.getAllByText("Questionnaire for You")[0]).toBeInTheDocument();
+  expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
 });
 
 test("renders main feature and open the modal", async () => {

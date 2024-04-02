@@ -23,6 +23,10 @@ jest.mock("@/lib/action/form", () => ({
   getQuestionnairesFilled: jest.fn(),
 }));
 
+jest.mock("@/lib/action", () => ({
+  getInvoices: jest.fn().mockResolvedValue([]),
+}));
+
 jest.mock("next/navigation", () => {
   return { useRouter: jest.fn(), usePathname: jest.fn() };
 });
@@ -147,8 +151,8 @@ describe("Login", () => {
 
     render(await Home());
 
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Responses")).toBeInTheDocument();
+    expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
 
     expect(screen.getByText("empty forms")).toBeInTheDocument();
     expect(screen.getByText("credits")).toBeInTheDocument();
@@ -208,6 +212,37 @@ describe("Login", () => {
     (auth as jest.Mock).mockResolvedValue(session);
 
     render(await Home());
+  });
+
+  test("renders with problem when fetching", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "CREATOR",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error(""));
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Home());
+
+    expect(screen.getByText("empty forms")).toBeInTheDocument();
   });
 });
 

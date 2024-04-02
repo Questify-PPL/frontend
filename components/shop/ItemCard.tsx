@@ -4,13 +4,14 @@ import React, {useState} from "react";
 import { Card } from "@/components/ui/card";
 import { LuScroll, LuCoins, LuCheck } from "react-icons/lu";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import PurchaseCard from "./PurchaseCard"; // Import the PurchaseCard component
 
 interface CardProps {
-    label: string;
-    cost: string;
-    discCost: string;
-    imageUrl: string;
-  }
+  label: string;
+  cost: string;
+  discCost: string;
+  imageUrl: string;
+}
 
   const ItemCard: React.FC<CardProps> = ({ label, cost, discCost, imageUrl }) => {
   const [isSelected, setIsSelected] = useState(false);

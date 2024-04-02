@@ -21,7 +21,7 @@ const childrenClass = `flex flex-col h-full gap-4 px-5 py-4 items-stretch overfl
 const renderButton = (
   label: string,
   onClick: () => void,
-  isActive: boolean
+  isActive: boolean,
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     <div className="flex flex-row gap-3 pl-5 py-3 items-center">
@@ -35,7 +35,7 @@ const renderButton = (
   </Button>
 );
 
-export function FormLeftMenu ({
+export function FormLeftMenu({
   className = "",
   state = "opening",
   onClickOpening = () => {},
@@ -63,4 +63,4 @@ export function FormLeftMenu ({
       </Card>
     </div>
   );
-};
+}

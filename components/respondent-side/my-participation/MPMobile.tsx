@@ -1,10 +1,10 @@
 import { FormAsProps } from "@/lib/types";
 import { decidePhoto, isEnded } from "@/lib/utils";
-import { LuCoins } from "react-icons/lu";
+import { LuCoins, LuDices } from "react-icons/lu";
 
 export function MPMobile({
   form,
-  className = '',
+  className = "",
 }: Readonly<
   FormAsProps & {
     className?: string;
@@ -54,35 +54,36 @@ export function MPMobile({
                 )}
               {!isEnded(form.endedAt)
                 ? `started on ${new Date(form.createdAt).toLocaleDateString(
-                  "en-GB",
-                  {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  },
-                )}`
-                  .split("/")
-                  .map((part, index, arr) => (
-                    <div key={index}>
-                      {part}
-                      {index !== arr.length - 1 && "/"}
-                    </div>
-                  ))
-                : `prized on ${form.endedAt
-                  ? new Date(form.endedAt).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
-                  : "TBA"
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    },
+                  )}`
+                    .split("/")
+                    .map((part, index, arr) => (
+                      <div key={index}>
+                        {part}
+                        {index !== arr.length - 1 && "/"}
+                      </div>
+                    ))
+                : `prized on ${
+                    form.endedAt
+                      ? new Date(form.endedAt).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                      : "TBA"
                   }`
-                  .split("/")
-                  .map((part, index, arr) => (
-                    <div key={index}>
-                      {part}
-                      {index !== arr.length - 1 && "/"}
-                    </div>
-                  ))}
+                    .split("/")
+                    .map((part, index, arr) => (
+                      <div key={index}>
+                        {part}
+                        {index !== arr.length - 1 && "/"}
+                      </div>
+                    ))}
             </div>
             <div className="text-left text-wrap w-full font-bold break-all">
               {form.title}
@@ -111,16 +112,32 @@ export function MPMobile({
           <div className="flex flex-row text-xs font-medium text-[#685B2D]">
             {form.prizeType === "LUCKY" && <span className="mr-1">lucky</span>}
           </div>
-          <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-            respon
+          <div className="flex flex-row text-xs font-medium text-[#685B2D] break-all">
+            respondents
           </div>
-          <div className="flex flex-row text-xs font-medium text-[#685B2D]">
-            dents
-          </div>
+        </div>
+        <div className="flex flex-wrap bg-[#F9EBF6] rounded-xl px-3 py-1 mt-2 ml-[46px]">
+          {form.winningChance ? (
+            <>
+              <div className="flex flex-wrap mb-1 flex-1">
+                <div className="flex flex-wrap text-xs font-bold text-[#804877] mr-1">
+                  <LuDices className="mr-1 text-[#C036A9]"></LuDices>
+                  {form.winningChance}%
+                </div>
+                <div className="text-xs font-medium text-[#804877] break-all">
+                  winning chance
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-row text-xs font-bold text-[#804877]">
+              TBA
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col py-2 w-[14%] font-bold justify-center items-end">
-        {form.isComplete ? (
+        {form.isCompleted ? (
           <span>Done</span>
         ) : (
           <span>
