@@ -22,7 +22,7 @@ const renderButton = (
     ) : (
       <span className={`${buttonIndicatorClassSm} bg-transparent`}></span>
     )}
-    <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:py-3 md:items-center">
+    <div className="flex flex-col md:flex-row gap-0.5 md:gap-3 md:pl-5 md:pr-12 md:py-3 md:items-center">
       {icon}
       <div className="font-bold text-xs md:text-sm text-[#324B4F] text-wrap md:text-nowrap">
         {label}
@@ -66,20 +66,9 @@ export function SummaryNavigation({ className = "" }) {
     },
   ];
 
-  function decideState(state: string) {
-    switch (state) {
-      case "Summary":
-        return "summary";
-      case "Question":
-        return "question";
-      default:
-        return "individual";
-    }
-  }
-
   return (
     <AnimatePresence>
-      <div className={`flex p-4 md:p-0  ${className}`}>
+      <motion.div className={`flex p-4 md:p-0  ${className} z-10`}>
         <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
           {NAVIGATION_CONST.map((nav) => (
             <Fragment key={nav.label}>
@@ -87,7 +76,7 @@ export function SummaryNavigation({ className = "" }) {
                 className="w-full md:block hidden"
                 initial={{
                   opacity: 0,
-                  y: activeTab === decideState(nav.label) ? 400 : 0,
+                  y: 400,
                 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 400 }}
@@ -107,7 +96,7 @@ export function SummaryNavigation({ className = "" }) {
             </Fragment>
           ))}
         </Card>
-      </div>
+      </motion.div>
     </AnimatePresence>
   );
 }

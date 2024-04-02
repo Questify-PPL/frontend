@@ -30,7 +30,9 @@ export function SummaryProvider({
       setActiveTab,
       currentPage,
       setCurrentPage,
-      questionDetails: questionsWithAnswers[currentPage - 1],
+      questionDetails: questionsWithAnswers
+        ? questionsWithAnswers[currentPage - 1]
+        : undefined,
     };
   }, [
     formStatistics,

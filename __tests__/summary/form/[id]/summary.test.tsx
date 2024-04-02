@@ -162,7 +162,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -202,7 +202,7 @@ describe("Summary Page", () => {
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
-      mockedForms
+      mockedForms,
     );
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -212,7 +212,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -239,7 +239,7 @@ describe("Summary Page", () => {
     } as Session;
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch")
+      new Error("Failed to fetch"),
     );
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -249,7 +249,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -392,7 +392,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     expect(screen.getAllByText("Question 2")[0]).toBeInTheDocument();
@@ -544,7 +544,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -688,7 +688,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 });
