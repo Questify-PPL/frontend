@@ -1,84 +1,81 @@
-'use client'
-
 import React from "react";
 import { Card } from "@/components/ui/card";
-import {  LuCoins, LuChevronRight, LuTag } from "react-icons/lu";
+import { LuCoins, LuChevronRight, LuTag } from "react-icons/lu";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
 
 interface CardProps {
-    balance:number,
-    promo:number,
-    price:number
-  }
+  balance: number;
+  promo: number;
+  price: number;
+}
 
-  const PurchaseCard: React.FC<CardProps> = ({ balance, promo, price}) => {
-
+const PurchaseCard: React.FC<CardProps> = ({ balance, promo, price }) => {
   return (
-    <Card className="min-w-80 max-w-2xl h-56 mt-5 p-2.5">
+    <div className="fixed bottom-0 left-0 w-full p-4 bg-white shadow-md z-50">
+      <Card className="min-w-80 max-w-2xl h-56 mt-5 p-2.5 md:w-1/2">
         <div className="flex flex-row justify-between p-0.5">
-            <div className="flex flex-col">
-                <div className="font-light text-[#95B0B4] text-xs">
-                    Credit Balance
-                </div>
-                <div className="flex flex-row mt-px">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10 ml-1">
-                    <LuCoins className="text-[#E2B720] p-0.5 w-5 h-5"></LuCoins>
-                </div>
-                    <div className="ml-1 text-[#1D2425] font-bold">
-                        82000
-                    </div>
-                </div>
+          <div className="flex flex-col">
+            <div className="font-light text-[#95B0B4] text-xs">
+              Credit Balance
             </div>
-            <div className="mt-2 flex flex-row">
-            <div className=" text-[#95B0B4] font-light text-xs">
-                Top up
+            <div className="flex flex-row mt-px">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10 ml-1">
+                <LuCoins className="text-[#E2B720] p-0.5 w-5 h-5"></LuCoins>
+              </div>
+              <div className="ml-1 text-[#1D2425] font-bold">82000</div>
             </div>
+          </div>
+          <div className="mt-2 flex flex-row">
+            <div className=" text-[#95B0B4] font-light text-xs">Top up</div>
             <LuChevronRight className="text-[#95B0B4]"></LuChevronRight>
-            </div>
-            
+          </div>
         </div>
 
         <Separator className="border-t-2 my-1 text-[#E5EEF0] mb-3"></Separator>
 
         <div className="flex flex-row justify-between">
-            <div className="bg-[#F9EBF6] w-32 h-5 flex flex-row rounded-lg py-1 px-2">
-                    <LuTag className="text-[#C036A9] h-2.5 w-2.5 font-bold mt-0.5"></LuTag>
-                    <div className="font-bold text-[#C036A9] text-[10px] ml-1">2 promo&#40;s&#41; for you</div>
+          <div className="bg-[#F9EBF6] w-32 h-5 flex flex-row rounded-lg py-1 px-2">
+            <LuTag className="text-[#C036A9] h-2.5 w-2.5 font-bold mt-0.5"></LuTag>
+            <div className="font-bold text-[#C036A9] text-[10px] ml-1">
+              2 promo(s) for you
             </div>
-            <div className="flex flex-row">
-                <div className="mt-1 text-[#95B0B4] font-light text-xs"> 
-                    Use Voucher
-                </div>
-                <LuChevronRight className="mt-1 text-[#95B0B4]"></LuChevronRight>
+          </div>
+          <div className="flex flex-row">
+            <div className="mt-1 text-[#95B0B4] font-light text-xs">
+              Use Voucher
             </div>
+            <LuChevronRight className="mt-1 text-[#95B0B4]"></LuChevronRight>
+          </div>
         </div>
 
         <Separator className="border-t-2 my-1 text-[#E5EEF0] mt-3"></Separator>
 
-        <div className="flex flex-row justify-between mt-3" >
-            <div className="flex flex-col">
-                <div className="text-[#95B0B4] font-light text-sm">Total</div>
-                <div className="flex flex-row"> 
-                    <div className="text-xs text-[#32636A]">You&apos;ve saved </div>
-                    <div className="w-4 h-4 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10 ml-1">
-                        <LuCoins className="text-[#E2B720] p-0.5"></LuCoins>
-                    </div>
-                    <div className="text-xs text-[#32636A] font-bold ml-1">2000 !</div>
-                </div>
+        <div className="flex flex-row justify-between mt-3">
+          <div className="flex flex-col">
+            <div className="text-[#95B0B4] font-light text-sm">Total</div>
+            <div className="flex flex-row">
+              <div className="text-xs text-[#32636A]">You've saved </div>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10 ml-1">
+                <LuCoins className="text-[#E2B720] p-0.5"></LuCoins>
+              </div>
+              <div className="text-xs text-[#32636A] font-bold ml-1">
+                2000 !
+              </div>
             </div>
+          </div>
 
-            <div className="flex flex-row mt-2">
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10 ">
-                        <LuCoins className="w-5 h-5 text-[#E2B720] p-0.5"></LuCoins>
-                    </div>
-                <div className="ml-1 text-base text-[#1D2425] font-bold">2000</div>
+          <div className="flex flex-row mt-2">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#E2B720] bg-opacity-10">
+              <LuCoins className="w-5 h-5 text-[#E2B720] p-0.5"></LuCoins>
             </div>
+            <div className="ml-1 text-base text-[#1D2425] font-bold">2000</div>
+          </div>
         </div>
 
         <Button className="w-full mt-3"> Purchase </Button>
-      
-    </Card>
+      </Card>
+    </div>
   );
 };
 
