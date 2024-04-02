@@ -1,26 +1,24 @@
-'use client'
+import React from "react";
 
-import { Card } from "@/components/ui/card";
+const ShopInfoTable: React.FC = () => {
+  return (
+    <table className="w-80 h-6 mt-2 md:w-1/2 rounded-lg border border-[#E5EEF0]">
+      <thead>
+        <tr className="flex flex-row rounded-lg border bg-card text-card-foreground shadow-sm p-3">
+          <th className="flex w-1/2">
+            <span className="font-medium font-bold text-[#32636A] text-m">
+              Item
+            </span>
+          </th>
+          <th className="flex w-1/2">
+            <span className="font-medium font-bold text-[#32636A] text-m">
+              Date
+            </span>
+          </th>
+        </tr>
+      </thead>
+    </table>
+  );
+};
 
-const ShopInfoTable: React.FC = ({ }) => {
-
-    return (
-      <Card className="min-w-80 max-w-2xl max-h-9 p-3 gap-2 mt-2 justify-between">
-       
-  
-          <div className="flex flex-row justify-between rounded-lg">
-            <div className="flex justify-between w-1/2"> 
-            <span className="font-medium font-bold text-[#32636A] text-xs" >Item</span>
-            </div>
-            
-            <div className="flex justify-between w-1/2"> 
-            <span className="font-medium font-bold text-[#32636A] text-xs" >Date</span>
-            </div>
-        
-          </div>
-        
-      </Card>
-    );
-  };
-  
-  export default ShopInfoTable;
+export default ShopInfoTable;
