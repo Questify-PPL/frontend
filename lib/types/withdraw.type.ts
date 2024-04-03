@@ -1,7 +1,7 @@
 export type WithdrawData = {
   amount: number;
-  issuedAt: string;
+  createdAt: string;
   accountNumber: string;
-  accountName: string;
+  payment: string;
   status: "PENDING" | "APPROVED" | "REJECTED";
 };
