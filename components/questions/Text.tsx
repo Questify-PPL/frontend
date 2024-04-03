@@ -21,6 +21,7 @@ interface TextProps {
   choice?: string[];
   answer: string;
   status?: boolean; // false means it can't be modified (submitted || questionnaire has ended)
+  onAnswerChange?: (questionId: number, answer: string) => void;
 }
 
 export function Text(textProps: TextProps) {
@@ -63,6 +64,11 @@ export function Text(textProps: TextProps) {
       handleTextAreaHeight(event as ChangeEvent<HTMLTextAreaElement>);
     }
     setAnswerValue(event.target.value);
+    console.log("Answer Value: ", answerValue);
+
+    if (textProps.onAnswerChange) {
+      textProps.onAnswerChange(questionId, event.target.value);
+    }
     handleAnswerValidation();
   };
 
