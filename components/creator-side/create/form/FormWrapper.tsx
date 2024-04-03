@@ -21,24 +21,37 @@ import {
 } from "@/lib/context";
 import { useQuestionnaireContext } from "@/lib/hooks";
 import { patchQuestionnaire, getQuestionnaire } from "@/lib/action";
-import { LuPlusSquare } from "react-icons/lu";
+import { LuGlobe, LuPlusSquare } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
+import { transformData } from "@/lib/services/form";
+import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
+import { publishQuestionnaire } from "@/lib/action/form";
+import PublishNowModal from "./PublishNowModal";
 
 export default function FormWrapper({ id }: { id: string }) {
   const { questionnaire, answers, setQuestionnaire } =
     useQuestionnaireContext();
   const [QRETitle, setQRETitle] = useState("");
   const router = useRouter();
-  const [leftMenuState, setLeftMenuState] = useState("opening");
-  const [rightMenuState, setRightMenuState] = useState("question");
-  const [isMobile, setIsMobile] = useState(true);
-  const [activeQuestionId, setActiveQuestionId] = useState(-1);
+
+  const fetchQuestionnaire = async () => {
+    try {
+      const response = await getQuestionnaire(id);
+      const transformed = transformData(response.data.questions);
+      setQuestionnaire(transformed);
+      setQRETitle(response.data.title);
+    } catch (error) {
+      console.error("Failed to get questionnaire", error);
+    }
+  };
 
   // Get Specific Question to be displayed
+  const [activeQuestionId, setActiveQuestionId] = useState(-1);
   const handleQuestionToggleSelect = async (questionId: number) => {
     setActiveQuestionId(questionId);
   };
@@ -57,10 +70,20 @@ export default function FormWrapper({ id }: { id: string }) {
     setSavedAsDraftState(newClass);
   };
 
+  // Open Publish Now Modal
+  const [openPublishNowState, setOpenPublishNowState] = useState("hidden");
+  const OpenPublishNow = () => {
+    const newClass = openPublishNowState === "hidden" ? "flex" : "hidden";
+    setOpenPublishNowState(newClass);
+  };
+
   // Change Left and Right Menu
+  const [leftMenuState, setLeftMenuState] = useState("opening");
   const handleLeftMenuChange = (menuState: React.SetStateAction<string>) => {
     setLeftMenuState(menuState);
   };
+
+  const [rightMenuState, setRightMenuState] = useState("question");
   const handleRightMenuChange = (menuState: React.SetStateAction<string>) => {
     setRightMenuState(menuState);
   };
@@ -80,7 +103,17 @@ export default function FormWrapper({ id }: { id: string }) {
     }
   };
 
+  const handlePublish = async () => {
+    try {
+      await publishQuestionnaire(id);
+      OpenPublishNow();
+    } catch (error) {
+      console.error("Failed to publish questionnaire", error);
+    }
+  };
+
   // Mobile Toggle Handler
+  const [isMobile, setIsMobile] = useState(true);
   const handleMobileToggle = () => {
     setIsMobile(!isMobile);
   };
@@ -88,12 +121,12 @@ export default function FormWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number,
+    questionId: number
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
+          (question) => question.questionId === questionId
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -108,8 +141,87 @@ export default function FormWrapper({ id }: { id: string }) {
     return undefined;
   }
 
-  // Render Question
-  const renderQuestion = (q: Question, index: number) => {
+  function renderOpening(questionnaire: QuestionnaireItem[]) {
+    const openingSection = questionnaire.find(
+      (section) =>
+        section.type === "SECTION" && section.sectionName === "OPENING"
+    );
+
+    if (openingSection) {
+      const section = openingSection as Section;
+
+      const handleSectionDescriptionChange = (
+        event: React.ChangeEvent<HTMLTextAreaElement>
+      ) => {
+        const updatedQuestionnaire = questionnaire.map((item) => {
+          if (item.type === "SECTION" && item.sectionName === "OPENING") {
+            return {
+              ...item,
+              sectionDescription: event.target.value,
+            };
+          }
+          return item;
+        });
+
+        setQuestionnaire(updatedQuestionnaire);
+      };
+
+      return (
+        <div className="flex flex-col w-full h-full items-center justify-center gap-3">
+          <span className="text-xs text-primary font-medium">Opening</span>
+          <Textarea
+            className="text-sm w-full font-normal text-[#64748B] placeholder:text-primary/30 focus-visible:outline-none focus-visible:ring-0"
+            placeholder={section.sectionDescription}
+            onChange={handleSectionDescriptionChange}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  function renderEnding(questionnaire: QuestionnaireItem[]) {
+    const openingSection = questionnaire.find(
+      (section) =>
+        section.type === "SECTION" && section.sectionName === "ENDING"
+    );
+
+    if (openingSection) {
+      const section = openingSection as Section;
+
+      const handleSectionDescriptionChange = (
+        event: React.ChangeEvent<HTMLTextAreaElement>
+      ) => {
+        const updatedQuestionnaire = questionnaire.map((item) => {
+          if (item.type === "SECTION" && item.sectionName === "ENDING") {
+            return {
+              ...item,
+              sectionDescription: event.target.value,
+            };
+          }
+          return item;
+        });
+
+        setQuestionnaire(updatedQuestionnaire);
+      };
+
+      return (
+        <div className="flex flex-col w-full h-full items-center justify-center gap-3">
+          <span className="text-xs text-primary font-medium">Ending</span>
+          <Textarea
+            className="text-sm w-full font-normal text-[#64748B] placeholder:text-primary/30 focus-visible:outline-none focus-visible:ring-0"
+            placeholder={section.sectionDescription}
+            onChange={handleSectionDescriptionChange}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  function renderQuestion(q: Question, index: number) {
     const {
       questionId,
       questionType,
@@ -119,6 +231,7 @@ export default function FormWrapper({ id }: { id: string }) {
       description,
       choice,
     } = q;
+
     const answer =
       answers.find((answer) => answer.questionId === questionId)?.answer ?? "";
 
@@ -163,7 +276,7 @@ export default function FormWrapper({ id }: { id: string }) {
         )}
       </div>
     );
-  };
+  }
 
   const questionToRender = findQuestionById(questionnaire, activeQuestionId);
 
@@ -192,78 +305,6 @@ export default function FormWrapper({ id }: { id: string }) {
       },
     ];
     addQuestionHandler(shortTextQuestion);
-  };
-
-  // Data Types for Fetching
-  interface QuestionGet {
-    sectionId: number | null;
-    questionId: number;
-    questionType: string;
-    questionTypeName: string;
-    isRequired: boolean;
-    question: string;
-    description: string;
-  }
-
-  interface SectionGet {
-    sectionId: number;
-    name: string;
-    description: string;
-    questions: QuestionGet[];
-  }
-
-  type QuestionnaireGetItem = SectionGet | QuestionGet;
-
-  // Transform Data before Fetching
-  function transformData(data: QuestionnaireGetItem[]): QuestionnaireItem[] {
-    return data.map((item) => {
-      if (
-        (item as SectionGet).sectionId !== null &&
-        (item as SectionGet).questions
-      ) {
-        const section = item as SectionGet;
-        const questions = section.questions.map((question) => ({
-          questionId: question.questionId,
-          questionType: question.questionType,
-          questionTypeName: question.questionTypeName,
-          isRequired: question.isRequired,
-          question: question.question,
-          description: question.description,
-          choice: [], // No choice provided in JSON A for now
-        }));
-        return {
-          type: "SECTION",
-          sectionId: section.sectionId,
-          sectionName: section.name,
-          sectionDescription: section.description,
-          questions: questions,
-        } as Section;
-      } else {
-        const question = item as QuestionGet;
-        return {
-          type: "DEFAULT",
-          question: {
-            questionId: question.questionId,
-            questionType: question.questionType,
-            questionTypeName: question.questionTypeName,
-            isRequired: question.isRequired,
-            question: question.question,
-            description: question.description,
-          },
-        } as DefaultQuestion;
-      }
-    });
-  }
-
-  const fetchQuestionnaire = async () => {
-    try {
-      const response = await getQuestionnaire(id);
-      const transformed = transformData(response.data.questions);
-      setQuestionnaire(transformed);
-      setQRETitle(response.data.title);
-    } catch (error) {
-      console.error("Failed to get questionnaire", error);
-    }
   };
 
   // Questionnaire Fetching
@@ -301,6 +342,11 @@ export default function FormWrapper({ id }: { id: string }) {
         QRETitle={QRETitle}
         onCancel={OpenSavedAsDraft}
       ></SavedAsDraftModal>
+      <PublishNowModal
+        className={`${openPublishNowState}`}
+        QRETitle={QRETitle}
+        onCancel={handleBack}
+      ></PublishNowModal>
       <div className="flex flex-row w-full h-full gap-4 p-5">
         <FormLeftMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
@@ -325,8 +371,11 @@ export default function FormWrapper({ id }: { id: string }) {
               <div className="flex flex-col gap-1">
                 {CreatorInfo.map((item, index) => (
                   <div key={index} className="flex flex-row gap-1.5 w-full">
-                    <Checkbox id={item} className="text-xs" />
-                    <Label htmlFor={item} className="font-medium text-xs">
+                    <Checkbox id={`cre${item}`} className="text-xs" />
+                    <Label
+                      htmlFor={`cre${item}`}
+                      className="font-medium text-xs"
+                    >
                       {item}
                     </Label>
                   </div>
@@ -344,8 +393,11 @@ export default function FormWrapper({ id }: { id: string }) {
               <div className="flex flex-col gap-1">
                 {RespondentInfo.map((item, index) => (
                   <div key={index} className="flex flex-row gap-1.5 w-full">
-                    <Checkbox id={item} className="text-xs" />
-                    <Label htmlFor={item} className="font-medium text-xs">
+                    <Checkbox id={`res${item}`} className="text-xs" />
+                    <Label
+                      htmlFor={`res${item}`}
+                      className="font-medium text-xs"
+                    >
                       {item}
                     </Label>
                   </div>
@@ -371,6 +423,12 @@ export default function FormWrapper({ id }: { id: string }) {
 
                   if (item.type === "SECTION") {
                     const section = item as Section;
+                    if (
+                      section.sectionName === "OPENING" ||
+                      section.sectionName === "ENDING"
+                    ) {
+                      return null;
+                    }
                     let sectionNum = 0;
                     return (
                       <SectionToggle
@@ -430,9 +488,30 @@ export default function FormWrapper({ id }: { id: string }) {
             QRETitle={QRETitle}
           />
           <Card className="flex w-[50%] h-full rounded-md p-5">
-            {activeQuestionId !== -1 && questionToRender
-              ? renderQuestion(questionToRender, 0) // Only called if questionToRender is not undefined
-              : "Select a question to edit"}
+            {leftMenuState === "opening" ? (
+              renderOpening(questionnaire)
+            ) : leftMenuState === "ending" ? (
+              renderEnding(questionnaire)
+            ) : activeQuestionId !== -1 && questionToRender ? (
+              renderQuestion(questionToRender, 0)
+            ) : (
+              <div className="flex flex-col w-full h-full justify-center items-center gap-3">
+                <Image
+                  src="/assets/choose-question.svg"
+                  alt="Questify"
+                  width={70}
+                  height={16}
+                />
+                <div className="flex flex-col justify-center items-center">
+                  <span className="text-primary text-sm font-semibold">
+                    Select a question to start editing
+                  </span>
+                  <span className="text-[#95B0B4] text-xs">
+                    Watch the left pane :D
+                  </span>
+                </div>
+              </div>
+            )}
           </Card>
           <FormLowerMenu onChange={handleMobileToggle} isMobile={isMobile} />
         </div>
@@ -449,7 +528,17 @@ export default function FormWrapper({ id }: { id: string }) {
           designChildren={<div>Design Children</div>}
           logicChildren={<div>Logic Children</div>}
           previewChildren={<div>Preview Children</div>}
-          publishChildren={<div>Publish Children</div>}
+          publishChildren={
+            <Button
+              variant="outline"
+              className="text-primary w-full hover:text-primary gap-2"
+              onClick={handlePublish}
+              data-testid="publish-button"
+            >
+              <LuGlobe className="w-5 h-5" />
+              <span>Publish Now</span>
+            </Button>
+          }
         />
       </div>
     </div>

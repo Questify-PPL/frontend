@@ -81,3 +81,22 @@ export type SummarizeFormAsProps = {
   questionsWithAnswers: QuestionAnswer[] | QuestionWithAnswerSection[];
   allIndividuals: string[];
 };
+
+export type QuestionGet = {
+  sectionId: number | null;
+  questionId: number;
+  questionType: string;
+  questionTypeName: string;
+  isRequired: boolean;
+  question: string;
+  description: string;
+}
+
+export type SectionGet = {
+  sectionId: number;
+  name: string;
+  description: string;
+  questions: QuestionGet[];
+}
+
+export type QuestionnaireGetItem = SectionGet | QuestionGet;

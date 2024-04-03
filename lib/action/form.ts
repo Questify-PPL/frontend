@@ -9,7 +9,6 @@ export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
-  maxParticipant?: number,
   maxWinner?: number
 ) {
   const session = await auth();
@@ -253,6 +252,31 @@ export async function patchQuestionnaire(
 
   if (response.status !== 200) {
     throw new Error("Failed to update questionnaire");
+  }
+}
+
+export async function publishQuestionnaire(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const publish = {
+    isPublished: true,
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify(publish),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to publish questionnaire");
   }
 }
 

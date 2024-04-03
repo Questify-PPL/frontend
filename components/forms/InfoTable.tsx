@@ -22,6 +22,7 @@ const tableColumnsCreator = [
   },
   {
     name: "Modified",
+    icon: <></>,
   },
   {
     name: "Questions",
@@ -95,7 +96,7 @@ export function InfoTable({
   }
 
   return (
-    <div className={`flex flex-col`}>
+    <div className={`flex flex-col overflow-y-scroll`}>
       <div>
         <div className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 hidden">
           {!isRespondent && (
