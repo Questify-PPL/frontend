@@ -3,13 +3,13 @@
 import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
 import { FetchListForm } from "../types";
-import { QuestionnaireItem } from "../context";
+import { Answer, QuestionnaireItem } from "../context";
 
 export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
-  maxWinner?: number,
+  maxWinner?: number
 ) {
   const session = await auth();
   const user = session?.user;
@@ -33,6 +33,31 @@ export async function createQuestionnaire(
   }
 
   return await response.json();
+}
+
+export async function getAllAvailableForm() {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(URL.createForm, {
+    headers: {
+      Authorization: `Bearer ${user?.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to get all available form");
+  }
+
+  const result: FetchListForm = await response.json();
+
+  if (!result.data) {
+    return [];
+  }
+
+  return result.data;
 }
 
 export async function getQuestionnairesOwned(type?: string) {
@@ -101,7 +126,7 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    },
+    }
   );
 
   if (response.status !== 200) {
@@ -111,6 +136,29 @@ export async function getQuestionnaire(formId: string) {
   return await response.json();
 }
 
+export async function getQuestionnaireRespondent(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}?type=respondent`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to get questionnaire as respondent");
+  }
+
+  return await response.json();
+}
+
+// Redundant need to adjust later
 export async function getCompletedQuestionnaireForRespondent(formId: string) {
   const session = await auth();
   const user = session?.user;
@@ -123,7 +171,7 @@ export async function getCompletedQuestionnaireForRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    },
+    }
   );
 
   if (response.status !== 200) {
@@ -182,7 +230,7 @@ export async function getSummaries(formId: string) {
 
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[],
+  data: any[] | QuestionnaireItem[]
 ) {
   const session = await auth();
   const user = session?.user;
@@ -199,11 +247,36 @@ export async function patchQuestionnaire(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    },
+    }
   );
 
   if (response.status !== 200) {
     throw new Error("Failed to update questionnaire");
+  }
+}
+
+export async function publishQuestionnaire(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const publish = {
+    isPublished: true,
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify(publish),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to publish questionnaire");
   }
 }
 
@@ -218,10 +291,72 @@ export async function deleteQuestionnaire(formId: string) {
         Authorization: `Bearer ${user?.accessToken}`,
       },
       method: "DELETE",
-    },
+    }
   );
 
   if (response.status !== 200) {
     throw new Error("Failed to delete questionnaire");
+  }
+}
+
+export async function postParticipation(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/participate/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }
+  );
+
+  if (response.status !== 201) {
+    throw new Error("Failed to participate to the questionnaire");
+  }
+
+  return await response.json();
+}
+
+export async function patchAnswer(
+  formId: string,
+  // data: any[] | QuestionnaireItem[],
+  data: any[] | Answer[],
+  isFinal: boolean = false
+) {
+  const session = await auth();
+  const user = session?.user;
+  let update: any;
+
+  if (isFinal) {
+    update = {
+      isCompleted: true,
+      questionsAnswer: data,
+    };
+  } else {
+    update = {
+      questionsAnswer: data,
+    };
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/form/participate/${formId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        method: "PATCH",
+        body: JSON.stringify(update),
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Failed to add answer to the questionnaire");
+    }
+
+    return await response.json();
   }
 }

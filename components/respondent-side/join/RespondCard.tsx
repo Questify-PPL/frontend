@@ -5,29 +5,34 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LuCheckCircle, LuX } from "react-icons/lu";
 import { useRouter } from "next/navigation";
+import { postParticipation } from "@/lib/action/form";
+
+// ...
 
 interface HomeNavProps {
   className?: string;
   formsRemainder?: number;
   creditsBalance?: number;
   onCancel?: () => void;
+  id?: string;
+  title?: string;
 }
 
 const HomeNav: React.FC<HomeNavProps> = ({
   className = "",
   onCancel = () => {},
+  id,
+  title,
 }) => {
-  // const [inputValue, setInputValue] = useState<string>(
-  //   "Initial Questionnaire Title",
-  // );
-
-  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setInputValue(event.target.value);
-  // };
   const router = useRouter();
 
-  const toForm = () => {
-    router.push("/join/questionnaire");
+  const toForm = async () => {
+    try {
+      await postParticipation(id ?? "");
+      router.push(`questionnaire/join/${id}`);
+    } catch (error) {
+      console.log("Failed to participate in forms", { duration: 5000 });
+    }
   };
 
   return (
@@ -50,9 +55,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
           </div>
           <div className="mt-6 text-left">
             <h3 className="text-lg font-semibold">Title</h3>
-            <p className="text-sm font-semibold">
-              Oreo Satisfaction: User Feedback in Indonesia
-            </p>
+            <p className="text-sm font-semibold">{title || "Default Title"}</p>
             <h3 className="text-lg font-semibold mt-4">Prize</h3>
             <div className="section bg-purple-100 p-1 pb-2 mb-2 rounded-lg flex items-center justify-between">
               <div className="flex items-center mt-2">

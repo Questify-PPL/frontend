@@ -1,17 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
 import CreatorNav from "@/components/creator-side/CreatorNav";
 import CreateModal from "@/components/creator-side/create/CreateModal";
 import { DraftMobile, InfoTable } from "@/components/forms";
 import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@/lib/hooks";
-import { FormsAsProps } from "@/lib/types";
 import { Fragment, useState } from "react";
 import { DraftContent } from "./DraftContent";
+import { getQuestionnairesOwned } from "@/lib/action";
+import { BareForm } from "@/lib/types";
 
-export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
+export function CreateWrapper() {
+  const [forms, setForms] = useState<BareForm[]>([]);
+
+  useEffect(() => {
+    getForms();
+  }, [forms]);
+
+  async function getForms() {
+    try {
+      const response = await getQuestionnairesOwned("UNPUBLISHED");
+      setForms(response);
+    } catch (error) {}
+
+    return forms;
+  }
+
   const [createModalState, setCreateModalState] = useState("hidden");
-  const isMobile = useMediaQuery(768);
 
   const OpenCreateModal = () => {
     const newClass = createModalState === "hidden" ? "flex" : "hidden";

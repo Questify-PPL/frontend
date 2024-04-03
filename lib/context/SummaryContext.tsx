@@ -16,7 +16,10 @@ export type SummaryContextValue = SummarizeFormAsProps & {
   // eslint-disable-next-line no-unused-vars
   setCurrentPage: Dispatch<SetStateAction<number>>;
 
-  questionDetails: QuestionAnswer | QuestionWithAnswerSection;
+  questionDetails: QuestionAnswer | QuestionWithAnswerSection | undefined;
+  isFinishedFetching: boolean;
+  // eslint-disable-next-line no-unused-vars
+  setIsFinishedFetching: Dispatch<SetStateAction<boolean>>;
 };
 
 export const SummaryContext = createContext({} as SummaryContextValue);

@@ -1,5 +1,5 @@
 import { QuestionnaireWrapper } from "@/components/respondent-side/QuestionnaireWrapper";
-import { getQuestionnairesFilled } from "@/lib/action/form";
+import { getAllAvailableForm } from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
 
 export default async function Questionnaire() {
@@ -9,7 +9,7 @@ export default async function Questionnaire() {
     let forms: BareForm[] = [];
 
     try {
-      forms = await getQuestionnairesFilled();
+      forms = await getAllAvailableForm();
     } catch (error) {}
 
     return forms;

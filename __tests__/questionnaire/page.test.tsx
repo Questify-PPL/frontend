@@ -1,6 +1,6 @@
 import Questionnaire from "@/app/(protected)/questionnaire/page";
 import { auth } from "@/auth";
-import { getQuestionnairesFilled } from "@/lib/action/form";
+import { getAllAvailableForm } from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
 import { UserRole } from "@/lib/types/auth";
 import "@testing-library/jest-dom";
@@ -15,7 +15,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 jest.mock("@/lib/action/form", () => ({
   getQuestionnairesOwned: jest.fn(),
-  getQuestionnairesFilled: jest.fn(),
+  getAllAvailableForm: jest.fn(),
 }));
 
 jest.mock("next/navigation", () => {
@@ -116,7 +116,7 @@ describe("Questionnaire List View Page", () => {
       },
     ];
 
-    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(mockedForms);
+    (getAllAvailableForm as jest.Mock).mockResolvedValue(mockedForms);
 
     (auth as jest.Mock).mockResolvedValue(session);
 
@@ -148,9 +148,7 @@ describe("Questionnaire List View Page", () => {
       expires: new Date().toISOString(),
     } as Session;
 
-    (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
-      new Error("error"),
-    );
+    (getAllAvailableForm as jest.Mock).mockRejectedValue(new Error("error"));
 
     (auth as jest.Mock).mockResolvedValue(session);
 

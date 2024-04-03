@@ -5,8 +5,14 @@ export default async function Verify(props: Readonly<Props>) {
   console.log("message", message);
 
   return (
-    <div>
-      <p>{message.message as string}</p>
+    <div className="w-full flex justify-center items-center my-24">
+      <p
+        className="
+      text=[#1D2425] font-bold text-[18px] leading-[24px] text-center
+      "
+      >
+        {message.message as string}
+      </p>
     </div>
   );
 }
@@ -14,7 +20,6 @@ export default async function Verify(props: Readonly<Props>) {
 async function getServerSideProps(props: Props) {
   const { token } = props.searchParams;
   try {
-    console.log("token", token);
     if (!token) {
       return {
         message: "Cannot access",
@@ -30,15 +35,12 @@ async function getServerSideProps(props: Props) {
       },
     );
 
-    console.log("status", response.status);
     if (response.status < 400) {
-      console.log("masuk sini");
       return {
         message:
           "Email verification successful, your email has been successfully verified",
       };
     }
-    console.log(">400");
     return {
       message: "Email already verified / invalid token",
     };

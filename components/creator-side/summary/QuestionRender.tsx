@@ -21,11 +21,11 @@ export function QuestionRender({
           {question.question}
         </p>
         {question.questionType !== "TEXT" && (
-          <div className="relative w-full">
+          <div className="relative w-full m-auto flex justify-center items-center">
             {graphType === "bar" && (
               <Bar
                 options={{
-                  responsive: true,
+                  responsive: false,
                   maintainAspectRatio: false,
                 }}
                 data={{
@@ -48,7 +48,7 @@ export function QuestionRender({
             {graphType === "pie" && (
               <Pie
                 options={{
-                  responsive: true,
+                  responsive: false,
                   maintainAspectRatio: false,
                 }}
                 data={{

@@ -125,3 +125,15 @@ export function decidePhoto(form: BareForm) {
 export function isEnded(endedAt: string): boolean {
   return new Date() > new Date(endedAt);
 }
+
+export async function convertToCSV(response: Response, formTitle: string) {
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `${formTitle}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

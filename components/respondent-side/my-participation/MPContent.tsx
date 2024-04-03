@@ -16,14 +16,16 @@ import {
 export function MPContent({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
 
-  function toReport() {
-    router.push(`/response`); // TBA
+  function onClick() {
+    !form.isCompleted
+      ? router.push(`questionnaire/join/${form.id}`)
+      : router.push(`response/`); // This should be directed to report summary
   }
 
   return (
     <tr
       className="flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer items-center"
-      onClick={toReport}
+      onClick={onClick}
       data-testid={`mp-content-${form.id}`}
     >
       <td className="w-[21.75%] flex flex-row gap-3">

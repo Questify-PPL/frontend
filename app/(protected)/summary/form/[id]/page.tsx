@@ -53,6 +53,8 @@ export default async function Summary({ params }: Readonly<Props>) {
             formStatistics={form.formStatistics}
             questionsWithAnswers={form.questionsWithAnswers}
             allIndividuals={form.allIndividuals}
+            formId={id}
+            session={session}
           />
         )}
       </div>

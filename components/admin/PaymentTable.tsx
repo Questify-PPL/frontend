@@ -24,9 +24,10 @@ import {
 import clsx from "clsx";
 import { Invoice, InvoiceStatus } from "@/lib/types";
 import { useTransition } from "react";
-import { updatePaymentStatus } from "@/lib/action";
+import { updateTopupInvoiceStatus } from "@/lib/action";
 import { useToast } from "../ui/use-toast";
-import { InvoiceStatusEnum } from "@/lib/types/admin";
+import { InvoiceStatusEnum, InvoiceExchangeEnum } from "@/lib/types/admin";
+import { updateWithdrawInvoiceStatus } from "@/lib/action/admin";
 
 export default function PaymentTable({
   data,
@@ -38,7 +39,10 @@ export default function PaymentTable({
 
   const handleStatusChange = (invoice: Invoice, value: InvoiceStatus) => {
     startTransition(async () => {
-      const response = await updatePaymentStatus(invoice, value);
+      const response =
+        invoice.exchange === InvoiceExchangeEnum.WITHDRAW
+          ? await updateWithdrawInvoiceStatus(invoice, value)
+          : await updateTopupInvoiceStatus(invoice, value);
       const notificationMessage = response
         ? {
             title: "Failed to update payment status",
@@ -81,7 +85,7 @@ export default function PaymentTable({
           {data.map((invoice) => (
             <TableRow key={invoice.id}>
               <TableCell className="h-auto px-[5px] py-[10px] pl-[20px] font-bold">
-                {invoice.creatorName}
+                {invoice.creatorName || invoice.userName}
               </TableCell>
               <TableCell className="h-auto px-[5px] py-[10px] text-[10px]">
                 <span className="flex gap-[10px] items-center">

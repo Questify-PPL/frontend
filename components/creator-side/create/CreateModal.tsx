@@ -7,7 +7,7 @@ import { LuScroll, LuCoins, LuX } from "react-icons/lu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup } from "@/components/ui/radio-group";
-import { createQuestionnaire } from "@/lib/action";
+import { createQuestionnaire, patchQuestionnaire } from "@/lib/action";
 import { CreateQuestionnaire } from "@/lib/schema/create-questionnaire.schema";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -51,9 +51,38 @@ export function CreateModal({
         data.title,
         data.prize,
         data.prizeType,
-        data.maxWinner ?? undefined,
+        data.maxWinner ?? undefined
       );
       const formId = response.data.id;
+      const initSection = [
+        {
+          type: "SECTION",
+          sectionName: "OPENING",
+          sectionDescription: "",
+          questions: [
+            {
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: false,
+              question: "What are you majoring in?",
+            },
+          ],
+        },
+        {
+          type: "SECTION",
+          sectionName: "ENDING",
+          sectionDescription: "",
+          questions: [
+            {
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: false,
+              question: "Was the questionnaire helpful?",
+            },
+          ],
+        },
+      ];
+      await patchQuestionnaire(formId, initSection);
       router.push(`/create/form/${formId}`);
     } catch (error) {
       console.error("Failed to create questionnaire", error);
