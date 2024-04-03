@@ -18,12 +18,51 @@ jest.mock("next/navigation", () => {
   };
 });
 
-describe("Withdraw", () => {
-  it("should render Withdraw page", async () => {
+jest.mock("@/lib/services/credit", () => {
+  return {
+    getUserCredit: jest.fn().mockResolvedValue(100000),
+  };
+});
+
+jest.mock("@/lib/action/withdraw", () => {
+  return {
+    getWithdrawals: jest.fn().mockResolvedValue({
+      data: [
+        {
+          id: 1,
+          nominal: 10000,
+          price: 13000,
+          discount: 16000,
+          createdAt: "2022-01-01",
+        },
+        {
+          id: 2,
+          nominal: 20000,
+          price: 24000,
+          discount: 30000,
+          createdAt: "2022-01-02",
+        },
+      ],
+    }),
+    createWithdrawal: jest.fn(),
+  };
+});
+
+describe("Withdraw Page", () => {
+  it("should render Withdraw Page", async () => {
     render(await Withdraw());
-    const choices = screen.getByText("Choices of Withdraw Nominals");
-    const history = screen.getByText("Withdrawal History");
-    expect(choices).toBeInTheDocument();
-    expect(history).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Choices of Withdraw Nominals")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Withdrawal History")).toBeInTheDocument();
+  });
+});
+
+describe("Withdraw History", () => {
+  it("should render Withdraw History", async () => {
+    render(await Withdraw());
+    expect(screen.getByText("Rp10000")).toBeInTheDocument();
+    expect(screen.getByText("Rp20000")).toBeInTheDocument();
   });
 });

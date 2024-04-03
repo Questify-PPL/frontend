@@ -14,13 +14,13 @@ export function TableContent({ info }: Readonly<WithdrawInfo>) {
 
       {/* Date */}
       <td className="text-[8px] leading-3 flex flex-col w-[20%] font-medium">
-        {new Date(info.issuedAt).toLocaleDateString("en-GB")}
+        {new Date(info.createdAt).toLocaleDateString("en-GB")}
       </td>
 
       {/* Account */}
       <td className="text-[10px] leading-3 flex flex-col w-[25%] font-medium">
         <div className="flex flex-col gap-0">
-          <span className="text-[10px] leading-3">{info.accountName}</span>
+          <span className="text-[10px] leading-3">{info.payment}</span>
           <span className="text-[8px] leading-3">{info.accountNumber}</span>
         </div>
       </td>

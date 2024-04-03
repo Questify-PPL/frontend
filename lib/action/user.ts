@@ -17,7 +17,7 @@ const logoutRedirectUrl = "/";
 
 export async function authenticate(
   prevState: string | undefined,
-  formData: FormData,
+  formData: FormData
 ) {
   try {
     await signIn("credentials", formData);
@@ -63,9 +63,16 @@ export async function getCurrentSession() {
   return session;
 }
 
+export async function getUserCredit() {
+  const session = (await auth()) as Session;
+  const user = session?.user;
+
+  return user?.credit || 0;
+}
+
 export async function updateProfile(
   prevState: UpdateState,
-  formData: FormData,
+  formData: FormData
 ) {
   try {
     const data = {
@@ -95,7 +102,7 @@ export async function updateProfile(
           Authorization: `Bearer ${user?.accessToken}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (response.status !== 200) {
