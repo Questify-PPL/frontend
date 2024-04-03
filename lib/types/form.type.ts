@@ -1,3 +1,5 @@
+import { Session } from "next-auth";
+
 export type BareForm = {
   id: string;
   creatorId?: string;
@@ -80,4 +82,6 @@ export type SummarizeFormAsProps = {
   formStatistics: SummarizeForm;
   questionsWithAnswers: QuestionAnswer[] | QuestionWithAnswerSection[];
   allIndividuals: string[];
+  formId: string;
+  session: Session;
 };

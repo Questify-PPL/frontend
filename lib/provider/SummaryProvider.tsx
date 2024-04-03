@@ -11,6 +11,8 @@ export function SummaryProvider({
   formStatistics,
   questionsWithAnswers,
   allIndividuals,
+  formId,
+  session,
 }: Readonly<SummaryProviderProps>) {
   const [activeTab, setActiveTab] = useState<
     "summary" | "question" | "individual"
@@ -18,6 +20,8 @@ export function SummaryProvider({
 
   const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [isFinishedFetching, setIsFinishedFetching] = useState(false);
 
   const returns = useMemo(() => {
     return {
@@ -33,6 +37,11 @@ export function SummaryProvider({
       questionDetails: questionsWithAnswers
         ? questionsWithAnswers[currentPage - 1]
         : undefined,
+
+      isFinishedFetching,
+      setIsFinishedFetching,
+      formId,
+      session,
     };
   }, [
     formStatistics,
@@ -41,6 +50,9 @@ export function SummaryProvider({
     graphType,
     activeTab,
     currentPage,
+    isFinishedFetching,
+    formId,
+    session,
   ]);
 
   return (

@@ -6,6 +6,7 @@ import { BackAndExport } from "@/components/dashboard/BackAndExport";
 import { SummaryProvider } from "@/lib/provider/SummaryProvider";
 import { SummaryTitle } from "./SummaryTitle";
 import { ContentBox } from "./ContentBox";
+import { LoadingModal } from "./LoadingModal";
 
 export function SummaryWrapper(props: Readonly<SummarizeFormAsProps>) {
   return (
@@ -19,6 +20,7 @@ export function SummaryWrapper(props: Readonly<SummarizeFormAsProps>) {
           </div>
           <ContentBox />
         </div>
+        <LoadingModal />
       </SummaryProvider>
     </div>
   );
