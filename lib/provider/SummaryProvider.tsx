@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
-import { SummarizeFormAsProps } from "../types";
+import { QuestionDetailResponse, SummarizeFormAsProps } from "../types";
 
 type SummaryProviderProps = {
   children: React.ReactNode;
@@ -11,6 +11,8 @@ export function SummaryProvider({
   formStatistics,
   questionsWithAnswers,
   allIndividuals,
+  formId,
+  session,
 }: Readonly<SummaryProviderProps>) {
   const [activeTab, setActiveTab] = useState<
     "summary" | "question" | "individual"
@@ -18,6 +20,11 @@ export function SummaryProvider({
 
   const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [isFinishedFetching, setIsFinishedFetching] = useState(false);
+  const [individualFormQuestions, setIndividualFormQuestions] = useState<
+    QuestionDetailResponse | undefined
+  >(undefined);
 
   const returns = useMemo(() => {
     return {
@@ -30,7 +37,14 @@ export function SummaryProvider({
       setActiveTab,
       currentPage,
       setCurrentPage,
-      questionDetails: questionsWithAnswers[currentPage - 1],
+      questionDetails: questionsWithAnswers
+        ? questionsWithAnswers[currentPage - 1]
+        : undefined,
+
+      isFinishedFetching,
+      setIsFinishedFetching,
+      formId,
+      session,
     };
   }, [
     formStatistics,
@@ -39,6 +53,9 @@ export function SummaryProvider({
     graphType,
     activeTab,
     currentPage,
+    isFinishedFetching,
+    formId,
+    session,
   ]);
 
   return (
