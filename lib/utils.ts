@@ -27,7 +27,7 @@ export function titleCase(text: string | undefined | null) {
 }
 
 export const handleTextAreaHeight = (
-  event: ChangeEvent<HTMLTextAreaElement>,
+  event: ChangeEvent<HTMLTextAreaElement>
 ) => {
   event.target.style.height = "auto";
   event.target.style.height = `${event.target.scrollHeight}px`;
@@ -36,7 +36,7 @@ export const handleTextAreaHeight = (
 // Quedes = Question Description
 export const handleQuedesChange = (
   event: ChangeEvent<HTMLTextAreaElement>,
-  setState: Dispatch<SetStateAction<string>>,
+  setState: Dispatch<SetStateAction<string>>
 ) => {
   handleTextAreaHeight(event);
   setState(event.target.value);
@@ -48,7 +48,7 @@ export const updateQuestionnaire = (
   requiredValue: boolean,
   questionValue: string,
   descriptionValue: string,
-  choiceValue?: string[],
+  choiceValue?: string[]
 ) => {
   const updatedQuestionnaire = latestQuestionnaire.map((item) => {
     if (item.type === "SECTION") {
@@ -92,10 +92,10 @@ export const updateQuestionnaire = (
 export const updateAnswers = (
   latestAnswers: Answer[],
   questionId: number,
-  answerValue: string | string[],
+  answerValue: string | string[]
 ) => {
   const answerIndex = latestAnswers.findIndex(
-    (answer) => answer.questionId === questionId,
+    (answer) => answer.questionId === questionId
   );
   const updatedAnswers = [...latestAnswers];
 
@@ -126,13 +126,13 @@ export function isEnded(endedAt: string): boolean {
   return new Date() > new Date(endedAt);
 }
 
-export async function convertToCSV(response: Response) {
+export async function convertToCSV(response: Response, formTitle: string) {
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", "data.csv");
+  link.setAttribute("download", `${formTitle}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

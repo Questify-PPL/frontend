@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { LuChevronLeft, LuUpload } from "react-icons/lu";
 
 export function BackAndExport() {
-  const { setIsFinishedFetching, formId, session } = useSummaryContext();
+  const { setIsFinishedFetching, formId, session, formStatistics } =
+    useSummaryContext();
   const router = useRouter();
 
   async function exportData() {
+    if (!session?.user?.accessToken || !formStatistics) return;
+
     setIsFinishedFetching(true);
 
     const response = await fetch(`${fetchURL.summaryURL}/${formId}/export`, {
@@ -19,7 +22,7 @@ export function BackAndExport() {
       },
     });
 
-    await convertToCSV(response);
+    await convertToCSV(response, formStatistics.title);
 
     setIsFinishedFetching(false);
   }
