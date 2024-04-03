@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import QuestionnaireJoin from "@/app/join/questionnaire/page";
+import QuestionnaireJoin from "@/app/(protected)/questionnaire/join/questionnaire/page";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -98,5 +98,5 @@ test("allows user to progress through the form steps", async () => {
   const okButton = screen.getByText("OK") as HTMLButtonElement;
   fireEvent.click(okButton);
 
-  expect(push).toHaveBeenCalledWith("/join");
+  expect(push).toHaveBeenCalledWith("../");
 });

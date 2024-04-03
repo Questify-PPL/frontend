@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import QuestionaireJoinForm from "@/components/respondent-side/QuestionnaireJoinForm";
+import QuestionaireJoinForm from "@/components/respondent-side/join/QuestionnaireJoinForm";
 
 export default function QuestionnaireJoin() {
   return (

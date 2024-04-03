@@ -36,9 +36,11 @@ export const URL = {
   getAllRespondentForm: `${process.env.NEXT_PUBLIC_API_URL}/form/respondent`,
   updateProfile: `${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`,
   sendContactData: `${process.env.NEXT_PUBLIC_API_URL}/email/send-contact-data`,
-  topUpInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/all`,
-  validateInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/validate`,
   summaryURL: `${process.env.NEXT_PUBLIC_API_URL}/form/summary`,
+  topUpInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/all`,
+  validateTopupInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/validate`,
+  withdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/all`,
+  validateWithdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/validate`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [

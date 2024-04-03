@@ -1,4 +1,9 @@
-import { Invoice, InvoiceStatus, InvoiceStatusEnum } from "./invoice";
+import {
+  Invoice,
+  InvoiceStatus,
+  InvoiceStatusEnum,
+  InvoiceExchangeEnum,
+} from "./invoice";
 
 export type { Invoice, InvoiceStatus };
-export { InvoiceStatusEnum };
+export { InvoiceStatusEnum, InvoiceExchangeEnum };

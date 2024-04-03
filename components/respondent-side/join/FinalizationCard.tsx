@@ -28,7 +28,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
   const router = useRouter();
 
   const toForm = () => {
-    router.push("/join");
+    router.push("../");
   };
 
   return (

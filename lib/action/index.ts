@@ -20,7 +20,7 @@ export {
   changeRole,
   updateProfile,
   getInvoices,
-  updateTopupInvoiceStatus as updatePaymentStatus,
+  updateTopupInvoiceStatus,
   createQuestionnaire,
   getQuestionnairesOwned,
   getQuestionnairesFilled,

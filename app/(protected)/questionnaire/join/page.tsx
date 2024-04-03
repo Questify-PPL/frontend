@@ -3,15 +3,15 @@
 import React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import RespondCard from "@/components/respondent-side/RespondCard";
 import RespondentNav from "@/components/respondent-side/RespondentNav";
+import RespondCard from "@/components/respondent-side/join/RespondCard";
 
 export default function Join() {
-  const [createCardState, setCreateCardState] = useState("hidden");
+  const [responsCardState, setresponsCardState] = useState("hidden");
 
   const OpenCreateCard = () => {
-    const newClass = createCardState === "hidden" ? "flex" : "hidden";
-    setCreateCardState(newClass);
+    const newClass = responsCardState === "hidden" ? "flex" : "hidden";
+    setresponsCardState(newClass);
   };
 
   return (
@@ -28,7 +28,7 @@ export default function Join() {
         </div>
       </div>
       <RespondCard
-        className={`${createCardState}`}
+        className={`${responsCardState}`}
         onCancel={OpenCreateCard}
       ></RespondCard>
     </main>
