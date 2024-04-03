@@ -6,14 +6,10 @@ const ShopInfoTable: React.FC = () => {
       <thead>
         <tr className="flex flex-row rounded-lg border bg-card text-card-foreground shadow-sm p-3">
           <th className="flex w-1/2">
-            <span className="font-medium font-bold text-[#32636A] text-m">
-              Item
-            </span>
+            <span className="font-bold text-[#32636A] text-m">Item</span>
           </th>
           <th className="flex w-1/2">
-            <span className="font-medium font-bold text-[#32636A] text-m">
-              Date
-            </span>
+            <span className="font-bold text-[#32636A] text-m">Date</span>
           </th>
         </tr>
       </thead>

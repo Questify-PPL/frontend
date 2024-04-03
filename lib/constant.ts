@@ -44,6 +44,7 @@ export const URL = {
   validateTopupInvoices: `${process.env.NEXT_PUBLIC_API_URL}/topup/validate`,
   withdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/all`,
   validateWithdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/validate`,
+  shop: `${process.env.NEXT_PUBLIC_API_URL}/shop`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
@@ -262,4 +263,11 @@ export const listFAQ = [
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   },
+];
+
+export const SHOP_IMAGE = [
+  "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/t0d4ej4vgdcwat4axh1w",
+  "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/wfpzalfbqoqjdffgr0nf",
+  "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/e8mioxl5zsxkfvsv4htt",
+  "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/rbefqvlej3svjp932bdd",
 ];
