@@ -10,7 +10,7 @@ export async function createQuestionnaire(
   prize: number,
   prizeType: string,
   maxParticipant?: number,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -34,6 +34,31 @@ export async function createQuestionnaire(
   }
 
   return await response.json();
+}
+
+export async function getAllAvailableForm() {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(URL.createForm, {
+    headers: {
+      Authorization: `Bearer ${user?.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to get all available form");
+  }
+
+  const result: FetchListForm = await response.json();
+
+  if (!result.data) {
+    return [];
+  }
+
+  return result.data;
 }
 
 export async function getQuestionnairesOwned(type?: string) {
@@ -102,7 +127,7 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -124,7 +149,7 @@ export async function getQuestionnaireRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -147,7 +172,7 @@ export async function getCompletedQuestionnaireForRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -206,7 +231,7 @@ export async function getSummaries(formId: string) {
 
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[]
+  data: any[] | QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -223,7 +248,7 @@ export async function patchQuestionnaire(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -242,7 +267,7 @@ export async function deleteQuestionnaire(formId: string) {
         Authorization: `Bearer ${user?.accessToken}`,
       },
       method: "DELETE",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -252,7 +277,7 @@ export async function deleteQuestionnaire(formId: string) {
 
 export async function patchAnswerAsDraft(
   formId: string,
-  data: any[] | QuestionnaireItem[]
+  data: any[] | QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -269,7 +294,7 @@ export async function patchAnswerAsDraft(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    }
+    },
   );
 
   if (response.status !== 200) {
