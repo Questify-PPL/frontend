@@ -7,7 +7,7 @@ import {
 import { BareForm } from "@/lib/types";
 import { UserRole } from "@/lib/types/auth";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Session } from "next-auth";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -162,7 +162,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
   });
 
@@ -202,7 +202,7 @@ describe("Summary Page", () => {
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
-      mockedForms,
+      mockedForms
     );
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -212,7 +212,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
   });
 
@@ -239,7 +239,7 @@ describe("Summary Page", () => {
     } as Session;
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch"),
+      new Error("Failed to fetch")
     );
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -249,7 +249,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
   });
 
@@ -392,7 +392,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
 
     expect(screen.getAllByText("Question 2")[0]).toBeInTheDocument();
@@ -544,11 +544,51 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      }),
+      })
     );
   });
 
   it("should show error message when form fetch failed", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "CREATOR",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getSummaries as jest.Mock).mockRejectedValue(new Error("Failed to fetch"));
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    // activeTab to question
+    mockedDispact.mockImplementation((state) => {
+      expect(state).toBe("question");
+    });
+
+    render(
+      await Summary({
+        params: {
+          id: "1",
+        },
+      })
+    );
+  });
+
+  it("should export to csv when button clicked", async () => {
     const session = {
       user: {
         email: "questify@gmail.com",
@@ -674,21 +714,26 @@ describe("Summary Page", () => {
       },
     ];
 
-    (getSummaries as jest.Mock).mockRejectedValue(new Error("Failed to fetch"));
+    (getSummaries as jest.Mock).mockResolvedValue({
+      formStatistics,
+      questionsWithAnswers,
+      allIndividuals: [],
+    });
 
     (auth as jest.Mock).mockResolvedValue(session);
 
-    // activeTab to question
-    mockedDispact.mockImplementation((state) => {
-      expect(state).toBe("question");
-    });
-
+    // Click export button
     render(
       await Summary({
         params: {
           id: "1",
         },
-      }),
+      })
     );
+
+    const exportButton = screen.getAllByTestId("export-button");
+
+    console.log(exportButton);
+    expect(exportButton[0]).toBeInTheDocument();
   });
 });
