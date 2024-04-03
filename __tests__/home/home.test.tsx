@@ -6,6 +6,11 @@ import Home from "@/app/(protected)/home/page";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import { UserRole } from "@/lib/types/auth";
+import {
+  getQuestionnairesOwned,
+  getQuestionnairesFilled,
+} from "@/lib/action/form";
+import { BareForm } from "@/lib/types";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -13,7 +18,34 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
+jest.mock("@/lib/action/form", () => ({
+  getQuestionnairesOwned: jest.fn(),
+  getQuestionnairesFilled: jest.fn(),
+}));
+
+jest.mock("@/lib/action", () => ({
+  getInvoices: jest.fn().mockResolvedValue([]),
+}));
+
+jest.mock("next/navigation", () => {
+  return { useRouter: jest.fn(), usePathname: jest.fn() };
+});
+
 const mockedDispact = jest.fn();
+
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // Deprecated
+    removeListener: jest.fn(), // Deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 jest.mock("react-dom", () => {
   const originalModule = jest.requireActual("react-dom");
@@ -34,10 +66,6 @@ jest.mock("react-dom", () => {
       Events: [],
     },
   };
-});
-
-jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn() };
 });
 
 jest.mock("@/auth", () => {
@@ -90,15 +118,162 @@ describe("Login", () => {
       expires: new Date().toISOString(),
     } as Session;
 
+    const mockedForms: BareForm[] = [
+      {
+        id: "1",
+        title: "Mocked Form 1",
+        prize: 100,
+        prizeType: "EVEN",
+        maxWinner: 1,
+        createdAt: "2024-03-17T12:00:00Z",
+        updatedAt: "2024-03-17T12:00:00Z",
+        endedAt: "2024-03-18T12:00:00Z",
+        ongoingParticipation: 10,
+        completedParticipation: 5,
+      },
+      {
+        id: "2",
+        title: "Mocked Form 2",
+        prize: 200,
+        prizeType: "LUCKY",
+        maxWinner: 2,
+        createdAt: "2024-03-16T12:00:00Z",
+        updatedAt: "2024-03-16T12:00:00Z",
+        endedAt: "2024-03-17T12:00:00Z",
+        ongoingParticipation: 15,
+        completedParticipation: 8,
+      },
+    ];
+
+    (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
+
     (auth as jest.Mock).mockResolvedValue(session);
 
     render(await Home());
 
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Create QRE")).toBeInTheDocument();
-    expect(screen.getByText("Responses")).toBeInTheDocument();
+    expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
 
     expect(screen.getByText("empty forms")).toBeInTheDocument();
     expect(screen.getByText("credits")).toBeInTheDocument();
+  });
+
+  test("renders home page with no problem as respondent", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    const mockedForms: BareForm[] = [
+      {
+        id: "1",
+        title: "Mocked Form 1",
+        prize: 100,
+        prizeType: "EVEN",
+        maxWinner: 1,
+        createdAt: "2024-03-17T12:00:00Z",
+        updatedAt: "2024-03-17T12:00:00Z",
+        endedAt: "2024-03-18T12:00:00Z",
+        ongoingParticipation: 10,
+        completedParticipation: 5,
+      },
+      {
+        id: "2",
+        title: "Mocked Form 2",
+        prize: 200,
+        prizeType: "LUCKY",
+        maxWinner: 2,
+        createdAt: "2024-03-16T12:00:00Z",
+        updatedAt: "2024-03-16T12:00:00Z",
+        endedAt: "2024-03-17T12:00:00Z",
+        ongoingParticipation: 15,
+        completedParticipation: 8,
+      },
+    ];
+
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(mockedForms);
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Home());
+  });
+
+  test("renders with problem when fetching", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "CREATOR",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error(""));
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Home());
+
+    expect(screen.getByText("empty forms")).toBeInTheDocument();
+  });
+});
+
+describe("Admin", () => {
+  test("renders home page with no problem", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["ADMIN"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        activeRole: "ADMIN",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(await Home());
+
+    const adminHomepage = screen.getByTestId("admin-homepage");
+    expect(adminHomepage).toBeInTheDocument();
   });
 });

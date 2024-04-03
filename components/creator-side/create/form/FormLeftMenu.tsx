@@ -13,7 +13,7 @@ interface FormLeftMenuProps {
   endingChildren?: React.ReactNode;
 }
 
-const buttonClass = `flex gap-2 h-fit w-full bg-background hover:bg-accent text-[#324B4F] hover:text-[#324B4F]
+const buttonClass = `flex gap-2 h-fit w-full bg-background hover:bg-[#F3F8F9] text-[#324B4F] hover:text-[#324B4F]
   flex-row justify-between p-0 rounded-none`;
 const indicatorClass = `w-1 h-full bg-primary rounded-l-md flex`;
 const childrenClass = `flex flex-col h-full gap-4 px-5 py-4 items-stretch overflow-y-auto`;
@@ -35,7 +35,7 @@ const renderButton = (
   </Button>
 );
 
-const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
+export function FormLeftMenu({
   className = "",
   state = "opening",
   onClickOpening = () => {},
@@ -44,7 +44,7 @@ const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
   contentsChildren = null,
   onClickEnding = () => {},
   endingChildren = null,
-}) => {
+}: Readonly<FormLeftMenuProps>) {
   return (
     <div className={`flex p-0  ${className}`}>
       <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
@@ -63,6 +63,4 @@ const FormLeftMenu: React.FC<FormLeftMenuProps> = ({
       </Card>
     </div>
   );
-};
-
-export default FormLeftMenu;
+}

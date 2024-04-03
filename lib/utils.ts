@@ -8,6 +8,7 @@ import {
   QuestionnaireItem,
   Answer,
 } from "@/lib/context/QuestionnaireContext";
+import { BareForm } from "./types/form.type";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -108,3 +109,31 @@ export const updateAnswers = (
   }
   return updatedAnswers;
 };
+
+export function decidePhoto(form: BareForm) {
+  const title = form.title.split(" ");
+
+  if (title.length === 1) {
+    return title[0].slice(0, 2).toUpperCase();
+  }
+
+  return (
+    title[0].slice(0, 1).toUpperCase() + title[1].slice(0, 1).toUpperCase()
+  );
+}
+
+export function isEnded(endedAt: string): boolean {
+  return new Date() > new Date(endedAt);
+}
+
+export async function convertToCSV(response: Response, formTitle: string) {
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `${formTitle}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

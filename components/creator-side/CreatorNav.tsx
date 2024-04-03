@@ -26,13 +26,16 @@ const HomeNav: React.FC<HomeNavProps> = ({
   };
 
   const toResponses = () => {
-    router.push("/home");
+    router.push("/response");
   };
 
   return (
     <Navigation
-      className={className}
-      action="Create QRE"
+      className={
+        className +
+        " fixed bottom-4 md:top-auto md:bottom-auto md:relative md:flex md:w-fit w-full !left-0"
+      }
+      action="Create Questionnaire"
       state={state}
       onClickHome={toHome}
       onClickAction={toCreate}

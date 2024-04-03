@@ -20,13 +20,21 @@ interface CheckboxProps {
   description?: string;
   choice?: string[];
   answer: string[];
+  status?: boolean;
 }
 
 export function Checkboxes(checkboxProps: CheckboxProps) {
   const { questionnaire, answers, setQuestionnaire, setAnswers } =
     useQuestionnaireContext();
   const { role, numbering, questionId, questionTypeName } = checkboxProps;
-  const { isRequired, question, description, choice, answer } = checkboxProps;
+  const {
+    isRequired,
+    question,
+    description,
+    choice,
+    answer,
+    status = true,
+  } = checkboxProps;
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
     description || "",
@@ -54,23 +62,16 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
     setOptions(newOptions);
   };
 
+  console.log(selectedOptionsValues);
+  console.log("====================================");
   const handleOptionToggle = (index: number, optionValue: string) => {
-    setSelectedOptionIndices((prevIndices) => {
-      const newIndices = [...prevIndices];
-      const idx = newIndices.indexOf(index);
-      if (idx !== -1) {
-        newIndices.splice(idx, 1);
-      } else {
-        newIndices.push(index);
-      }
-
-      const newSelectedOptionsValues = options.filter((_, idx) =>
-        newIndices.includes(idx),
+    if (selectedOptionsValues.includes(optionValue)) {
+      setSelectedOptionsValues(
+        selectedOptionsValues.filter((option) => option !== optionValue),
       );
-      setSelectedOptionsValues(newSelectedOptionsValues);
-
-      return newIndices;
-    });
+    } else {
+      setSelectedOptionsValues([...selectedOptionsValues, optionValue]);
+    }
   };
 
   const handleSwitchChange = () => {
@@ -109,29 +110,31 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
   const handleOption = () => {
     return (
       <div>
-        {options.map((option, index) => (
-          <div key={index} className="flex items-center self-stretch gap-2">
-            <input
-              type="checkbox"
-              className=""
-              checked={selectedOptionIndices.includes(index)}
-              onChange={() => handleOptionToggle(index, option)}
-            />
+        {choice &&
+          choice.map((option, index) => (
+            <div key={index} className="flex items-center self-stretch gap-2">
+              <input
+                type="checkbox"
+                className=""
+                checked={selectedOptionsValues.includes(option)} // Check if the option is in the answer list
+                onChange={() => handleOptionToggle(index, option)}
+                disabled={!status} // Disable checkbox if status is false
+              />
 
-            <input
-              style={{ borderBottom: "none" }}
-              type="text"
-              value={option}
-              placeholder={`Option ${index + 1}`}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              className="text-sm outline-none border-b border-gray-300 focus:border-primary "
-              readOnly={role === "RESPONDENT"}
-            />
-            {role === "CREATOR" && (
-              <button onClick={() => deleteOption(index)}>&times;</button>
-            )}
-          </div>
-        ))}
+              <input
+                style={{ borderBottom: "none" }}
+                type="text"
+                value={option}
+                placeholder={`Option ${index + 1}`}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                className="text-sm outline-none border-b border-gray-300 focus:border-primary"
+                readOnly={role === "RESPONDENT"}
+              />
+              {role === "CREATOR" && (
+                <button onClick={() => deleteOption(index)}>&times;</button>
+              )}
+            </div>
+          ))}
         {role === "CREATOR" && checkboxTemplate}
       </div>
     );
@@ -161,7 +164,7 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
   }, [selectedOptionsValues]);
 
   return (
-    <div className="w-[84%] md:w-[50%] flex flex-col gap-4">
+    <div className="w-[84%] flex flex-col gap-4">
       <QuestionLayout
         role={role}
         numbering={numbering}

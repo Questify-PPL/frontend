@@ -1,46 +1,64 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect } from "react";
 import CreatorNav from "@/components/creator-side/CreatorNav";
-import CreateCard from "@/components/creator-side/create/CreateCard";
+import CreateModal from "@/components/creator-side/create/CreateModal";
+import { DraftMobile, InfoTable } from "@/components/forms";
 import { Button } from "@/components/ui/button";
-import { InfoTable } from "@/components/creator-side/InfoTable";
-import { BareForm } from "@/lib/types/form.type";
-import { TableContent } from "../TableContent";
+import { Fragment, useState } from "react";
+import { DraftContent } from "./DraftContent";
+import { getQuestionnairesOwned } from "@/lib/action";
+import { BareForm } from "@/lib/types";
 
-interface CreateWrapperProps {
-  forms: BareForm[];
-}
+export function CreateWrapper() {
+  const [forms, setForms] = useState<BareForm[]>([]);
 
-export function CreateWrapper({ forms }: Readonly<CreateWrapperProps>) {
-  const [createCardState, setCreateCardState] = useState("hidden");
+  useEffect(() => {
+    getForms();
+  }, [forms]);
 
-  const OpenCreateCard = () => {
-    const newClass = createCardState === "hidden" ? "flex" : "hidden";
-    setCreateCardState(newClass);
+  async function getForms() {
+    try {
+      const response = await getQuestionnairesOwned("UNPUBLISHED");
+      setForms(response);
+    } catch (error) {}
+
+    return forms;
+  }
+
+  const [createModalState, setCreateModalState] = useState("hidden");
+
+  const OpenCreateModal = () => {
+    const newClass = createModalState === "hidden" ? "flex" : "hidden";
+    setCreateModalState(newClass);
   };
 
   return (
-    <main className="flex flex-col h-screen w-full">
-      <div className="flex flex-col md:flex-row w-full h-full gap-4 p-5">
-        <CreatorNav
-          className="absolute md:relative md:flex md:w-[20%]"
-          state="action"
-        ></CreatorNav>
-        <div className="flex flex-col w-full space-y-4">
-          <Button className="flex w-fit" onClick={OpenCreateCard}>
+    <>
+      <div
+        className="flex flex-col md:flex-row w-full h-full gap-4 p-5 relative"
+        data-testid="table-content"
+      >
+        <CreatorNav state="action"></CreatorNav>
+        <div className="flex flex-col w-full space-y-4 flex-1">
+          <Button className="flex md:w-fit w-full" onClick={OpenCreateModal}>
             Create a new Questionnaire
           </Button>
-          <InfoTable />
-          {forms.map((form) => (
-            <TableContent key={form.id} form={form} />
-          ))}
+          <p className="text-[#32636A] text-[10px] font-medium">Drafts</p>
+          <InfoTable>
+            {forms.map((form) => (
+              <Fragment key={form.id}>
+                <DraftMobile form={form} key={form.id} />
+                <DraftContent form={form} />
+              </Fragment>
+            ))}
+          </InfoTable>
         </div>
       </div>
-      <CreateCard
-        className={`${createCardState}`}
-        onCancel={OpenCreateCard}
-      ></CreateCard>
-    </main>
+      <CreateModal
+        className={`${createModalState}`}
+        onCancel={OpenCreateModal}
+      ></CreateModal>
+    </>
   );
 }

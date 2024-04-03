@@ -1,26 +1,40 @@
-import Image from "next/image";
-import Link from "next/link";
-import { RoleDropdown } from "./RoleDropdown";
-import { UserDropdownMenu } from ".";
+"use client";
+
 import { Session } from "next-auth";
+import { usePathname } from "next/navigation";
+import PrimaryNavbar from "./PrimaryNavbar";
+import SecondaryNavbar from "./SecondaryNavbar";
+
+const primaryNavbarPath = ["/home", "/reports", "/reviews"];
 
 export default function Navbar({
   session,
 }: Readonly<{ session: Session | null }>) {
+  const pathname = usePathname();
+
   return (
-    <div className="bg-[#E5EEF0] flex px-[15px] py-[10px] justify-between items-center gap-[10px]">
-      <Link href={"/home"}>
-        <Image
-          src="/assets/Questify.svg"
-          alt="Questify Logo"
-          width={82}
-          height={19}
+    <>
+      {primaryNavbarPath.includes(pathname) && (
+        <PrimaryNavbar session={session} />
+      )}
+      {!primaryNavbarPath.includes(pathname) && (
+        <PrimaryNavbar session={session} className="md:flex hidden" />
+      )}
+      {pathname === "/create" && (
+        <SecondaryNavbar
+          title="Create QRE"
+          infoDescription="Create Questionnaire Page"
         />
-      </Link>
-      <div className="flex items-center gap-[10px]">
-        <RoleDropdown session={session} />
-        <UserDropdownMenu />
-      </div>
-    </div>
+      )}
+      {pathname === "/response" && (
+        <SecondaryNavbar title="Responses" infoDescription="Responses Page" />
+      )}
+      {pathname === "/questionnaire" && (
+        <SecondaryNavbar
+          title="QRE For You"
+          infoDescription="Search For Questionnaires Page"
+        />
+      )}
+    </>
   );
 }

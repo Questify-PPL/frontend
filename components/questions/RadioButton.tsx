@@ -2,7 +2,11 @@
 
 import { useState, ChangeEvent, useRef, useEffect } from "react";
 import QuestionLayout from "./QuestionLayout";
-import { handleQuedesChange, updateQuestionnaire } from "@/lib/utils";
+import {
+  handleQuedesChange,
+  updateAnswers,
+  updateQuestionnaire,
+} from "@/lib/utils";
 import { RadioGroup } from "../ui/radio-group";
 import { RadioGroupItem } from "../ui/radio-group";
 import { useQuestionnaireContext } from "@/lib/hooks";
@@ -18,14 +22,21 @@ interface RadioButtonProps {
   description?: string;
   choice?: string[];
   answer: string[];
+  status?: boolean;
 }
 
 export function RadioButton(radioButtonProps: RadioButtonProps) {
   const { questionnaire, answers, setQuestionnaire, setAnswers } =
     useQuestionnaireContext();
   const { role, numbering, questionId, questionTypeName } = radioButtonProps;
-  const { isRequired, question, description, choice, answer } =
-    radioButtonProps;
+  const {
+    isRequired,
+    question,
+    description,
+    choice,
+    answer,
+    status = true,
+  } = radioButtonProps;
 
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
@@ -35,6 +46,8 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
 
   const [options, setOptions] = useState<string[]>(answer || []);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>(-1);
+  const [selectedOptionsValues, setSelectedOptionsValues] =
+    useState<string>("");
   const YES_VALUE = 1;
   const NO_VALUE = 0;
   const lastOptionRef = useRef<HTMLInputElement>(null);
@@ -55,6 +68,10 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
 
   const handleOptionSelect = (index: number, optionValue: string) => {
     setSelectedOptionIndex(index);
+    setSelectedOptionsValues(optionValue);
+    console.log("====================================");
+    console.log(optionValue);
+    console.log("====================================");
   };
 
   const handleSwitchChange = () => {
@@ -109,14 +126,15 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
     if (questionTypeName === "Multiple Choice") {
       return (
         <RadioGroup className="flex flex-col gap-2 mt-2">
-          {options.map((option, index) => (
+          {choice?.map((option, index) => (
             <div key={index} className="flex items-center self-stretch gap-2">
               <RadioGroupItem
                 value={option}
                 id={`option-${index}`}
-                className={`h-4 w-4 rounded-full border-[1px] border-solid border-[#CDDDE1] ${index === selectedOptionIndex ? "bg-custom-blue" : "bg-white"}`}
+                className={`h-4 w-4 rounded-full border-[1px] border-solid border-[#CDDDE1] ${answer.includes(option) ? "bg-custom-blue" : "bg-white"}`}
                 onClick={() => handleOptionSelect(index, option)}
-                checked={index === selectedOptionIndex}
+                disabled={!status}
+                checked={selectedOptionsValues === option}
               />
               <input
                 style={{ borderBottom: "none", width: "170px" }}
@@ -142,9 +160,9 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
             <RadioGroupItem
               value="Yes"
               id="option-yes"
-              className={`h-4 w-4 rounded-full border-[1px] border-solid border-[#CDDDE1] ${selectedOptionIndex === YES_VALUE ? "bg-custom-blue" : "bg-white"}`}
-              onClick={() => handleOptionSelect(1, "yes")} // Set the selected option index
-              checked={selectedOptionIndex === YES_VALUE} // Set the checked state
+              className={`h-4 w-4 rounded-full border-[1px] border-solid border-[#CDDDE1] ${selectedOptionsValues === "Yes" ? "bg-custom-blue" : "bg-white"}`}
+              onClick={() => handleOptionSelect(1, "yes")}
+              disabled={!status}
             />
             <span className="text-sm">Yes</span>
           </div>
@@ -152,9 +170,9 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
             <RadioGroupItem
               value="No"
               id="option-no"
-              className={`h-4 w-4 rounded-full border-[1px] border-solid border-[#CDDDE1] ${selectedOptionIndex === NO_VALUE ? "bg-custom-blue" : "bg-white"}`}
-              onClick={() => handleOptionSelect(0, "no")} // Set the selected option index
-              checked={selectedOptionIndex === NO_VALUE} // Set the checked state
+              className={`h-4 w-4 rounded-full border-[1px] border-solid border-[#CDDDE1] ${selectedOptionsValues === "No" ? "bg-custom-blue" : "bg-white"}`}
+              onClick={() => handleOptionSelect(0, "no")}
+              disabled={!status}
             />
             <span className="text-sm">No</span>
           </div>
@@ -178,14 +196,18 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
     setQuestionnaire(updatedQuestionnaire);
   }, [requiredValue, questionValue, descriptionValue, options]);
 
-  // useEffect(() => {
-  //   const updatedAnswers = updateAnswers(answers, questionId, selectedOptionsValues);
+  useEffect(() => {
+    const updatedAnswers = updateAnswers(
+      answers,
+      questionId,
+      selectedOptionsValues,
+    );
 
-  //   setAnswers(updatedAnswers);
-  // }, [selectedOptionsValues]);
+    setAnswers(updatedAnswers);
+  }, [selectedOptionsValues]);
 
   return (
-    <div className="w-[84%] md:w-[50%] flex flex-col gap-4">
+    <div className="w-[84%] flex flex-col gap-4">
       <QuestionLayout
         role={role}
         numbering={numbering}

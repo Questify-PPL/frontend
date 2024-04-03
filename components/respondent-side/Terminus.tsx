@@ -27,7 +27,10 @@ const Terminus: React.FC<TerminusProps> = ({
   buttonIcon = null,
 }) => {
   return (
-    <Card className={`flex flex-col w-[50%] h-[90%] ${className}`}>
+    <Card
+      className={`flex flex-col w-[50%] h-[90%] ${className}`}
+      data-testid="terminus"
+    >
       <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
         {QRETitle}
         {terminusImage}
@@ -41,6 +44,7 @@ const Terminus: React.FC<TerminusProps> = ({
             className="gap-2"
             type={buttonType}
             onClick={buttonClickHandler}
+            data-testid="terminus-button"
           >
             {buttonText}
             {buttonIcon}
