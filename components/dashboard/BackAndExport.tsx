@@ -1,10 +1,12 @@
 import { URL as fetchURL } from "@/lib/constant";
 import { useSummaryContext } from "@/lib/context/SummaryContext";
 import { convertToCSV } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { LuChevronLeft, LuUpload } from "react-icons/lu";
 
 export function BackAndExport() {
   const { setIsFinishedFetching, formId, session } = useSummaryContext();
+  const router = useRouter();
 
   async function exportData() {
     setIsFinishedFetching(true);
@@ -24,7 +26,12 @@ export function BackAndExport() {
 
   return (
     <div className="flex justify-between items-end self-stretch">
-      <button className="flex gap-1 items-center" onClick={() => {}}>
+      <button
+        className="flex gap-1 items-center"
+        onClick={() => {
+          router.back();
+        }}
+      >
         <LuChevronLeft className="text-[#95B0B4] h-4 w-4" />
         <p className="text-[#95B0B4] text-[14px] font-semibold leading-normal">
           Back
