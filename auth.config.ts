@@ -12,7 +12,7 @@ export const homepageRoute = "/home";
  * Array to specify which routes should be accessed with appropritae role
  */
 export const RBACRoutes = {
-  CREATOR: ["/create", "/create/form/[id]"],
+  CREATOR: ["/create", "/create/form/[id]", "/shop"],
   RESPONDENT: ["/questionnaire"],
   ADMIN: ["/admin", "/reports", "/reviews"],
 } as Record<UserRole, string[]>;
@@ -30,7 +30,7 @@ export const authConfig = {
 
       // Disable route for authenticated user
       const isAuthDisabledRoute = disabledRoutesAfterAuthenticated.some(
-        (route) => nextUrl.pathname.startsWith(route),
+        (route) => nextUrl.pathname.startsWith(route)
       );
       const isLoggedIn = !!auth?.user;
 
@@ -40,7 +40,7 @@ export const authConfig = {
 
       // Public routes
       const isPublic = publicRoutes.some((route) =>
-        nextUrl.pathname.startsWith(route),
+        nextUrl.pathname.startsWith(route)
       );
       if (isPublic) return true;
 

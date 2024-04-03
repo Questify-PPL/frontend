@@ -215,7 +215,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>
+      </InfoTable>,
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
   });
@@ -241,7 +241,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>
+      </InfoTable>,
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
     const moreButton = screen.getByRole("button", {
@@ -252,7 +252,7 @@ describe("CreateWrapper Component", () => {
       new PointerEvent("pointerdown", {
         ctrlKey: false,
         button: 0,
-      })
+      }),
     );
 
     await screen.findByText("Delete");

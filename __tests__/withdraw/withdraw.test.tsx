@@ -53,7 +53,7 @@ describe("Withdraw Page", () => {
     render(await Withdraw());
 
     expect(
-      screen.getByText("Choices of Withdraw Nominals")
+      screen.getByText("Choices of Withdraw Nominals"),
     ).toBeInTheDocument();
     expect(screen.getByText("Withdrawal History")).toBeInTheDocument();
   });
