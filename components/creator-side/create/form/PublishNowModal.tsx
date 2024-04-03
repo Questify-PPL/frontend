@@ -35,7 +35,9 @@ export function PublishNowModal({
             </span>
           </div>
         </div>
-        <Button className="w-full" onClick={onCancel}>OK</Button>
+        <Button className="w-full" onClick={onCancel}>
+          OK
+        </Button>
       </Card>
     </div>
   );
