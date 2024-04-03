@@ -27,7 +27,7 @@ describe("Form Component", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByTestId("form-wrapper")).toBeInTheDocument();
   });
@@ -38,7 +38,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByText("Contents")).toBeInTheDocument();
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
@@ -50,12 +50,12 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
     contentButton.click();
     const addQuestionButton = screen.getByTestId(
-      "add-question"
+      "add-question",
     ) as HTMLInputElement;
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
@@ -65,12 +65,12 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
     contentButton.click();
     const addQuestionButton = screen.getByTestId(
-      "add-question"
+      "add-question",
     ) as HTMLInputElement;
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
@@ -86,12 +86,12 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
     contentButton.click();
     const addQuestionButton = screen.getByTestId(
-      "add-question"
+      "add-question",
     ) as HTMLInputElement;
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
@@ -103,17 +103,17 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
     contentButton.click();
     const addQuestionButton = screen.getByTestId(
-      "add-question"
+      "add-question",
     ) as HTMLInputElement;
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
     const cancelButton = screen.getByTestId(
-      "cancel-add-question"
+      "cancel-add-question",
     ) as HTMLInputElement;
     fireEvent.click(cancelButton);
     await screen.findByText("Contents");
@@ -125,12 +125,12 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
     contentButton.click();
     const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft"
+      "save-as-draft",
     ) as HTMLInputElement;
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
@@ -140,17 +140,17 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents") as HTMLInputElement;
     contentButton.click();
     const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft"
+      "save-as-draft",
     ) as HTMLInputElement;
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
     const closeButton = screen.getByTestId(
-      "cancel-saved-as-draft"
+      "cancel-saved-as-draft",
     ) as HTMLInputElement;
     fireEvent.click(closeButton);
     await screen.findByText("Contents");
@@ -160,14 +160,14 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Publish") as HTMLInputElement;
     contentButton.click();
 
     await screen.findByTestId("publish-button");
     const publishButton = screen.getByTestId(
-      "publish-button"
+      "publish-button",
     ) as HTMLInputElement;
     publishButton.click();
     await screen.findByText("Published!");

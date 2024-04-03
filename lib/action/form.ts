@@ -9,7 +9,7 @@ export async function createQuestionnaire(
   title: string,
   prize: number,
   prizeType: string,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -126,7 +126,7 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -148,7 +148,7 @@ export async function getQuestionnaireRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -171,7 +171,7 @@ export async function getCompletedQuestionnaireForRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -230,7 +230,7 @@ export async function getSummaries(formId: string) {
 
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[]
+  data: any[] | QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -247,7 +247,7 @@ export async function patchQuestionnaire(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -272,7 +272,7 @@ export async function publishQuestionnaire(formId: string) {
       },
       method: "PATCH",
       body: JSON.stringify(publish),
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -291,7 +291,7 @@ export async function deleteQuestionnaire(formId: string) {
         Authorization: `Bearer ${user?.accessToken}`,
       },
       method: "DELETE",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -311,7 +311,7 @@ export async function postParticipation(formId: string) {
         "Content-Type": "application/json",
       },
       method: "POST",
-    }
+    },
   );
 
   if (response.status !== 201) {
@@ -325,7 +325,7 @@ export async function patchAnswer(
   formId: string,
   // data: any[] | QuestionnaireItem[],
   data: any[] | Answer[],
-  isFinal: boolean = false
+  isFinal: boolean = false,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -350,7 +350,7 @@ export async function patchAnswer(
         },
         method: "PATCH",
         body: JSON.stringify(update),
-      }
+      },
     );
 
     if (response.status !== 200) {

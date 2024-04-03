@@ -7,3 +7,9 @@ export type ApiResponse<T> = {
 export type ActionReponse = {
   message: string;
 };
+
+export type ErrorReponse = {
+  statusCode: number;
+  message: string;
+  error: string;
+};

@@ -34,7 +34,7 @@ export function DraftContent({
       event.stopPropagation();
       router.push(`/create/form/${form.id}`);
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   const handleDeleteClick = useCallback(
@@ -43,7 +43,7 @@ export function DraftContent({
       deleteQuestionnaire(form.id);
       router.refresh();
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   return (
