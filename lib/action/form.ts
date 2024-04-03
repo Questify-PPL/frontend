@@ -36,6 +36,31 @@ export async function createQuestionnaire(
   return await response.json();
 }
 
+export async function getAllAvailableForm() {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(URL.createForm, {
+    headers: {
+      Authorization: `Bearer ${user?.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to get all available form");
+  }
+
+  const result: FetchListForm = await response.json();
+
+  if (!result.data) {
+    return [];
+  }
+
+  return result.data;
+}
+
 export async function getQuestionnairesOwned(type?: string) {
   const session = await auth();
   const user = session?.user;
