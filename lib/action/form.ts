@@ -10,7 +10,7 @@ export async function createQuestionnaire(
   prize: number,
   prizeType: string,
   maxParticipant?: number,
-  maxWinner?: number
+  maxWinner?: number,
 ) {
   const session = await auth();
   const user = session?.user;
@@ -127,7 +127,7 @@ export async function getQuestionnaire(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -149,7 +149,7 @@ export async function getQuestionnaireRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -172,7 +172,7 @@ export async function getCompletedQuestionnaireForRespondent(formId: string) {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -231,7 +231,7 @@ export async function getSummaries(formId: string) {
 
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[]
+  data: any[] | QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -248,7 +248,7 @@ export async function patchQuestionnaire(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -267,7 +267,7 @@ export async function deleteQuestionnaire(formId: string) {
         Authorization: `Bearer ${user?.accessToken}`,
       },
       method: "DELETE",
-    }
+    },
   );
 
   if (response.status !== 200) {
@@ -277,7 +277,7 @@ export async function deleteQuestionnaire(formId: string) {
 
 export async function patchAnswerAsDraft(
   formId: string,
-  data: any[] | QuestionnaireItem[]
+  data: any[] | QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -294,7 +294,7 @@ export async function patchAnswerAsDraft(
       },
       method: "PATCH",
       body: JSON.stringify(update),
-    }
+    },
   );
 
   if (response.status !== 200) {
