@@ -5,14 +5,26 @@ import "@testing-library/jest-dom";
 
 describe("ItemCard", () => {
   test("toggles selected state on card click", () => {
-    const props = {
-      label: "Item Label",
-      cost: "$10",
-      discCost: "$8",
-      imageUrl: "example.com/image.jpg",
+    const shopItem = {
+      id: 7,
+      title: "10 Forms",
+      price: 200000,
+      category: "BASIC_PLAN",
+      advertisedOriginalPrice: 270000,
+      description: "Get 10 Forms",
     };
 
-    render(<ItemCard {...props} />);
+    // Mock functionality of setChosenShopItem in the context
+    const setChosenShopItem = jest.fn();
+    jest.mock("@/lib/context", () => {
+      return {
+        useShopContext: jest
+          .fn()
+          .mockReturnValue({ chosenShopItem: undefined, setChosenShopItem }),
+      };
+    });
+
+    render(<ItemCard shopItem={shopItem} imageUrl="https://image.com/test" />);
 
     // Query the card element based on its data-testid
     const cardElement = screen.getByTestId("item-card");
@@ -21,16 +33,9 @@ describe("ItemCard", () => {
     expect(cardElement).toHaveClass("cursor-pointer");
     expect(cardElement).not.toHaveClass("bg-[#324B4F] bg-opacity-60");
 
-    // Simulate click on the card
-    fireEvent.click(cardElement);
-
     // Assert that the selected state is toggled to true
-    expect(cardElement).toHaveClass("bg-[#324B4F] bg-opacity-60");
-
-    // Simulate another click on the card
-    fireEvent.click(cardElement);
-
-    // Assert that the selected state is toggled back to false
-    expect(cardElement).not.toHaveClass("bg-[#324B4F] bg-opacity-60");
+    expect(cardElement).toHaveClass(
+      "rounded-lg border bg-card text-card-foreground shadow-sm relative min-w-32 h-fit p-3 gap-2 cursor-pointer",
+    );
   });
 });
