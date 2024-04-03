@@ -116,7 +116,7 @@ export default function PaymentTable({
                     href={`https://${invoice.buktiPembayaranUrl}`}
                     className="underline"
                   >
-                    {invoice.buktiPembayaranUrl}
+                    {invoice.buktiPembayaranUrl.slice(0, 35) + "..."}
                   </a>
                 )) ||
                   invoice.accountNumber}
@@ -146,7 +146,7 @@ export default function PaymentTable({
                             invoice.status === InvoiceStatusEnum.REJECTED,
                           "bg-[#DDFAD6]  text-[#39A014]":
                             invoice.status === InvoiceStatusEnum.APPROVED,
-                        },
+                        }
                       )}`}
                     >
                       {invoice.status === InvoiceStatusEnum.PENDING && (
