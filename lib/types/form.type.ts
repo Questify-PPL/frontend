@@ -1,4 +1,5 @@
 import { Session } from "next-auth";
+import { Section } from "../context";
 
 export type BareForm = {
   id: string;
@@ -15,6 +16,7 @@ export type BareForm = {
   questionFilled?: number;
   isCompleted?: boolean;
   questionAmount?: number;
+  canRespond?: boolean;
   winningChance?: number;
   winningStatus?: boolean;
 };
@@ -40,14 +42,17 @@ export type SummarizeForm = BareForm & {
   questionsStatistics: SectionGrouped[] | QuestionStatistic[];
 };
 
-export type SectionGrouped = {
+export type SectionParent = {
   sectionId: number;
   name: string;
   description: string;
+};
+
+export type SectionGrouped = SectionParent & {
   questions: QuestionStatistic[];
 };
 
-export type QuestionStatistic = {
+export type QuestionGrouped = {
   sectionId: number | null;
   questionId: number;
   questionType: "TEXT" | "RADIO" | "CHECKBOX";
@@ -55,6 +60,9 @@ export type QuestionStatistic = {
   isRequired: boolean;
   question: string;
   description: string;
+};
+
+export type QuestionStatistic = QuestionGrouped & {
   statistics: string[] | RadioStatistic;
 };
 
@@ -84,4 +92,20 @@ export type SummarizeFormAsProps = {
   allIndividuals: string[];
   formId: string;
   session: Session;
+};
+
+export type AnswerAndChoice = {
+  answer: string[] | string;
+  choice?: string[];
+};
+
+export type QuestionGroupedWithAnswerAndChoice = QuestionGrouped &
+  AnswerAndChoice;
+
+export type SectionGroupedWithAnswer = SectionParent & {
+  questions: QuestionGrouped & AnswerAndChoice[];
+};
+
+export type QuestionDetailResponse = {
+  questions: SectionGroupedWithAnswer[] | QuestionGroupedWithAnswerAndChoice[];
 };
