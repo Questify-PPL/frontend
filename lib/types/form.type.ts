@@ -118,13 +118,13 @@ export type QuestionGet = {
   isRequired: boolean;
   question: string;
   description: string;
-}
+};
 
 export type SectionGet = {
   sectionId: number;
   name: string;
   description: string;
   questions: QuestionGet[];
-}
+};
 
 export type QuestionnaireGetItem = SectionGet | QuestionGet;

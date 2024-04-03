@@ -30,7 +30,7 @@ export const authConfig = {
 
       // Disable route for authenticated user
       const isAuthDisabledRoute = disabledRoutesAfterAuthenticated.some(
-        (route) => nextUrl.pathname.startsWith(route)
+        (route) => nextUrl.pathname.startsWith(route),
       );
       const isLoggedIn = !!auth?.user;
 
@@ -40,7 +40,7 @@ export const authConfig = {
 
       // Public routes
       const isPublic = publicRoutes.some((route) =>
-        nextUrl.pathname.startsWith(route)
+        nextUrl.pathname.startsWith(route),
       );
       if (isPublic) return true;
 

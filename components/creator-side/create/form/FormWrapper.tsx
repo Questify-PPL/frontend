@@ -121,12 +121,12 @@ export default function FormWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -144,14 +144,14 @@ export default function FormWrapper({ id }: { id: string }) {
   function renderOpening(questionnaire: QuestionnaireItem[]) {
     const openingSection = questionnaire.find(
       (section) =>
-        section.type === "SECTION" && section.sectionName === "OPENING"
+        section.type === "SECTION" && section.sectionName === "OPENING",
     );
 
     if (openingSection) {
       const section = openingSection as Section;
 
       const handleSectionDescriptionChange = (
-        event: React.ChangeEvent<HTMLTextAreaElement>
+        event: React.ChangeEvent<HTMLTextAreaElement>,
       ) => {
         const updatedQuestionnaire = questionnaire.map((item) => {
           if (item.type === "SECTION" && item.sectionName === "OPENING") {
@@ -184,14 +184,14 @@ export default function FormWrapper({ id }: { id: string }) {
   function renderEnding(questionnaire: QuestionnaireItem[]) {
     const openingSection = questionnaire.find(
       (section) =>
-        section.type === "SECTION" && section.sectionName === "ENDING"
+        section.type === "SECTION" && section.sectionName === "ENDING",
     );
 
     if (openingSection) {
       const section = openingSection as Section;
 
       const handleSectionDescriptionChange = (
-        event: React.ChangeEvent<HTMLTextAreaElement>
+        event: React.ChangeEvent<HTMLTextAreaElement>,
       ) => {
         const updatedQuestionnaire = questionnaire.map((item) => {
           if (item.type === "SECTION" && item.sectionName === "ENDING") {
