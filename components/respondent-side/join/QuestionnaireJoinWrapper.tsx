@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormUpperMenu,
   SavedAsDraftModal,
 } from "@/components/creator-side/create/form";
 import { RadioButton, Text, Checkboxes } from "@/components/questions";
-import { Section, DefaultQuestion, Question } from "@/lib/context";
+import { Section, DefaultQuestion, Question, Answer } from "@/lib/context";
 import { LuCheck, LuCheckCheck, LuChevronRight } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { useQuestionnaireContext } from "@/lib/hooks";
@@ -15,10 +15,10 @@ import { Card } from "@/components/ui/card";
 import Terminus from "../Terminus";
 import QuestionUI from "@/components/respondent-side/Question";
 import FinalizationCard from "./FinalizationCard";
-import { getQuestionnaireRespondent } from "@/lib/action/form";
+import { getQuestionnaireRespondent, patchAnswer } from "@/lib/action/form";
 
 export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
-  const { questionnaire, answers, setQuestionnaire, setAnswers } =
+  const { questionnaire, answers, setAnswers, setQuestionnaire } =
     useQuestionnaireContext();
   const [QRETitle, setQRETitle] = useState("");
   const router = useRouter();
@@ -26,12 +26,43 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   const [activeQuestionId, setActiveQuestionId] = useState(0);
   const [activeSectionId, setActiveSectionId] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [prize, setPrize] = useState(0);
+  const [maxWinner, setMaxWinner] = useState(0);
+  const [prizeType, setPrizeType] = useState("EVEN");
   const [finalizationCard, setFinalizationCard] = useState("hidden");
+
+  const handleAnswerChange = (questionId: number, newAnswer: string) => {
+    setAnswers((prevAnswers) => {
+      const answerIndex = prevAnswers.findIndex(
+        (answer) => answer.questionId === questionId,
+      );
+
+      if (answerIndex >= 0) {
+        // Update existing answer
+        const updatedAnswers = [...prevAnswers];
+        updatedAnswers[answerIndex].answer = newAnswer;
+        return updatedAnswers;
+      } else {
+        // Add new answer
+        return [...prevAnswers, { questionId, answer: newAnswer }];
+      }
+    });
+  };
 
   const openFinalizationCard = () => {
     const newClass = finalizationCard === "hidden" ? "flex" : "hidden";
     setFinalizationCard(newClass);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchQuestionnaire();
+    };
+
+    console.log("answers: ", answers);
+
+    fetchData().catch(console.error);
+  }, []);
 
   // Get Specific Question to be displayed
   const handleQuestionToggleSelect = async (questionId: number) => {
@@ -56,7 +87,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
 
   const handleSave = async () => {
     try {
-      // await patchAnswerAsDraft(id, questionnaire);
+      await patchAnswer(id, answers);
       OpenSavedAsDraft();
       await fetchQuestionnaire();
     } catch (error) {
@@ -66,7 +97,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
 
   const handleSubmit = async () => {
     try {
-      // await patchQuestionnaire(id, questionnaire);
+      await patchAnswer(id, answers, true);
       openFinalizationCard();
       // await fetchQuestionnaire();
     } catch (error) {
@@ -108,7 +139,14 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       description,
       choice,
     } = q;
-    const answer = choice?.[0] ?? "";
+    let existingAnswerIndex = answers.findIndex(
+      (answer) => answer.questionId === questionId,
+    );
+
+    const answer = answers[existingAnswerIndex]?.answer ?? "";
+
+    console.log("Answer Value: ", answers);
+    console.log("Existing Answer Index: ", answer);
 
     return (
       <div className="flex flex-col w-full" key={questionId}>
@@ -123,6 +161,9 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
             description={description ?? ""}
             choice={choice ?? []}
             answer={answer as string}
+            onAnswerChange={(questionId, newAnswer) =>
+              handleAnswerChange(questionId, newAnswer)
+            }
           />
         ) : questionType === "CHECKBOX" ? (
           <Checkboxes
@@ -135,7 +176,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
             description={description ?? ""}
             choice={choice ?? []}
             // answer={answer as string[]}
-            answer={[answer]}
+            answer={answer as string[]}
           />
         ) : (
           <RadioButton
@@ -148,7 +189,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
             description={description ?? ""}
             choice={choice ?? []}
             // answer={answer as string[]}
-            answer={[answer]}
+            answer={answer as string[]}
           />
         )}
       </div>
@@ -184,15 +225,19 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
         (item as SectionGet).questions
       ) {
         const section = item as SectionGet;
-        const questions = section.questions.map((question) => ({
-          questionId: question.questionId,
-          questionType: question.questionType,
-          questionTypeName: question.questionTypeName,
-          isRequired: question.isRequired,
-          question: question.question,
-          description: question.description,
-          choice: [question.answer], // Needs refactoring
-        }));
+        const questions = section.questions.map((question) => {
+          handleAnswerChange(question.questionId, question.answer);
+          return {
+            questionId: question.questionId,
+            questionType: question.questionType,
+            questionTypeName: question.questionTypeName,
+            isRequired: question.isRequired,
+            question: question.question,
+            description: question.description,
+            choice: [question.answer], // needs refactoring
+          };
+        });
+
         return {
           type: "SECTION",
           sectionId: section.sectionId,
@@ -225,6 +270,9 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       const transformed = transformData(response.data.questions);
       setQuestionnaire(transformed);
       setQRETitle(response.data.title);
+      setPrizeType(response.data.prizeType);
+      setPrize(response.data.prize);
+      setMaxWinner(response.data.maxWinner);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
@@ -233,14 +281,10 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   const next = async () => {
     if (activeSectionId === 0) {
       await handleSectionChanges(activeSectionId + 1);
-      await fetchQuestionnaire();
-    } else if (activeSectionId < questionnaire.length) {
+    } else if (activeSectionId + 1 <= questionnaire.length - 1) {
       await handleSectionChanges(activeSectionId + 1);
-    } else if (activeSectionId === questionnaire.length) {
+    } else if (activeSectionId + 1 === questionnaire.length) {
       console.log("Masuk finalization");
-      await handleSectionChanges(activeSectionId + 1);
-    } else if (activeSectionId > questionnaire.length) {
-      console.log("Masuk else");
       await handleSubmit();
     }
   };
@@ -266,6 +310,10 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       ></SavedAsDraftModal>
       <FinalizationCard
         className={`${finalizationCard}`}
+        prizeType={prizeType}
+        prize={prize}
+        maxWinner={maxWinner}
+        QRETitle={QRETitle}
         onCancel={openFinalizationCard}
       ></FinalizationCard>
       <div className="flex flex-row w-full h-full gap-4 p-5">
@@ -276,72 +324,87 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
             QRETitle={QRETitle}
           />
 
-          {activeSectionId !== 0 ? (
-            (() => {
-              console.log("Masuk render section: " + activeSectionId);
-              const item = questionnaire[activeSectionId - 1];
-              console.log("item: " + item);
-              if (item !== undefined) {
-                const section = item as Section;
-                return (
-                  <QuestionUI
-                    questionSectionTitle={"Section " + section.sectionId}
-                    questionSectionText={section.sectionName}
-                    required={true}
-                    questions={
-                      <div className="flex flex-col gap-8 text-base text-primary w-full justify-start ">
-                        {section.questions?.length >= 1
-                          ? section.questions?.map((question, index) => {
-                              const renderedQuestion = findQuestionById(
-                                questionnaire,
-                                question.questionId,
-                              ) as Question;
-                              const renderFragment = renderQuestion(
-                                renderedQuestion,
-                                question.questionId,
-                              );
-                              return renderFragment;
-                            })
-                          : ""}
-                      </div>
-                    }
-                    prevButton={prev}
-                    nextButton={next}
-                    buttonText="Next"
-                    buttonIcon={<LuCheck className="w-5 h-5" />}
-                  />
+          {activeSectionId === 0
+            ? (() => {
+                console.log(
+                  "Rendering the opening section: activeSectionId is 0",
                 );
-              } else {
-                return (
-                  <Card className="flex flex-row w-full h-full justify-center items-center">
-                    <Terminus
-                      QRETitle="Oreo Satisfaction: User Feedback in Indonesia"
-                      terminusSectionTitle="Ending"
-                      terminusText="Thank you for participating! Your insights are valuable. I hope you don't mind joining future questionnaires."
-                      buttonClickHandler={next}
-                      buttonText="Submit"
-                      buttonIcon={<LuCheckCheck className="w-5 h-5" />}
-                      buttonType="submit"
+                const item = questionnaire[0];
+                if (item !== undefined) {
+                  const section = item as Section;
+                  return (
+                    <Card className="flex flex-row w-full h-full justify-center items-center">
+                      <Terminus
+                        QRETitle=""
+                        terminusSectionTitle={section.sectionName}
+                        terminusText={section.sectionDescription}
+                        buttonClickHandler={next}
+                        buttonText="Start"
+                        buttonIcon={<LuChevronRight className="w-5 h-5" />}
+                        buttonType="submit"
+                      />
+                    </Card>
+                  );
+                }
+              })()
+            : (() => {
+                console.log("Rendering section: " + activeSectionId);
+                const item = questionnaire[activeSectionId];
+                if (
+                  item !== undefined &&
+                  activeSectionId + 1 <= questionnaire.length - 1
+                ) {
+                  const section = item as Section;
+                  return (
+                    <QuestionUI
+                      questionSectionTitle={"Section " + activeSectionId}
+                      questionSectionText={section.sectionName}
+                      required={true}
+                      questions={
+                        <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
+                          {section.questions?.length >= 1
+                            ? section.questions.map((question, index) => {
+                                const renderedQuestion = findQuestionById(
+                                  questionnaire,
+                                  question.questionId,
+                                ) as Question;
+                                return renderQuestion(renderedQuestion, index);
+                              })
+                            : ""}
+                        </div>
+                      }
+                      prevButton={prev}
+                      nextButton={next}
+                      buttonText="Next"
+                      buttonIcon={<LuCheck className="w-5 h-5" />}
                     />
-                  </Card>
-                );
-              }
-            })()
-          ) : (
-            <Card className="flex flex-row w-full h-full justify-center items-center">
-              {activeSectionId === 0 && (
-                <Terminus
-                  QRETitle="Oreo Satisfaction: User Feedback in Indonesia"
-                  terminusSectionTitle="Opening"
-                  terminusText="Hello! I'm Ruben. I'm a Scientist at Oreo. Through this questionnaire I'd like to know consumer's preferences for Oreo flavors and packaging."
-                  buttonClickHandler={next}
-                  buttonText="Start"
-                  buttonIcon={<LuChevronRight className="w-5 h-5" />}
-                  buttonType="submit"
-                />
-              )}
-            </Card>
-          )}
+                  );
+                } else {
+                  console.log(
+                    `End of sections, activeSectionId: ${activeSectionId}`,
+                  );
+                  const item = questionnaire[activeSectionId];
+                  if (
+                    item !== undefined &&
+                    activeSectionId + 1 == questionnaire.length
+                  ) {
+                    const section = item as Section;
+                    return (
+                      <Card className="flex flex-row w-full h-full justify-center items-center">
+                        <Terminus
+                          QRETitle=""
+                          terminusSectionTitle={section.sectionName}
+                          terminusText={section.sectionDescription}
+                          buttonClickHandler={next}
+                          buttonText="Submit"
+                          buttonIcon={<LuCheckCheck className="w-5 h-5" />}
+                          buttonType="submit"
+                        />
+                      </Card>
+                    );
+                  }
+                }
+              })()}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { FormAsProps } from "@/lib/types";
 import { decidePhoto, isEnded } from "@/lib/utils";
 import { LuCoins, LuDices } from "react-icons/lu";
+import { useRouter } from "next/navigation";
 
 export function MPMobile({
   form,
@@ -10,9 +11,18 @@ export function MPMobile({
     className?: string;
   }
 >) {
+  const router = useRouter();
+
+  function onClick() {
+    !form.isCompleted
+      ? router.push(`questionnaire/join/${form.id}`)
+      : router.push(`response/`); // This should be directed to report summary
+  }
+
   return (
     <div
       className={`flex flex-row justify-between items-center justify-center ${className} gap-[60px]`}
+      onClick={onClick}
       data-testid={`mp-mobile-${form.id}`}
     >
       <div className="flex flex-col justify-center">
