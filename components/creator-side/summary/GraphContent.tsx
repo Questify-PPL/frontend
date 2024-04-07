@@ -19,7 +19,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  ArcElement
 );
 
 const variations = [
@@ -30,6 +30,10 @@ const variations = [
   {
     label: "Bar Chart",
     value: "bar",
+  },
+  {
+    label: "Doughnut Chart",
+    value: "doughnut",
   },
 ];
 
@@ -45,7 +49,9 @@ export function GraphContent() {
             className={`flex items-center gap-2 bg-[#F3F8F9] text-[#324B4F] font-medium text-[12px] px-3 py-1 rounded-md ${
               graphType === variation.value ? "bg-primary text-white" : ""
             }`}
-            onClick={() => setGraphType(variation.value as "pie" | "bar")}
+            onClick={() =>
+              setGraphType(variation.value as "pie" | "bar" | "doughnut")
+            }
           >
             {variation.label}
           </button>

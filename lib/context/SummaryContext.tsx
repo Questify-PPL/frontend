@@ -6,9 +6,9 @@ import {
 } from "../types";
 
 export type SummaryContextValue = SummarizeFormAsProps & {
-  graphType: "bar" | "pie";
+  graphType: "bar" | "pie" | "doughnut";
   // eslint-disable-next-line no-unused-vars
-  setGraphType: (type: "bar" | "pie") => void;
+  setGraphType: (type: "bar" | "pie" | "doughnut") => void;
   activeTab: "summary" | "question" | "individual";
   // eslint-disable-next-line no-unused-vars
   setActiveTab: (tab: "summary" | "question" | "individual") => void;
