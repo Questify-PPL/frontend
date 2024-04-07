@@ -18,7 +18,7 @@ export function SummaryProvider({
     "summary" | "question" | "individual"
   >("summary");
 
-  const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
+  const [graphType, setGraphType] = useState<"bar" | "pie" | "doughnut">("pie");
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isFinishedFetching, setIsFinishedFetching] = useState(false);
