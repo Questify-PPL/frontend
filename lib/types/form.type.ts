@@ -89,7 +89,11 @@ export type QuestionWithAnswerSection = {
 export type SummarizeFormAsProps = {
   formStatistics: SummarizeForm;
   questionsWithAnswers: QuestionAnswer[] | QuestionWithAnswerSection[];
-  allIndividuals: string[];
+  allIndividuals: {
+    respondentId: string;
+    name: string;
+    email: string;
+  }[];
   formId: string;
   session: Session;
 };

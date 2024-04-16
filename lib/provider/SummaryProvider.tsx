@@ -45,6 +45,8 @@ export function SummaryProvider({
       setIsFinishedFetching,
       formId,
       session,
+      individualFormQuestions,
+      setIndividualFormQuestions,
     };
   }, [
     formStatistics,
@@ -56,6 +58,7 @@ export function SummaryProvider({
     isFinishedFetching,
     formId,
     session,
+    individualFormQuestions,
   ]);
 
   return (

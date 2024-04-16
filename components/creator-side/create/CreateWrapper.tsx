@@ -15,7 +15,7 @@ export function CreateWrapper() {
 
   useEffect(() => {
     getForms();
-  }, [forms]);
+  }, []);
 
   async function getForms() {
     try {
