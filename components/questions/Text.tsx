@@ -64,7 +64,6 @@ export function Text(textProps: TextProps) {
       handleTextAreaHeight(event as ChangeEvent<HTMLTextAreaElement>);
     }
     setAnswerValue(event.target.value);
-    console.log("Answer Value: ", answerValue);
 
     if (textProps.onAnswerChange) {
       textProps.onAnswerChange(questionId, event.target.value);

@@ -20,7 +20,6 @@ export function TriviaForm() {
 
   function onSubmit(data: TriviaSchema) {
     const { answer } = data;
-    console.log(answer);
 
     if (answer == "Baseball") {
       toast({

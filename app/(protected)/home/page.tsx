@@ -35,10 +35,14 @@ export default async function Home() {
   return (
     <>
       {session.user.activeRole === UserRoleEnum.Creator && (
-        <CreatorHomePage forms={forms} />
+        <CreatorHomePage forms={forms} session={session} />
       )}
       {session.user.activeRole === UserRoleEnum.Respondent && (
-        <RespondentHomePage forms={forms} isRespondent={true} />
+        <RespondentHomePage
+          forms={forms}
+          isRespondent={true}
+          session={session}
+        />
       )}
       {session.user.activeRole === UserRoleEnum.Admin && (
         <AdminHomePage invoices={await getInvoices()} />

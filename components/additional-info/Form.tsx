@@ -50,9 +50,7 @@ const Form = () => {
   });
 
   console.log(watch());
-  const processForm: SubmitHandler<AdditionalInfo> = (data) => {
-    console.log(data);
-  };
+  const processForm: SubmitHandler<AdditionalInfo> = (data) => {};
 
   const next = async () => {
     const fields = steps[currentStep].fields;

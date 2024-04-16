@@ -72,7 +72,6 @@ const QuestionaireJoinForm = () => {
     }
   };
 
-  console.log(watch());
   const processForm: SubmitHandler<QuestionnaireJoin> = (data) => {
     console.log(data);
     OpenCreateCard();
