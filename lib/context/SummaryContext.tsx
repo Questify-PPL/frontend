@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, createContext, useContext } from "react";
 import {
   QuestionAnswer,
-  QuestionDetailResponse,
   QuestionWithAnswerSection,
+  Questions,
   SummarizeFormAsProps,
 } from "../types";
 
@@ -22,11 +22,9 @@ export type SummaryContextValue = SummarizeFormAsProps & {
   // eslint-disable-next-line no-unused-vars
   setIsFinishedFetching: Dispatch<SetStateAction<boolean>>;
 
-  individualFormQuestions: QuestionDetailResponse | undefined;
+  individualFormQuestions: Questions | undefined;
   // eslint-disable-next-line no-unused-vars
-  setIndividualFormQuestions: Dispatch<
-    SetStateAction<QuestionDetailResponse | undefined>
-  >;
+  setIndividualFormQuestions: Dispatch<SetStateAction<Questions | undefined>>;
 };
 
 export const SummaryContext = createContext({} as SummaryContextValue);

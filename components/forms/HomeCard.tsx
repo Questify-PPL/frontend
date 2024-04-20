@@ -37,7 +37,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
   const router = useRouter();
 
   const toFormShop = () => {
-    router.push("/home");
+    router.push("/shop");
   };
   const toFormPromo = () => {
     router.push("/home");
