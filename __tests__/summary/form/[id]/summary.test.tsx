@@ -63,6 +63,10 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 describe("Summary Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });

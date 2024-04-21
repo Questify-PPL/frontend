@@ -34,6 +34,10 @@ describe("Form Component", () => {
 });
 
 describe("Add Question Functionality", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders add question button", async () => {
     render(
       <QuestionnaireProvider>
@@ -121,6 +125,10 @@ describe("Add Question Functionality", () => {
 });
 
 describe("Saved As Draft Functionality", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders saved as draft modal", async () => {
     render(
       <QuestionnaireProvider>

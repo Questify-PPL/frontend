@@ -53,6 +53,10 @@ jest.mock("next/navigation", () => {
 });
 
 describe("Profile Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should renders without crashing", async () => {
     render(await ProfilePage());
 

@@ -67,6 +67,10 @@ jest.mock("@/auth", () => {
 });
 
 describe("Questionnaire List View Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders questionnaire list view page with no problem", async () => {
     const session = {
       user: {

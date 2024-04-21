@@ -83,6 +83,10 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 describe("CreateWrapper Component", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -269,6 +273,10 @@ describe("CreateWrapper Component", () => {
 });
 
 describe("CreateModal Component", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders without crashing", async () => {
     const props = {
       formsRemainder: 0,
