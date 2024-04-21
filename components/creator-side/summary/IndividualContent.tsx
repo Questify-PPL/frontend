@@ -26,7 +26,7 @@ export function IndividualContent() {
     session,
   } = useSummaryContext();
   const [individual, setIndividual] = useState(
-    allIndividuals ? allIndividuals[0] : null
+    allIndividuals ? allIndividuals[0] : null,
   );
 
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export function IndividualContent() {
           headers: {
             Authorization: `Bearer ${session.user.accessToken}`,
           },
-        }
+        },
       );
 
       const res = await response.json();
@@ -78,7 +78,7 @@ export function IndividualContent() {
                 respondentId: string;
                 name: string;
                 email: string;
-              } | null
+              } | null,
             );
           }}
           defaultValue={individual.respondentId.toString()}
@@ -138,7 +138,7 @@ export function IndividualContent() {
                             val={val}
                             index={index + 1}
                           />
-                        )
+                        ),
                       )}
                     </div>
                   </div>
