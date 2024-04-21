@@ -351,7 +351,12 @@ describe("Summary Page", () => {
     (getSummaries as jest.Mock).mockResolvedValue({
       formStatistics,
       questionsWithAnswers,
-      allIndividuals: ["userId"],
+      allIndividuals: [
+        {
+          respondentId: "1",
+          respondentName: "John Doe",
+        },
+      ],
     });
 
     (auth as jest.Mock).mockResolvedValue(session);
@@ -425,7 +430,12 @@ describe("Summary Page", () => {
     (getSummaries as jest.Mock).mockResolvedValue({
       formStatistics,
       questionsWithAnswers,
-      allIndividuals: ["userId"],
+      allIndividuals: [
+        {
+          respondentId: "userId",
+          respondentName: "John Doe",
+        },
+      ],
     });
 
     (auth as jest.Mock).mockResolvedValue(session);
