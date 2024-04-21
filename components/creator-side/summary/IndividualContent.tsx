@@ -28,6 +28,7 @@ export function IndividualContent() {
   const [individual, setIndividual] = useState(
     allIndividuals ? allIndividuals[0] : null,
   );
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -57,10 +58,10 @@ export function IndividualContent() {
 
     fetchIndividualResponse();
   }, [
-    individual,
     formId,
     setIndividualFormQuestions,
     session.user.accessToken,
+    individual,
   ]);
 
   return (
@@ -70,7 +71,17 @@ export function IndividualContent() {
       </h2>
 
       {individual && (
-        <Select defaultValue={individual.email}>
+        <Select
+          onValueChange={(e) => {
+            setIndividual(
+              allIndividuals.find((val) => val.respondentId === e) as {
+                respondentId: string;
+                name: string;
+                email: string;
+              } | null,
+            );
+          }}
+        >
           <SelectTrigger className="md:w-3/5 w-4/5">
             <SelectValue>
               {individual.name ? individual.name : individual.email}
@@ -79,13 +90,12 @@ export function IndividualContent() {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Individuals</SelectLabel>
-              {allIndividuals.map((individual) => (
+              {allIndividuals.map((curr) => (
                 <SelectItem
-                  key={individual.respondentId}
-                  value={individual.respondentId}
-                  onClick={() => setIndividual(individual)}
+                  key={curr.respondentId}
+                  value={curr.respondentId.toString()}
                 >
-                  {individual.name ? individual.name : individual.email}
+                  {curr.name ? curr.name : curr.email}
                 </SelectItem>
               ))}
             </SelectGroup>
