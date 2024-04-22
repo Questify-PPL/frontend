@@ -42,7 +42,7 @@ export function SummaryProvider({
           description: "Please try again later",
           variant: "destructive",
         });
-      }
+      },
     );
 
     setIsFinishedFetching(false);

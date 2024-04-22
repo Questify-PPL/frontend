@@ -5,7 +5,7 @@ export async function exportForm(
   formId: string,
   accessToken: string,
   title: string,
-  callback?: () => void
+  callback?: () => void,
 ) {
   try {
     const response = await fetch(`${URL.summaryURL}/${formId}/export`, {
