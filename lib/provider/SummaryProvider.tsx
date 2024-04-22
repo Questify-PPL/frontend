@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
-import { SummarizeFormAsProps } from "../types";
+import { QuestionDetailResponse, SummarizeFormAsProps } from "../types";
 import { convertToCSV } from "../utils";
 import { useToast } from "@/components/ui/use-toast";
 import { URL as fetchURL } from "../constant";
@@ -26,6 +26,9 @@ export function SummaryProvider({
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isFinishedFetching, setIsFinishedFetching] = useState(false);
+  const [individualFormQuestions, setIndividualFormQuestions] = useState<
+    QuestionDetailResponse | undefined
+  >(undefined);
 
   const exportData = useCallback(async () => {
     if (!session?.user?.accessToken || !formStatistics) return;
@@ -42,7 +45,7 @@ export function SummaryProvider({
           description: "Please try again later",
           variant: "destructive",
         });
-      },
+      }
     );
 
     setIsFinishedFetching(false);

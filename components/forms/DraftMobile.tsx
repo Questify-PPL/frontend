@@ -1,19 +1,40 @@
 import { FormAsProps } from "@/lib/types";
 import { decidePhoto } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { LuCoins, LuDices, LuSend } from "react-icons/lu";
 
 export function DraftMobile({
   form,
   isRespondent = false,
   isSendIcon = false,
+  onOpenRespondCard = (id, title) => {},
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
     isSendIcon?: boolean;
+    onOpenRespondCard?: (id: string, title: string) => void;
   }
 >) {
+  const router = useRouter();
+
+  function toEdit() {
+    router.push(`/create/form/${form.id}`); // Adjust it to the correct path, if needed
+  }
+
+  const handleOnClick = useCallback(
+    (event: { stopPropagation: () => void }) => {
+      event.stopPropagation();
+      onOpenRespondCard(form.id, form.title);
+    },
+    [form.id, router],
+  );
+
   return (
-    <div className="flex flex-row justify-between items-center md:hidden">
+    <div
+      className="flex flex-row justify-between items-center md:hidden"
+      onClick={isRespondent ? handleOnClick : toEdit}
+    >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
         <div className="flex flex-col items-start justify-start">
           <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white">

@@ -63,6 +63,13 @@ export async function getCurrentSession() {
   return session;
 }
 
+export async function getUserCredit() {
+  const session = (await auth()) as Session;
+  const user = session?.user;
+
+  return user?.credit || 0;
+}
+
 export async function updateProfile(
   prevState: UpdateState,
   formData: FormData,

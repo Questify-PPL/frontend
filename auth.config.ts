@@ -12,7 +12,7 @@ export const homepageRoute = "/home";
  * Array to specify which routes should be accessed with appropritae role
  */
 export const RBACRoutes = {
-  CREATOR: ["/create", "/create/form/[id]"],
+  CREATOR: ["/create", "/create/form/[id]", "/shop"],
   RESPONDENT: ["/questionnaire"],
   ADMIN: ["/admin", "/reports", "/reviews"],
 } as Record<UserRole, string[]>;

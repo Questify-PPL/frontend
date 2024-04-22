@@ -47,8 +47,8 @@ window.PointerEvent = MockPointerEvent as any;
 
 const mockedDispact = jest.fn();
 
-jest.mock("react-dom", () => {
-  const originalModule = jest.requireActual("react-dom");
+jest.mock("react-dom/client", () => {
+  const originalModule = jest.requireActual("react-dom/client");
 
   return {
     ...originalModule,
@@ -122,7 +122,7 @@ describe("CreateWrapper Component", () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
     render(await Create());
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper />);
   });
 
   test("renders with provided forms data", async () => {
@@ -155,20 +155,18 @@ describe("CreateWrapper Component", () => {
 
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
 
-    mockedForms.forEach((form) => {
-      const formElement = screen.getAllByText(form.title)[0];
-      expect(formElement).toBeInTheDocument();
-    });
+    await screen.findAllByText("Mocked Form 1");
+    await screen.findAllByText("Mocked Form 2");
   });
 
   test("renders with no forms data", async () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue([]);
 
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -176,7 +174,7 @@ describe("CreateWrapper Component", () => {
   test("renders with error", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -186,7 +184,7 @@ describe("CreateWrapper Component", () => {
       pending: true,
     });
 
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -278,23 +276,13 @@ describe("CreateModal Component", () => {
   });
 
   test("renders without crashing", async () => {
-    const props = {
-      formsRemainder: 0,
-      creditsBalance: 0,
-      onCancel: jest.fn(),
-    };
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
 
   test("opens modal when create button is clicked", async () => {
-    const props = {
-      formsRemainder: 0,
-      creditsBalance: 0,
-      onCancel: jest.fn(),
-    };
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
 

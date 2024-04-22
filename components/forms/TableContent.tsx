@@ -18,9 +18,11 @@ import {
 export function TableContent({
   form,
   isRespondent = false,
+  onOpenRespondCard = (id, title) => {},
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
+    onOpenRespondCard?: (id: string, title: string) => void;
   }
 >) {
   const router = useRouter();
@@ -46,10 +48,18 @@ export function TableContent({
     [form.id, router],
   );
 
+  const handleOnClick = useCallback(
+    (event: { stopPropagation: () => void }) => {
+      event.stopPropagation();
+      onOpenRespondCard(form.id, form.title);
+    },
+    [form.id, router],
+  );
+
   return (
     <div
       className="md:flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer hidden"
-      onClick={toEdit}
+      onClick={isRespondent ? handleOnClick : toEdit}
       role="none"
     >
       <div className="w-1/4 flex flex-row gap-3">

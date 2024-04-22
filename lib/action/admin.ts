@@ -7,6 +7,7 @@ import { URL } from "../constant";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import { ApiResponse } from "../types";
+import { mergeInvoicesByDate } from './utils/mergeInvoice';
 
 export async function getTopupInvoices() {
   noStore();
@@ -54,7 +55,7 @@ export async function getInvoices(): Promise<Invoice[]> {
     withdrawalInvoicesPromise,
   ]);
 
-  const invoices = [...topupInvoices, ...withdrawalInvoices];
+  const invoices = mergeInvoicesByDate(topupInvoices, withdrawalInvoices);
   return invoices;
 }
 

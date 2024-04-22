@@ -163,4 +163,21 @@ describe("Saved As Draft Functionality", () => {
     fireEvent.click(closeButton);
     await screen.findByText("Contents");
   });
+
+  test("renders published modal", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Publish") as HTMLInputElement;
+    contentButton.click();
+
+    await screen.findByTestId("publish-button");
+    const publishButton = screen.getByTestId(
+      "publish-button",
+    ) as HTMLInputElement;
+    publishButton.click();
+    await screen.findByText("Published!");
+  });
 });

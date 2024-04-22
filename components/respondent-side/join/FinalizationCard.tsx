@@ -9,13 +9,22 @@ import { LucideClipboardCheck } from "lucide-react";
 
 interface HomeNavProps {
   className?: string;
-  formsRemainder?: number;
-  creditsBalance?: number;
+  winningChance?: number;
+  prizeType?: string;
+  QRETitle?: string;
+  prize?: number;
+  maxWinner?: number;
+
   onCancel?: () => void;
 }
 
 const HomeNav: React.FC<HomeNavProps> = ({
   className = "",
+  QRETitle = "",
+  prizeType = "EVEN",
+  winningChance = 10,
+  prize = 2000,
+  maxWinner = 1,
   onCancel = () => {},
 }) => {
   // const [inputValue, setInputValue] = useState<string>(
@@ -29,11 +38,13 @@ const HomeNav: React.FC<HomeNavProps> = ({
 
   const toForm = () => {
     router.push("../");
+    router.refresh();
   };
 
   return (
     <div
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
+      data-testid="finalization-modal"
     >
       <Card className="flex flex-col w-[35%] p-5 justify-center items-center gap-6">
         <div className="flex flex-row justify-between items-center w-full">
@@ -49,27 +60,37 @@ const HomeNav: React.FC<HomeNavProps> = ({
           <div className="mt-6 text-left">
             <h3 className="text-lg font-semibold">Title</h3>
             <p className="text-sm font-semibold">
-              Oreo Satisfaction: User Feedback in Indonesia
+              {QRETitle || "Default Title"}
             </p>
             <h3 className="text-lg font-semibold mt-4">Prize</h3>
             <div className="section bg-purple-100 p-1 pb-2 mb-2 rounded-lg flex items-center justify-between">
               <div className="flex items-center mt-2">
                 <LuCheckCircle className="h-5 w-5 text-purple-500 " />
-                <p className="ml-2 text-sm font-bold">10% winning chance</p>
+                <p className="ml-2 text-sm font-bold">
+                  {winningChance}% winning chance
+                </p>
               </div>
             </div>
             <div className="section bg-yellow-100 p-1 pb-2 mb-2 rounded-lg flex items-center justify-between">
               <div className="flex items-center mt-2">
                 <LuCheckCircle className="h-5 w-5 text-yellow-500" />
                 <p className="ml-2 text-sm font-bold">
-                  2.000 for each respondent
+                  {prizeType === "EVEN"
+                    ? `${prize} for each respondent`
+                    : maxWinner === 1
+                      ? `${prize} for ${maxWinner} lucky respondent`
+                      : `${prize} for ${maxWinner} lucky respondents`}
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-row w-full gap-3">
-          <Button className="w-full" onClick={toForm}>
+          <Button
+            className="w-full"
+            onClick={toForm}
+            data-testid="submit-participation"
+          >
             OK
           </Button>
         </div>
