@@ -9,6 +9,13 @@ import { UserRole } from "@/lib/types/auth";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Session } from "next-auth";
+import * as utils from "@/lib/utils";
+
+// Mock the entire module containing convertToCSV
+jest.mock("@/lib/utils", () => ({
+  ...jest.requireActual("@/lib/utils"), // Keep the real implementation for other functions
+  convertToCSV: jest.fn(), // Mock convertToCSV as a Jest mock function
+}));
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -23,6 +30,16 @@ jest.mock("@/lib/action/form", () => ({
 
 jest.mock("next/navigation", () => {
   return { useRouter: jest.fn(), usePathname: jest.fn() };
+});
+
+jest.mock("@/auth", () => {
+  return {
+    __esModule: true,
+    signIn: jest.fn(),
+    signOut: jest.fn(),
+    auth: jest.fn(),
+    unstable_update: jest.fn(),
+  };
 });
 
 const mockedDispact = jest.fn();
@@ -596,8 +613,8 @@ describe("Summary Page", () => {
     const session = {
       user: {
         email: "questify@gmail.com",
-        id: "1",
-        roles: ["CREATOR"] as UserRole[],
+        id: "UI2100000000",
+        roles: ["CREATOR", "RESPONDENT"] as UserRole[],
         ssoUsername: null,
         firstName: null,
         lastName: null,
@@ -609,6 +626,7 @@ describe("Summary Page", () => {
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,
+        accessToken: "token",
         activeRole: "CREATOR",
       },
       expires: new Date().toISOString(),
@@ -726,6 +744,8 @@ describe("Summary Page", () => {
 
     (auth as jest.Mock).mockResolvedValue(session);
 
+    (utils.convertToCSV as jest.Mock).mockResolvedValueOnce(undefined);
+
     // Click export button
     render(
       await Summary({
@@ -735,8 +755,185 @@ describe("Summary Page", () => {
       }),
     );
 
-    const exportButton = screen.getAllByTestId("export-button");
+    const exportButton = await screen.findAllByTestId("export-button");
 
-    expect(exportButton[0]).toBeInTheDocument();
+    expect(exportButton[1]).toBeInTheDocument();
+
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          blob: () => Promise.resolve(new Blob()),
+        }) as Promise<Response>,
+    );
+
+    fireEvent.click(exportButton[1] as Element);
+    // Mock fetch exportData function
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("should throw error when export csv failed", async () => {
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "UI2100000000",
+        roles: ["CREATOR", "RESPONDENT"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        accessToken: "token",
+        activeRole: "CREATOR",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    const formStatistics = {
+      id: "8bb53ce4-0aa5-4ed4-a109-5b99b51e796e",
+      creatorId: "4ec14456-88ed-41b0-b961-164e23506335",
+      title: "Form 1",
+      prize: 20000,
+      isDraft: false,
+      isPublished: true,
+      maxParticipant: null,
+      prizeType: "EVEN",
+      maxWinner: null,
+      createdAt: "2024-03-12T16:00:29.167Z",
+      updatedAt: "2024-03-31T08:05:08.662Z",
+      endedAt: null,
+      questionsStatistics: [
+        {
+          sectionId: 60,
+          name: "ASOKDKOASDOKSADOKSAD",
+          description: "Austin",
+          questions: [
+            {
+              sectionId: 60,
+              questionId: 161,
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: true,
+              question: "Question 2",
+              description: "Bebek",
+              statistics: ["Hi Bas"],
+            },
+            {
+              sectionId: 60,
+              questionId: 162,
+              questionType: "RADIO",
+              questionTypeName: "Radio",
+              isRequired: true,
+              question: "Question 2",
+              description: "Bebek",
+              statistics: {
+                choices: ["A", "B", "C", "D"],
+                amounts: [1, 0, 0, 0],
+              },
+            },
+          ],
+        },
+        {
+          sectionId: null,
+          questionId: 163,
+          questionType: "CHECKBOX",
+          questionTypeName: "Radio",
+          isRequired: true,
+          question: "Question 4",
+          description: "Bebek",
+          statistics: {
+            choices: ["A", "B", "C", "D", "E"],
+            amounts: [1, 1, 1, 0, 0],
+          },
+        },
+      ],
+    };
+
+    const questionsWithAnswers = [
+      {
+        sectionId: 60,
+        questions: [
+          {
+            questionId: 161,
+            questionType: "TEXT",
+            questionTypeName: "Short Text",
+            isRequired: true,
+            question: "Question 2",
+            description: "Bebek",
+            occurences: {
+              "Hi Bas": 1,
+            },
+          },
+          {
+            questionId: 162,
+            questionType: "RADIO",
+            questionTypeName: "Radio",
+            isRequired: true,
+            question: "Question 2",
+            description: "Bebek",
+            occurences: {
+              A: 1,
+            },
+          },
+        ],
+      },
+      {
+        sectionId: null,
+        questionId: 163,
+        questionType: "CHECKBOX",
+        questionTypeName: "Radio",
+        isRequired: true,
+        question: "Question 4",
+        description: "Bebek",
+        occurences: {
+          A: 1,
+          B: 1,
+          C: 1,
+        },
+      },
+    ];
+
+    (getSummaries as jest.Mock).mockResolvedValue({
+      formStatistics,
+      questionsWithAnswers,
+      allIndividuals: [],
+    });
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    (utils.convertToCSV as jest.Mock).mockRejectedValueOnce(undefined);
+
+    // Click export button
+    render(
+      await Summary({
+        params: {
+          id: "1",
+        },
+      }),
+    );
+
+    const exportButton = await screen.findAllByTestId("export-button");
+
+    expect(exportButton[1]).toBeInTheDocument();
+
+    // mock error fetch
+
+    global.fetch = jest.fn(() => Promise.reject(new Error("Failed to fetch")));
+
+    fireEvent.click(exportButton[1] as Element);
+
+    await waitFor(() => {
+      // Assert that fetch was called
+      expect(global.fetch).toHaveBeenCalled();
+      expect(global.fetch).rejects.toThrow("Failed to fetch");
+    });
   });
 });

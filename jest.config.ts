@@ -18,7 +18,7 @@ const config: Config = {
     "!**/.next/**",
   ],
   automock: false,
-  setupFiles: ["./setupJest.ts"],
+  setupFiles: ["./setupJest.ts", "jest-canvas-mock"],
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/$1",
     "next-auth": "<rootDir>/__tests__/mocks/next-auth.ts",
