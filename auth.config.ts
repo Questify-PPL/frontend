@@ -9,6 +9,7 @@ export const publicRoutes = ["/login", "/register"];
 export const disabledRoutesAfterAuthenticated = ["/login", "/register"];
 export const homepageRoute = "/home";
 export const additionalInfoRoute = "/additional-info";
+export const blockedPageRoute = "/blocked";
 
 /**
  * Array to specify which routes should be accessed with appropritae role
@@ -53,6 +54,16 @@ export const authConfig = {
         nextUrl.pathname.startsWith(route),
       );
       if (isPublic) return true;
+
+      // Blocked page
+      if (nextUrl.pathname === blockedPageRoute) {
+        return isLoggedIn && auth.user.isBlocked;
+      }
+
+      // Redirect blocked user to blocked page
+      if (isLoggedIn && auth.user.isBlocked) {
+        return NextResponse.redirect(new URL(blockedPageRoute, nextUrl));
+      }
 
       // Check authenticated user has completed additional info
       const authUserHasNotCompletedProfile =
