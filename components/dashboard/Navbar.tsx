@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import PrimaryNavbar from "./PrimaryNavbar";
 import SecondaryNavbar from "./SecondaryNavbar";
 
-const primaryNavbarPath = ["/home", "/reports", "/reviews"];
+const primaryNavbarPath = ["/home", "/reports", "/reviews", "/blocked"];
 
 export default function Navbar({
   session,
