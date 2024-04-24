@@ -7,7 +7,7 @@ import { URL } from "../constant";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 import { ApiResponse } from "../types";
-import { mergeInvoicesByDate } from './utils/mergeInvoice';
+import { mergeInvoicesByDate } from "./utils/mergeInvoice";
 
 export async function getTopupInvoices() {
   noStore();
