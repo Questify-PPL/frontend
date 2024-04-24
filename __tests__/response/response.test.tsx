@@ -114,6 +114,10 @@ describe("Responder Response", () => {
     expires: new Date().toISOString(),
   };
 
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });

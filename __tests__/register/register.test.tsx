@@ -49,6 +49,10 @@ jest.mock("next/navigation", () => {
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe("Register and RegisterForm", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", async () => {
     global.fetch = jest.fn(
       () =>

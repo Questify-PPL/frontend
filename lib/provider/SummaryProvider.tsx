@@ -1,6 +1,10 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
 import { QuestionDetailResponse, SummarizeFormAsProps } from "../types";
+import { convertToCSV } from "../utils";
+import { useToast } from "@/components/ui/use-toast";
+import { URL as fetchURL } from "../constant";
+import { exportForm } from "../helper";
 
 type SummaryProviderProps = {
   children: React.ReactNode;
@@ -17,7 +21,7 @@ export function SummaryProvider({
   const [activeTab, setActiveTab] = useState<
     "summary" | "question" | "individual"
   >("summary");
-
+  const { toast } = useToast();
   const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -25,6 +29,27 @@ export function SummaryProvider({
   const [individualFormQuestions, setIndividualFormQuestions] = useState<
     QuestionDetailResponse | undefined
   >(undefined);
+
+  const exportData = useCallback(async () => {
+    if (!session?.user?.accessToken || !formStatistics) return;
+
+    setIsFinishedFetching(true);
+
+    await exportForm(
+      formId,
+      session.user.accessToken,
+      formStatistics.title,
+      () => {
+        toast({
+          title: "Failed to export data",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      },
+    );
+
+    setIsFinishedFetching(false);
+  }, [formStatistics, formId, session?.user?.accessToken, toast]);
 
   const returns = useMemo(() => {
     return {
@@ -45,6 +70,7 @@ export function SummaryProvider({
       setIsFinishedFetching,
       formId,
       session,
+      exportData,
     };
   }, [
     formStatistics,
@@ -56,6 +82,7 @@ export function SummaryProvider({
     isFinishedFetching,
     formId,
     session,
+    exportData,
   ]);
 
   return (
