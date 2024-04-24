@@ -7,7 +7,6 @@ export const UpdateProfileSchema = z.object({
     .max(20, "First Name must be less than 20 characters"),
   lastName: z
     .string()
-    .min(1, "Name must not be empty")
     .max(20, "Name must be less than 20 characters"),
   gender: z.enum(["MALE", "FEMALE"]),
   birthDate: z
