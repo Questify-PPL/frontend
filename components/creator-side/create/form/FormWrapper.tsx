@@ -11,8 +11,8 @@ import {
   SectionToggle,
   SavedAsDraftModal,
   AddQuestionModal,
+  OpeningChildren,
 } from "@/components/creator-side/create/form";
-import { RadioButton, Text, Checkboxes } from "@/components/questions";
 import {
   Section,
   DefaultQuestion,
@@ -21,22 +21,46 @@ import {
 } from "@/lib/context";
 import { useQuestionnaireContext } from "@/lib/hooks";
 import { patchQuestionnaire, getQuestionnaire } from "@/lib/action";
-import { LuGlobe, LuPlusSquare } from "react-icons/lu";
+import { LuGlobe, LuPlusSquare, LuTrash } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
-import { transformData } from "@/lib/services/form";
-import { Textarea } from "@/components/ui/textarea";
-import Image from "next/image";
-import { publishQuestionnaire } from "@/lib/action/form";
+import {
+  QuestionTypeNames as qtn,
+  questionTypeHandler,
+  transformData,
+} from "@/lib/services/form";
+import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
 import PublishNowModal from "./PublishNowModal";
+import { EmptyRenderer, QuestionRenderer, TerminusRenderer } from "./Renderer";
+import {
+  FormLeftMenuState as flms,
+  FormRightMenuState as frms,
+} from "@/lib/services/form";
 
 export default function FormWrapper({ id }: { id: string }) {
-  const { questionnaire, answers, setQuestionnaire } =
-    useQuestionnaireContext();
+  const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
   const [QRETitle, setQRETitle] = useState("");
+
+  // Open Add Question Modal
+  const [addQuestionState, setAddQuestionState] = useState("hidden");
+  const toggleAddQuestion = () => {
+    setAddQuestionState(addQuestionState === "hidden" ? "flex" : "hidden");
+  };
+
+  // Open Saved As Draft Modal
+  const [savedAsDraftState, setSavedAsDraftState] = useState("hidden");
+  const toggleSavedAsDraft = () => {
+    setSavedAsDraftState(savedAsDraftState === "hidden" ? "flex" : "hidden");
+  };
+
+  // Open Publish Now Modal
+  const [openPublishNowState, setOpenPublishNowState] = useState("hidden");
+  const togglePublishNow = () => {
+    const newClass = openPublishNowState === "hidden" ? "flex" : "hidden";
+    setOpenPublishNowState(newClass);
+  };
+
   const router = useRouter();
 
   const fetchQuestionnaire = async () => {
@@ -45,6 +69,7 @@ export default function FormWrapper({ id }: { id: string }) {
       const transformed = transformData(response.data.questions);
       setQuestionnaire(transformed);
       setQRETitle(response.data.title);
+      console.log(transformed);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
@@ -56,35 +81,14 @@ export default function FormWrapper({ id }: { id: string }) {
     setActiveQuestionId(questionId);
   };
 
-  // Open Add Question Modal
-  const [addQuestionState, setAddQuestionState] = useState("hidden");
-  const OpenAddQuestion = () => {
-    const newClass = addQuestionState === "hidden" ? "flex" : "hidden";
-    setAddQuestionState(newClass);
-  };
-
-  // Open Saved As Draft Modal
-  const [savedAsDraftState, setSavedAsDraftState] = useState("hidden");
-  const OpenSavedAsDraft = () => {
-    const newClass = savedAsDraftState === "hidden" ? "flex" : "hidden";
-    setSavedAsDraftState(newClass);
-  };
-
-  // Open Publish Now Modal
-  const [openPublishNowState, setOpenPublishNowState] = useState("hidden");
-  const OpenPublishNow = () => {
-    const newClass = openPublishNowState === "hidden" ? "flex" : "hidden";
-    setOpenPublishNowState(newClass);
-  };
-
   // Change Left and Right Menu
-  const [leftMenuState, setLeftMenuState] = useState("opening");
-  const handleLeftMenuChange = (menuState: React.SetStateAction<string>) => {
+  const [leftMenuState, setLeftMenuState] = useState(flms.OPENING);
+  const handleLeftMenuChange = (menuState: React.SetStateAction<flms>) => {
     setLeftMenuState(menuState);
   };
 
-  const [rightMenuState, setRightMenuState] = useState("question");
-  const handleRightMenuChange = (menuState: React.SetStateAction<string>) => {
+  const [rightMenuState, setRightMenuState] = useState(frms.QUESTION);
+  const handleRightMenuChange = (menuState: React.SetStateAction<frms>) => {
     setRightMenuState(menuState);
   };
 
@@ -96,7 +100,7 @@ export default function FormWrapper({ id }: { id: string }) {
   const handleSave = async () => {
     try {
       await patchQuestionnaire(id, questionnaire);
-      OpenSavedAsDraft();
+      toggleSavedAsDraft();
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
@@ -106,9 +110,18 @@ export default function FormWrapper({ id }: { id: string }) {
   const handlePublish = async () => {
     try {
       await publishQuestionnaire(id);
-      OpenPublishNow();
+      togglePublishNow();
     } catch (error) {
       console.error("Failed to publish questionnaire", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteQuestion(id, activeQuestionId);
+      await fetchQuestionnaire();
+    } catch (error) {
+      console.error("Failed to delete the question", error);
     }
   };
 
@@ -121,12 +134,12 @@ export default function FormWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number,
+    questionId: number
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
+          (question) => question.questionId === questionId
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -141,276 +154,81 @@ export default function FormWrapper({ id }: { id: string }) {
     return undefined;
   }
 
-  function renderOpening(questionnaire: QuestionnaireItem[]) {
-    const openingSection = questionnaire.find(
-      (section) =>
-        section.type === "SECTION" && section.sectionName === "OPENING",
-    );
-
-    if (openingSection) {
-      const section = openingSection as Section;
-
-      const handleSectionDescriptionChange = (
-        event: React.ChangeEvent<HTMLTextAreaElement>,
-      ) => {
-        const updatedQuestionnaire = questionnaire.map((item) => {
-          if (item.type === "SECTION" && item.sectionName === "OPENING") {
-            return {
-              ...item,
-              sectionDescription: event.target.value,
-            };
-          }
-          return item;
-        });
-
-        setQuestionnaire(updatedQuestionnaire);
-      };
-
-      return (
-        <div className="flex flex-col w-full h-full items-center justify-center gap-3">
-          <span className="text-xs text-primary font-medium">Opening</span>
-          <Textarea
-            className="text-sm w-full font-normal text-[#64748B] placeholder:text-primary/30 focus-visible:outline-none focus-visible:ring-0"
-            placeholder={section.sectionDescription}
-            onChange={handleSectionDescriptionChange}
-          />
-        </div>
-      );
-    } else {
-      return null;
-    }
-  }
-
-  function renderEnding(questionnaire: QuestionnaireItem[]) {
-    const openingSection = questionnaire.find(
-      (section) =>
-        section.type === "SECTION" && section.sectionName === "ENDING",
-    );
-
-    if (openingSection) {
-      const section = openingSection as Section;
-
-      const handleSectionDescriptionChange = (
-        event: React.ChangeEvent<HTMLTextAreaElement>,
-      ) => {
-        const updatedQuestionnaire = questionnaire.map((item) => {
-          if (item.type === "SECTION" && item.sectionName === "ENDING") {
-            return {
-              ...item,
-              sectionDescription: event.target.value,
-            };
-          }
-          return item;
-        });
-
-        setQuestionnaire(updatedQuestionnaire);
-      };
-
-      return (
-        <div className="flex flex-col w-full h-full items-center justify-center gap-3">
-          <span className="text-xs text-primary font-medium">Ending</span>
-          <Textarea
-            className="text-sm w-full font-normal text-[#64748B] placeholder:text-primary/30 focus-visible:outline-none focus-visible:ring-0"
-            placeholder={section.sectionDescription}
-            onChange={handleSectionDescriptionChange}
-          />
-        </div>
-      );
-    } else {
-      return null;
-    }
-  }
-
-  function renderQuestion(q: Question, index: number) {
-    const {
-      questionId,
-      questionType,
-      questionTypeName,
-      isRequired,
-      question,
-      description,
-      choice,
-    } = q;
-
-    const answer =
-      answers.find((answer) => answer.questionId === questionId)?.answer ?? "";
-
-    return (
-      <div className="flex flex-col w-full" key={questionId}>
-        {questionType === "TEXT" ? (
-          <Text
-            role="CREATOR"
-            numbering={index + 1}
-            questionId={questionId}
-            questionTypeName={questionTypeName}
-            isRequired={isRequired}
-            question={question}
-            description={description ?? ""}
-            choice={choice ?? []}
-            answer={answer as string}
-          />
-        ) : questionType === "CHECKBOX" ? (
-          <Checkboxes
-            role="CREATOR"
-            numbering={index + 1}
-            questionId={questionId}
-            questionTypeName={questionTypeName}
-            isRequired={isRequired}
-            question={question}
-            description={description ?? ""}
-            choice={choice ?? []}
-            answer={answer as string[]}
-          />
-        ) : (
-          <RadioButton
-            role="CREATOR"
-            numbering={index + 1}
-            questionId={questionId}
-            questionTypeName={questionTypeName}
-            isRequired={isRequired}
-            question={question}
-            description={description ?? ""}
-            choice={choice ?? []}
-            answer={answer as string[]}
-          />
-        )}
-      </div>
-    );
-  }
-
   const questionToRender = findQuestionById(questionnaire, activeQuestionId);
 
-  const addQuestionHandler = async (newQuestion: any) => {
+  const addQuestionHandler = async (questionType: qtn) => {
+    const newQuestion = questionTypeHandler(questionType);
     try {
       await patchQuestionnaire(id, questionnaire);
       await patchQuestionnaire(id, newQuestion);
-      setAddQuestionState("hidden");
+      toggleAddQuestion();
       await fetchQuestionnaire();
-      setActiveQuestionId(questionnaire.length - 1);
+      const lastQuestionnaireItem = questionnaire[questionnaire.length - 1];
+      if (lastQuestionnaireItem.type === "DEFAULT") {
+        setActiveQuestionId(lastQuestionnaireItem.question.questionId);
+      } else if (lastQuestionnaireItem.type === "SECTION") {
+        setActiveQuestionId(
+          lastQuestionnaireItem.questions[
+            lastQuestionnaireItem.questions.length - 1
+          ].questionId
+        );
+      }
     } catch (error) {
       console.error("Failed to update questionnaire", error);
     }
   };
 
-  const handleShortTextClick = () => {
-    const shortTextQuestion = [
-      {
-        type: "DEFAULT",
-        question: {
-          questionType: "TEXT",
-          questionTypeName: "Short Text",
-          isRequired: false,
-          question: "",
-        },
-      },
-    ];
-    addQuestionHandler(shortTextQuestion);
-  };
-
-  // Questionnaire Fetching
   useEffect(() => {
     fetchQuestionnaire();
   }, [id]);
-
-  const CreatorInfo = [
-    "First Name",
-    "Last Name",
-    "Gender",
-    "Email",
-    "Phone Number",
-    "Company",
-  ] as const;
-
-  const RespondentInfo = [
-    "First Name",
-    "Last Name",
-    "Gender",
-    "Email",
-    "Phone Number",
-    "Company",
-  ] as const;
 
   return (
     <div className="flex w-full h-full" data-testid="form-wrapper">
       <AddQuestionModal
         className={`${addQuestionState}`}
-        onCancel={OpenAddQuestion}
-        onShortTextClick={handleShortTextClick}
+        onCancel={toggleAddQuestion}
+        onShortTextClick={() => addQuestionHandler(qtn.SHORT_TEXT)}
+        onLongTextClick={() => addQuestionHandler(qtn.LONG_TEXT)}
+        onCheckboxClick={() => addQuestionHandler(qtn.CHECKBOX)}
+        onMultipleChoiceClick={() => addQuestionHandler(qtn.MULTIPLE_CHOICE)}
+        onYesNoClick={() => addQuestionHandler(qtn.YES_NO)}
       ></AddQuestionModal>
+
       <SavedAsDraftModal
         className={`${savedAsDraftState}`}
         QRETitle={QRETitle}
-        onCancel={OpenSavedAsDraft}
+        onCancel={toggleSavedAsDraft}
       ></SavedAsDraftModal>
+
       <PublishNowModal
         className={`${openPublishNowState}`}
         QRETitle={QRETitle}
-        onCancel={handleBack}
+        onCancel={togglePublishNow}
       ></PublishNowModal>
+
       <div className="flex flex-row w-full h-full gap-4 p-5">
         <FormLeftMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
           state={leftMenuState}
           onClickOpening={() => {
-            handleLeftMenuChange("opening");
+            handleLeftMenuChange(flms.OPENING);
             patchQuestionnaire(id, questionnaire);
           }}
           onClickContents={() => {
-            handleLeftMenuChange("contents");
+            handleLeftMenuChange(flms.CONTENTS);
             patchQuestionnaire(id, questionnaire);
           }}
           onClickEnding={() => {
-            handleLeftMenuChange("ending");
+            handleLeftMenuChange(flms.ENDING);
             patchQuestionnaire(id, questionnaire);
           }}
-          openingChildren={
-            <form className="flex flex-col w-full h-full gap-2">
-              <span className="flex flex-col font-bold text-xs text-wrap">
-                Specify your personal details disclosure
-              </span>
-              <div className="flex flex-col gap-1">
-                {CreatorInfo.map((item, index) => (
-                  <div key={index} className="flex flex-row gap-1.5 w-full">
-                    <Checkbox id={`cre${item}`} className="text-xs" />
-                    <Label
-                      htmlFor={`cre${item}`}
-                      className="font-medium text-xs"
-                    >
-                      {item}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-              <Separator className="bg-[#E5EEF0]"></Separator>
-              <div className="flex flex-col gap-0">
-                <span className="flex flex-col font-bold text-xs text-wrap">
-                  Specify the required respondent data
-                </span>
-                <span className="flex flex-col font-normal text-[#95B0B4] text-[10px] leading-3 text-wrap">
-                  If you add another, the question will expect a short answer.
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                {RespondentInfo.map((item, index) => (
-                  <div key={index} className="flex flex-row gap-1.5 w-full">
-                    <Checkbox id={`res${item}`} className="text-xs" />
-                    <Label
-                      htmlFor={`res${item}`}
-                      className="font-medium text-xs"
-                    >
-                      {item}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </form>
-          }
+          openingChildren={<OpeningChildren />}
           contentsChildren={
             <div className="flex flex-col w-full h-full gap-4">
               <Button
                 variant="outline"
                 className="text-primary hover:text-primary gap-2"
-                onClick={OpenAddQuestion}
+                onClick={toggleAddQuestion}
               >
                 <LuPlusSquare className="w-5 h-5" />
                 <span>Add Question</span>
@@ -419,7 +237,7 @@ export default function FormWrapper({ id }: { id: string }) {
               <div className="flex flex-col overflow-y-auto gap-1.5">
                 {questionnaire.map((questionnaireItem, index) => {
                   const item = questionnaireItem;
-                  let questionNum = index + 1;
+                  let questionNum = index - 1;
 
                   if (item.type === "SECTION") {
                     const section = item as Section;
@@ -487,47 +305,43 @@ export default function FormWrapper({ id }: { id: string }) {
             onSave={handleSave}
             QRETitle={QRETitle}
           />
-          <Card className="flex w-[50%] h-full rounded-md p-5">
-            {leftMenuState === "opening" ? (
-              renderOpening(questionnaire)
-            ) : leftMenuState === "ending" ? (
-              renderEnding(questionnaire)
-            ) : activeQuestionId !== -1 && questionToRender ? (
-              renderQuestion(questionToRender, 0)
-            ) : (
-              <div className="flex flex-col w-full h-full justify-center items-center gap-3">
-                <Image
-                  src="/assets/choose-question.svg"
-                  alt="Questify"
-                  width={70}
-                  height={16}
-                />
-                <div className="flex flex-col justify-center items-center">
-                  <span className="text-primary text-sm font-semibold">
-                    Select a question to start editing
-                  </span>
-                  <span className="text-[#95B0B4] text-xs">
-                    Watch the left pane :D
-                  </span>
+          <div className="flex flex-col w-full h-full items-center gap-2">
+            {leftMenuState !== flms.OPENING &&
+              leftMenuState !== flms.ENDING && (
+                <div className="flex items-center justify-start w-1/2">
+                  <Button
+                    variant="outline"
+                    className="h-full text-primary hover:text-primary p-2"
+                    onClick={handleDelete}
+                    data-testid="delete-question"
+                  >
+                    <LuTrash className="w-3 h-3" />
+                  </Button>
                 </div>
-              </div>
-            )}
-          </Card>
+              )}
+            <Card className="flex w-1/2 h-full rounded-md p-5">
+              {leftMenuState === flms.OPENING
+                ? TerminusRenderer({ sectionKey: "OPENING" })
+                : leftMenuState === flms.ENDING
+                  ? TerminusRenderer({ sectionKey: "ENDING" })
+                  : activeQuestionId !== -1 && questionToRender
+                    ? QuestionRenderer(questionToRender, 0)
+                    : EmptyRenderer()}
+            </Card>
+          </div>
           <FormLowerMenu onChange={handleMobileToggle} isMobile={isMobile} />
         </div>
 
         <FormRightMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
           state={rightMenuState}
-          onClickQuestion={() => handleRightMenuChange("question")}
-          onClickDesign={() => handleRightMenuChange("design")}
-          onClickLogic={() => handleRightMenuChange("logic")}
-          onClickPreview={() => handleRightMenuChange("preview")}
-          onClickPublish={() => handleRightMenuChange("publish")}
+          onClickQuestion={() => handleRightMenuChange(frms.QUESTION)}
+          onClickDesign={() => handleRightMenuChange(frms.DESIGN)}
+          onClickLogic={() => handleRightMenuChange(frms.LOGIC)}
+          onClickPublish={() => handleRightMenuChange(frms.PUBLISH)}
           questionChildren={<div>Question Children</div>}
           designChildren={<div>Design Children</div>}
           logicChildren={<div>Logic Children</div>}
-          previewChildren={<div>Preview Children</div>}
           publishChildren={
             <Button
               variant="outline"

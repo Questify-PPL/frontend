@@ -16,6 +16,7 @@ import {
   LuUpload,
   LuLink,
 } from "react-icons/lu";
+import { QuestionTypeNames as qtn } from "@/lib/services/form";
 
 interface QuestionTypeProps {
   type: string;
@@ -23,67 +24,67 @@ interface QuestionTypeProps {
 }
 
 const QuestionType: React.FC<QuestionTypeProps> = ({
-  type = "Hello",
+  type,
   noText = false,
 }) => {
   const getDynamicStyles = () => {
     switch (type) {
-      case "Short Text":
-      case "Long Text":
+      case qtn.SHORT_TEXT:
+      case qtn.LONG_TEXT:
         return "bg-[#D2E4E3] text-[#1D7973]";
-      case "Multiple Choice":
-      case "Checkboxes":
-      case "Picture Choice":
-      case "Yes/No":
-      case "Dropdown":
+      case qtn.CHECKBOX:
+      case qtn.MULTIPLE_CHOICE:
+      case qtn.PICTURE_CHOICE:
+      case qtn.YES_NO:
+      case qtn.DROPDOWN:
         return "bg-[#FAD6E8] text-[#E7328C]";
-      case "Matrix":
-      case "Net Promoter Score":
-      case "Rating":
-        return " bg-[#FFE8D6] text-[#FD8B31]";
-      case "Date":
-      case "Time":
-      case "Number":
+      case qtn.MATRIX:
+      case qtn.NET_PROMOTER:
+      case qtn.RATING:
+        return "bg-[#FFE8D6] text-[#FD8B31]";
+      case qtn.DATE:
+      case qtn.TIME:
+      case qtn.NUMBER:
         return "bg-[#E8EFD8] text-[#8CAF3E]";
-      case "File Upload":
-      case "Link":
+      case qtn.FILE_UPLOAD:
+      case qtn.LINK:
         return "bg-[#F0EED3] text-[#B3A824]";
       default:
-        return "";
+        return "bg-gray-200 text-gray-800"; // Default style
     }
   };
 
   const renderIcon = () => {
     switch (type) {
-      case "Short Text":
+      case qtn.SHORT_TEXT:
         return <LuMinus />;
-      case "Long Text":
+      case qtn.LONG_TEXT:
         return <LuAlignLeft />;
-      case "Multiple Choice":
-        return <LuListChecks />;
-      case "Checkboxes":
+      case qtn.CHECKBOX:
         return <LuCheckSquare />;
-      case "Picture Choice":
+      case qtn.MULTIPLE_CHOICE:
+        return <LuListChecks />;
+      case qtn.PICTURE_CHOICE:
         return <LuLayoutGrid />;
-      case "Yes/No":
+      case qtn.YES_NO:
         return <LuColumns />;
-      case "Dropdown":
+      case qtn.DROPDOWN:
         return <LuChevronsUpDown />;
-      case "Matrix":
+      case qtn.MATRIX:
         return <LuFrame />;
-      case "Net Promoter Score":
+      case qtn.NET_PROMOTER:
         return <LuGauge />;
-      case "Rating":
+      case qtn.RATING:
         return <LuStar />;
-      case "Date":
+      case qtn.DATE:
         return <LuCalendar />;
-      case "Time":
+      case qtn.TIME:
         return <LuClock />;
-      case "Number":
+      case qtn.NUMBER:
         return <LuHash />;
-      case "File Upload":
+      case qtn.FILE_UPLOAD:
         return <LuUpload />;
-      case "Link":
+      case qtn.LINK:
         return <LuLink />;
     }
   };

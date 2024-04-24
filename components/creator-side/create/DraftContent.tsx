@@ -48,7 +48,7 @@ export function DraftContent({
 
   return (
     <div
-      className="hidden md:flex w-full p-[10px] gap-[10px] hover:cursor-pointer border-b border-[#E5EEF0] items-center hover:bg-[#F3F8F9]"
+      className="hidden md:flex w-full p-3 hover:cursor-pointer border-b border-[#E5EEF0] items-center hover:bg-[#F3F8F9]"
       onClick={toEdit}
       data-testid="table-content"
       role="none"
@@ -89,7 +89,7 @@ export function DraftContent({
             </div>
           </div>
 
-          {/* Prize */}
+          {/* Form Ended */}
           <div className="flex flex-col py-2 w-[23.958%] font-bold">
             {form.endedAt
               ? new Date(form.endedAt).toLocaleDateString("en-GB", {

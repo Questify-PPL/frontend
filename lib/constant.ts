@@ -271,3 +271,21 @@ export const SHOP_IMAGE = [
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/e8mioxl5zsxkfvsv4htt",
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/rbefqvlej3svjp932bdd",
 ];
+
+export const CreatorInfo = [
+  "First Name",
+  "Last Name",
+  "Gender",
+  "Email",
+  "Phone Number",
+  "Company",
+];
+
+export const RespondentInfo = [
+  "First Name",
+  "Last Name",
+  "Gender",
+  "Email",
+  "Phone Number",
+  "Company",
+];
