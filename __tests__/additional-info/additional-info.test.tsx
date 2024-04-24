@@ -3,6 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import AdditionalInfo from "@/app/(protected)/additional-info/page";
 
+jest.mock("next/navigation", () => {
+  return { useRouter: jest.fn() };
+});
+
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
@@ -54,6 +58,11 @@ test("allows user to progress through the form steps", async () => {
     "Your number here",
   ) as HTMLInputElement;
   fireEvent.change(phoneNumberInput, { target: { value: "1234567890" } });
+
+  const companyNameInput = screen.getByPlaceholderText(
+    "Your company name here",
+  ) as HTMLInputElement;
+  fireEvent.change(companyNameInput, { target: { value: "Questify" } });
 
   fireEvent.click(screen.getByText("Next"));
 

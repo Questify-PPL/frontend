@@ -40,7 +40,7 @@ const QuestionLayout: React.FC<QuestionLayoutProps> = ({
           <span className="w-1 h-6 md:w-1.5 bg-transparent rounded-md"></span>
         )}
         {numbering === 0 ? null : (
-          <div className="md:hidden flex w-6 h-6 bg-secondary rounded-md text-primary justify-center items-center text-[10px] leading-[12px]">
+          <div className="flex w-6 h-6 bg-secondary rounded-md text-primary justify-center items-center text-[10px] leading-[12px]">
             {numbering}
           </div>
         )}

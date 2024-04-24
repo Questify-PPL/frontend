@@ -146,7 +146,7 @@ export default function PaymentTable({
                             invoice.status === InvoiceStatusEnum.REJECTED,
                           "bg-[#DDFAD6]  text-[#39A014]":
                             invoice.status === InvoiceStatusEnum.APPROVED,
-                        }
+                        },
                       )}`}
                     >
                       {invoice.status === InvoiceStatusEnum.PENDING && (
