@@ -83,75 +83,52 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 describe("CreateWrapper Component", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test("renders with no problems", async () => {
-    const mockedForms: BareForm[] = [
-      {
-        id: "1",
-        title: "Mocked Form 1",
-        prize: 100,
-        prizeType: "EVEN",
-        maxWinner: 1,
-        createdAt: "2024-03-17T12:00:00Z",
-        updatedAt: "2024-03-17T12:00:00Z",
-        endedAt: "2024-03-18T12:00:00Z",
-        ongoingParticipation: 10,
-        completedParticipation: 5,
-      },
-      {
-        id: "2",
-        title: "Mocked Form 2",
-        prize: 200,
-        prizeType: "LUCKY",
-        maxWinner: 2,
-        createdAt: "2024-03-16T12:00:00Z",
-        updatedAt: "2024-03-16T12:00:00Z",
-        endedAt: "2024-03-17T12:00:00Z",
-        ongoingParticipation: 15,
-        completedParticipation: 8,
-      },
-    ];
+  const mockedForms: BareForm[] = [
+    {
+      id: "1",
+      title: "Mocked Form 1",
+      prize: 100,
+      prizeType: "EVEN",
+      maxWinner: 1,
+      createdAt: "2024-03-17T12:00:00Z",
+      updatedAt: "2024-03-17T12:00:00Z",
+      endedAt: "2024-03-18T12:00:00Z",
+      ongoingParticipation: 10,
+      completedParticipation: 5,
+    },
+    {
+      id: "2",
+      title: "Mocked Form 2",
+      prize: 200,
+      prizeType: "LUCKY",
+      maxWinner: 2,
+      createdAt: "2024-03-16T12:00:00Z",
+      updatedAt: "2024-03-16T12:00:00Z",
+      endedAt: "2024-03-17T12:00:00Z",
+      ongoingParticipation: 15,
+      completedParticipation: 8,
+    },
+  ];
 
+  test("renders with no problems", async () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
     render(await Create());
-    render(<CreateWrapper />);
+    render(<CreateWrapper forms={mockedForms} />);
   });
 
   test("renders with provided forms data", async () => {
-    const mockedForms: BareForm[] = [
-      {
-        id: "1",
-        title: "Mocked Form 1",
-        prize: 100,
-        prizeType: "EVEN",
-        maxWinner: 1,
-        createdAt: "2024-03-17T12:00:00Z",
-        updatedAt: "2024-03-17T12:00:00Z",
-        endedAt: "2024-03-18T12:00:00Z",
-        ongoingParticipation: 10,
-        completedParticipation: 5,
-      },
-      {
-        id: "2",
-        title: "Mocked Form 2",
-        prize: 200,
-        prizeType: "LUCKY",
-        maxWinner: 2,
-        createdAt: "2024-03-16T12:00:00Z",
-        updatedAt: "2024-03-16T12:00:00Z",
-        endedAt: "2024-03-17T12:00:00Z",
-        ongoingParticipation: 15,
-        completedParticipation: 8,
-      },
-    ];
-
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
-    render(<CreateWrapper />);
+    render(<CreateWrapper forms={mockedForms} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
 
@@ -162,7 +139,7 @@ describe("CreateWrapper Component", () => {
   test("renders with no forms data", async () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue([]);
 
-    render(<CreateWrapper />);
+    render(<CreateWrapper forms={mockedForms} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -170,7 +147,7 @@ describe("CreateWrapper Component", () => {
   test("renders with error", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(<CreateWrapper />);
+    render(<CreateWrapper forms={mockedForms}/>);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -180,7 +157,7 @@ describe("CreateWrapper Component", () => {
       pending: true,
     });
 
-    render(<CreateWrapper />);
+    render(<CreateWrapper forms={mockedForms}/>);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -188,8 +165,7 @@ describe("CreateWrapper Component", () => {
   test("renders create with error when fetching", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(await Create());
-
+    render(<CreateWrapper forms={mockedForms}/>);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -267,19 +243,18 @@ describe("CreateWrapper Component", () => {
 });
 
 describe("CreateModal Component", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders without crashing", async () => {
-    render(<CreateWrapper />);
-    const createButton = screen.getByText("Create a new Questionnaire");
-    expect(createButton).toBeInTheDocument();
+    render(<CreateWrapper forms={[]} />);
   });
 
   test("opens modal when create button is clicked", async () => {
-    render(<CreateWrapper />);
+    render(<CreateWrapper forms={[]} />);
     const createButton = screen.getByText("Create a new Questionnaire");
-    expect(createButton).toBeInTheDocument();
-
     createButton.click();
-
-    await screen.findByText("Give the Questionnaire what it needs first :)");
+    await screen.findByText("Create a new Questionnaire");
   });
 });

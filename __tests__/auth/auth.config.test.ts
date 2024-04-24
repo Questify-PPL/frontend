@@ -1,12 +1,18 @@
-import { authConfig, homepageRoute } from "@/auth.config";
+import {
+  authConfig,
+  blockedPageRoute,
+  homepageRoute,
+  additionalInfoRoute,
+} from "@/auth.config";
 import { UserRole, UserRoleEnum } from "@/lib/types/auth/user";
 import { NextURL } from "next/dist/server/web/next-url";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
+NextResponse.redirect = jest.fn();
 Response.redirect = jest.fn();
 
 beforeEach(() => {
-  (Response.redirect as jest.Mock).mockClear();
+  (NextResponse.redirect as jest.Mock).mockClear();
 });
 describe("authConfig", () => {
   describe("authorize", () => {
@@ -81,7 +87,7 @@ describe("authConfig", () => {
           credit: null,
           isVerified: true,
           isBlocked: false,
-          hasCompletedProfile: false,
+          hasCompletedProfile: true,
           accessToken: "",
         },
         expires: new Date().toISOString(),
@@ -118,7 +124,7 @@ describe("authConfig", () => {
           credit: null,
           isVerified: true,
           isBlocked: false,
-          hasCompletedProfile: false,
+          hasCompletedProfile: true,
           accessToken: "",
         },
         expires: new Date().toISOString(),
@@ -129,7 +135,7 @@ describe("authConfig", () => {
         request: nextRequest,
       });
 
-      const redirectMock = Response.redirect as jest.Mock;
+      const redirectMock = NextResponse.redirect as jest.Mock;
       expect(redirectMock).toHaveBeenCalled();
 
       const redirectCallArgument = redirectMock.mock.calls[0][0];
@@ -159,7 +165,7 @@ describe("authConfig", () => {
           credit: null,
           isVerified: true,
           isBlocked: false,
-          hasCompletedProfile: false,
+          hasCompletedProfile: true,
           accessToken: "",
         },
         expires: new Date().toISOString(),
@@ -170,7 +176,7 @@ describe("authConfig", () => {
         request: nextRequest,
       });
 
-      const redirectMock = Response.redirect as jest.Mock;
+      const redirectMock = NextResponse.redirect as jest.Mock;
       expect(redirectMock).toHaveBeenCalled();
 
       const redirectCallArgument = redirectMock.mock.calls[0][0];
@@ -200,7 +206,7 @@ describe("authConfig", () => {
           credit: null,
           isVerified: true,
           isBlocked: false,
-          hasCompletedProfile: false,
+          hasCompletedProfile: true,
           accessToken: "",
         },
         expires: new Date().toISOString(),
@@ -237,7 +243,7 @@ describe("authConfig", () => {
           credit: null,
           isVerified: true,
           isBlocked: false,
-          hasCompletedProfile: false,
+          hasCompletedProfile: true,
           accessToken: "",
         },
         expires: new Date().toISOString(),
@@ -273,7 +279,7 @@ describe("authConfig", () => {
           credit: null,
           isVerified: true,
           isBlocked: false,
-          hasCompletedProfile: false,
+          hasCompletedProfile: true,
           activeRole: UserRoleEnum.Creator,
           accessToken: "",
         },
@@ -287,6 +293,161 @@ describe("authConfig", () => {
         }),
       ).toBeFalsy();
     });
+
+    it("should disallow non-blocked user accessing /blocked page", () => {
+      const url = "https://localhost:3000/blocked";
+      const nextRequest = new NextRequest(new Request(url), {});
+
+      jest
+        .spyOn(nextRequest, "nextUrl", "get")
+        .mockReturnValue(new NextURL(url));
+
+      const session = {
+        user: {
+          email: "questify@gmail.com",
+          id: "1",
+          roles: ["ADMIN", "CREATOR"] as UserRole[],
+          ssoUsername: null,
+          firstName: null,
+          lastName: null,
+          phoneNumber: null,
+          gender: null,
+          companyName: null,
+          birthDate: null,
+          credit: null,
+          isVerified: true,
+          isBlocked: false,
+          hasCompletedProfile: true,
+          activeRole: UserRoleEnum.Creator,
+          accessToken: "",
+        },
+        expires: new Date().toISOString(),
+      };
+
+      expect(
+        authConfig.callbacks.authorized({
+          auth: session,
+          request: nextRequest,
+        }),
+      ).toBeFalsy();
+    });
+  });
+
+  it("should redirect blocked user to /blocked page", () => {
+    const url = "https://localhost:3000/home";
+    const nextRequest = new NextRequest(new Request(url), {});
+
+    jest.spyOn(nextRequest, "nextUrl", "get").mockReturnValue(new NextURL(url));
+
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: true,
+        hasCompletedProfile: true,
+        accessToken: "",
+      },
+      expires: new Date().toISOString(),
+    };
+
+    authConfig.callbacks.authorized({
+      auth: session,
+      request: nextRequest,
+    });
+
+    const redirectMock = NextResponse.redirect as jest.Mock;
+    expect(redirectMock).toHaveBeenCalled();
+
+    const redirectCallArgument = redirectMock.mock.calls[0][0];
+    expect(redirectCallArgument.pathname).toBe(blockedPageRoute);
+  });
+
+  it("should redirect authenticated user that has completed profile when accessing /additional-info again", () => {
+    const url = "https://localhost:3000/additional-info";
+    const nextRequest = new NextRequest(new Request(url), {});
+
+    jest.spyOn(nextRequest, "nextUrl", "get").mockReturnValue(new NextURL(url));
+
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: true,
+        accessToken: "",
+      },
+      expires: new Date().toISOString(),
+    };
+
+    authConfig.callbacks.authorized({
+      auth: session,
+      request: nextRequest,
+    });
+
+    const redirectMock = NextResponse.redirect as jest.Mock;
+    expect(redirectMock).toHaveBeenCalled();
+
+    const redirectCallArgument = redirectMock.mock.calls[0][0];
+    expect(redirectCallArgument.pathname).toBe(homepageRoute);
+  });
+
+  it("should redirect authenticated user that has not completed profile to /additional-info", () => {
+    const url = "https://localhost:3000/home";
+    const nextRequest = new NextRequest(new Request(url), {});
+
+    jest.spyOn(nextRequest, "nextUrl", "get").mockReturnValue(new NextURL(url));
+
+    const session = {
+      user: {
+        email: "questify@gmail.com",
+        id: "1",
+        roles: ["CREATOR"] as UserRole[],
+        ssoUsername: null,
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: null,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: false,
+        accessToken: "",
+      },
+      expires: new Date().toISOString(),
+    };
+
+    authConfig.callbacks.authorized({
+      auth: session,
+      request: nextRequest,
+    });
+
+    const redirectMock = NextResponse.redirect as jest.Mock;
+    expect(redirectMock).toHaveBeenCalled();
+
+    const redirectCallArgument = redirectMock.mock.calls[0][0];
+    expect(redirectCallArgument.pathname).toBe(additionalInfoRoute);
   });
 
   describe("jwt", () => {

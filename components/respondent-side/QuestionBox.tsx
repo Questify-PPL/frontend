@@ -29,11 +29,11 @@ const QuestionBox: React.FC<QuestionBoxProps> = ({
 }) => {
   return (
     <Card className={`flex flex-col w-[50%] h-[90%] ${className}`}>
-      <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
+      <div className="flex flex-col bg-secondary md:h-[15%] justify-center font-semibold text-[14px] md:text-xl px-[20px] py-[10px] md:p-6 gap-1 rounded-t-md">
         {QRETitle}
         {questionImage}
       </div>
-      <div className="flex flex-col h-full overflow-hidden gap-8 items-center font-medium text-xl px-24 py-14 rounded-t-md">
+      <div className="flex flex-col h-full overflow-hidden gap-8 items-center font-medium text-sm md:text-xl p-[40px] rounded-t-md">
         {questionNum}
         <div className="flex flex-col h-full overflow-auto gap-8 w-full">
           {questions}

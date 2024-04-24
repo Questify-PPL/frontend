@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FormLeftMenuState as fmls } from "@/lib/services/form";
 
 interface FormLeftMenuProps {
   className?: string;
@@ -37,7 +38,7 @@ const renderButton = (
 
 export function FormLeftMenu({
   className = "",
-  state = "opening",
+  state = fmls.OPENING,
   onClickOpening = () => {},
   openingChildren = null,
   onClickContents = () => {},
@@ -48,16 +49,16 @@ export function FormLeftMenu({
   return (
     <div className={`flex p-0  ${className}`}>
       <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
-        {renderButton("Opening", onClickOpening, state === "opening")}
-        {state === "opening" ? (
+        {renderButton("Opening", onClickOpening, state === fmls.OPENING)}
+        {state === fmls.OPENING ? (
           <div className={childrenClass}>{openingChildren}</div>
         ) : null}
-        {renderButton("Contents", onClickContents, state === "contents")}
-        {state === "contents" ? (
+        {renderButton("Contents", onClickContents, state === fmls.CONTENTS)}
+        {state === fmls.CONTENTS ? (
           <div className={childrenClass}>{contentsChildren}</div>
         ) : null}
-        {renderButton("Ending", onClickEnding, state === "ending")}
-        {state === "ending" ? (
+        {renderButton("Ending", onClickEnding, state === fmls.ENDING)}
+        {state === fmls.ENDING ? (
           <div className={childrenClass}>{endingChildren}</div>
         ) : null}
       </Card>

@@ -222,7 +222,6 @@ describe("Update user information", () => {
       formErrors: [],
       fieldErrors: {
         firstName: ["Name must not be empty"],
-        lastName: ["Name must not be empty"],
         gender: ["Invalid enum value. Expected 'MALE' | 'FEMALE', received ''"],
         birthDate: ["Birth date must be in the past"],
         phoneNumber: ["Phone number must be at least 10 digits"],

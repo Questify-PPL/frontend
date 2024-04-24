@@ -20,6 +20,8 @@ export type SummaryContextValue = SummarizeFormAsProps & {
   isFinishedFetching: boolean;
   // eslint-disable-next-line no-unused-vars
   setIsFinishedFetching: Dispatch<SetStateAction<boolean>>;
+
+  exportData: () => Promise<void>;
 };
 
 export const SummaryContext = createContext({} as SummaryContextValue);
