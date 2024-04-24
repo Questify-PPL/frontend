@@ -14,7 +14,7 @@ const NotificationMessage: React.FC<NotificationProps> = ({
   return (
     <div className="p-2">
       <div className="flex justify-between">
-        <span className="text-m font-bold ">{title}</span>
+        <span className="text-m font-bold text-nowrap">{title}</span>
       </div>
       <div>
         <span className="text-xs ">{message}</span>
@@ -29,7 +29,7 @@ const NotificationCard: React.FC<{ title: string; message: string }> = ({
 }) => {
   return (
     <motion.div
-      className={`relative md:w-1/3 sm:w-24 h-fit gap-2`}
+      className={`relative md:w-fit sm:w-fit h-fit gap-2`}
       data-testid="notification-card"
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
