@@ -1,13 +1,13 @@
 import FormWrapper from "@/components/creator-side/create/form/FormWrapper";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 
-interface Props {
+interface FormProps {
   params: {
     id: string;
   };
 }
 
-const Form = ({ params }: Props) => {
+const Form = ({ params }: FormProps) => {
   const { id } = params;
 
   return (
