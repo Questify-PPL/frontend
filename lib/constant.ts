@@ -1,5 +1,6 @@
 import { QuestionnaireItem, Answer } from "@/lib/context";
 import { BareForm } from "./types";
+import { processTopUp } from "./action/topup";
 
 export const BENEFIT = [
   {
@@ -45,6 +46,8 @@ export const URL = {
   withdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/all`,
   validateWithdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/validate`,
   shop: `${process.env.NEXT_PUBLIC_API_URL}/shop`,
+  topUpCreator: `${process.env.NEXT_PUBLIC_API_URL}/topup/creator`,
+  processTopUp: `${process.env.NEXT_PUBLIC_API_URL}/topup/create?type=creator`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
