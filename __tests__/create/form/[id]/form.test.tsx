@@ -2,6 +2,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Form from "@/app/(protected)/create/form/[id]/page";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
+import { deleteQuestion, patchQuestionnaire } from "@/lib/action/form";
 import "@testing-library/jest-dom";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -22,6 +23,11 @@ jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
   })),
 }));
 
+jest.mock("@/lib/action/form", () => ({
+  deleteQuestion: jest.fn(),
+  patchQuestionnaire: jest.fn(),
+}));
+
 describe("Form Component", () => {
   test("renders Form component with QuestionGetter and FormWrapper", () => {
     render(
@@ -34,6 +40,10 @@ describe("Form Component", () => {
 });
 
 describe("Add Question Functionality", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders add question button", async () => {
     render(
       <QuestionnaireProvider>
@@ -82,23 +92,6 @@ describe("Add Question Functionality", () => {
     expect(screen.getByText("Others")).toBeInTheDocument();
   });
 
-  test("renders add question modal and add short text question", async () => {
-    render(
-      <QuestionnaireProvider>
-        <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>,
-    );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
-    contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
-    addQuestionButton.click();
-    await screen.findByText("Choose a Question Type");
-    const shortTextButton = screen.getByText("Short Text") as HTMLInputElement;
-    shortTextButton.click();
-  });
-
   test("renders add question modal and cancel", async () => {
     render(
       <QuestionnaireProvider>
@@ -118,9 +111,110 @@ describe("Add Question Functionality", () => {
     fireEvent.click(cancelButton);
     await screen.findByText("Contents");
   });
+
+  test("renders add question modal try to add short text", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    const addQuestionButton = screen.getByTestId(
+      "add-question",
+    ) as HTMLInputElement;
+    addQuestionButton.click();
+    await screen.findByText("Choose a Question Type");
+    const shortTextButton = screen.getByText("Short Text") as HTMLInputElement;
+    shortTextButton.click();
+
+    expect(patchQuestionnaire).toHaveBeenCalled();
+  });
+
+  test("renders add question modal try to add long text", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    const addQuestionButton = screen.getByTestId(
+      "add-question",
+    ) as HTMLInputElement;
+    addQuestionButton.click();
+    await screen.findByText("Choose a Question Type");
+    const numberButton = screen.getByText("Long Text") as HTMLInputElement;
+    numberButton.click();
+
+    expect(patchQuestionnaire).toHaveBeenCalled();
+  });
+
+  test("renders add question modal try to add checkbox question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    const addQuestionButton = screen.getByTestId(
+      "add-question",
+    ) as HTMLInputElement;
+    addQuestionButton.click();
+    await screen.findByText("Choose a Question Type");
+    const numberButton = screen.getByText("Checkboxes") as HTMLInputElement;
+    numberButton.click();
+
+    expect(patchQuestionnaire).toHaveBeenCalled();
+  });
+
+  test("renders add question modal try to add multiple choice question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    const addQuestionButton = screen.getByTestId(
+      "add-question",
+    ) as HTMLInputElement;
+    addQuestionButton.click();
+    await screen.findByText("Choose a Question Type");
+    const numberButton = screen.getByText(
+      "Multiple Choice",
+    ) as HTMLInputElement;
+    numberButton.click();
+
+    expect(patchQuestionnaire).toHaveBeenCalled();
+  });
+
+  test("renders add question modal try to add yes-no question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    const addQuestionButton = screen.getByTestId(
+      "add-question",
+    ) as HTMLInputElement;
+    addQuestionButton.click();
+    await screen.findByText("Choose a Question Type");
+    const numberButton = screen.getByText("Yes/No") as HTMLInputElement;
+    numberButton.click();
+
+    expect(patchQuestionnaire).toHaveBeenCalled();
+  });
 });
 
 describe("Saved As Draft Functionality", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders saved as draft modal", async () => {
     render(
       <QuestionnaireProvider>
@@ -171,5 +265,47 @@ describe("Saved As Draft Functionality", () => {
     ) as HTMLInputElement;
     publishButton.click();
     await screen.findByText("Published!");
+  });
+});
+
+describe("Delete Question Functionality", () => {
+  test("delete question button cant be found in opening", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    expect(screen.queryByTestId("delete-question")).toBeNull();
+  });
+
+  test("renders delete question button", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    await screen.findByTestId("delete-question");
+  });
+
+  test("renders delete question button and delete", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    await screen.findByTestId("delete-question");
+    const deleteButton = screen.getByTestId(
+      "delete-question",
+    ) as HTMLInputElement;
+    deleteButton.click();
+    expect(deleteQuestion).toHaveBeenCalled();
+    await screen.findByText("Contents");
   });
 });

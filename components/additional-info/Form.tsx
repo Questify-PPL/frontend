@@ -1,10 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import React from "react";
+import { useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import Terminus from "@/components/respondent-side/Terminus";
 import QuestionBox from "@/components/respondent-side/QuestionBox";
@@ -14,6 +12,9 @@ import { LuCheck, LuChevronRight, LuCheckCheck } from "react-icons/lu";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AdditionalInfo, FieldName } from "@/lib/schema/additional-info.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { updateProfile } from "@/lib/action";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {
@@ -23,7 +24,7 @@ const steps = [
     fields: ["name"],
   },
   {
-    fields: ["gender", "birthdate", "phoneNumber"],
+    fields: ["gender", "birthdate", "phoneNumber", "companyName"],
   },
   {
     fields: [],
@@ -32,13 +33,15 @@ const steps = [
 
 const Form = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
     trigger,
     formState: { errors },
-    watch,
   } = useForm<AdditionalInfo>({
     resolver: zodResolver(AdditionalInfo),
     defaultValues: {
@@ -46,11 +49,41 @@ const Form = () => {
       birthDate: undefined,
       gender: undefined,
       phoneNumber: "",
+      companyName: "",
     },
   });
 
-  console.log(watch());
-  const processForm: SubmitHandler<AdditionalInfo> = (data) => {};
+  const processForm: SubmitHandler<AdditionalInfo> = (data) => {
+    startTransition(async () => {
+      const formData = new FormData();
+      const [firstName, ...lastNameArr] = data.name.split(/\s+/);
+      const lastName = lastNameArr.join(" ");
+
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("birthDate", data.birthDate.toISOString());
+      formData.append("gender", data.gender.toUpperCase());
+      formData.append("phoneNumber", data.phoneNumber);
+      formData.append("companyName", data.companyName);
+
+      const response = await updateProfile(undefined, formData);
+
+      const notificationMessage = response
+        ? {
+            title: "Failed to update profile information",
+            description:
+              "Please try again in a few minutes or contact our support team",
+          }
+        : {
+            title: "Success to update profile information",
+          };
+      toast(notificationMessage);
+
+      if (!response) {
+        router.replace("/home");
+      }
+    });
+  };
 
   const next = async () => {
     const fields = steps[currentStep].fields;
@@ -59,9 +92,6 @@ const Form = () => {
     if (!output) return;
 
     if (currentStep < steps.length - 1) {
-      if (currentStep === steps.length - 2) {
-        // await handleSubmit(processForm)();
-      }
       setCurrentStep((step) => step + 1);
     }
   };
@@ -74,7 +104,7 @@ const Form = () => {
 
   return (
     <form
-      className="flex flex-row w-full h-full justify-center items-center"
+      className="flex w-full h-full justify-center items-center"
       onSubmit={handleSubmit(processForm)}
     >
       {currentStep == 0 && (
@@ -86,6 +116,7 @@ const Form = () => {
               alt="Questify"
               width={70}
               height={16}
+              className="hidden md:block"
             />
           }
           terminusSectionTitle="Opening"
@@ -94,11 +125,13 @@ const Form = () => {
           buttonClickHandler={next}
           buttonText="Start"
           buttonIcon={<LuChevronRight className="w-5 h-5" />}
+          className="w-full max-w-96 md:max-w-none md:w-[50%] h-[90%] rounded-none md:rounded-md"
         />
       )}
 
       {currentStep === 1 && (
         <QuestionBox
+          className="w-full max-w-96 md:max-w-none md:w-[50%] h-[90%] rounded-none md:rounded-md"
           QRETitle="User Additional Information"
           questionImage={
             <Image
@@ -106,6 +139,7 @@ const Form = () => {
               alt="Questify"
               width={70}
               height={16}
+              className="hidden md:block"
             />
           }
           questionNum={
@@ -127,7 +161,7 @@ const Form = () => {
                     type="text"
                     placeholder="Your answer here"
                     {...register("name")}
-                    className="text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
+                    className="text-base md:text-2xl placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background"
                   />
                   <span className="w-full h-0.5 bg-primary/40"></span>
                   {errors.name && (
@@ -148,6 +182,7 @@ const Form = () => {
 
       {currentStep == 2 && (
         <QuestionBox
+          className="w-full max-w-96 md:max-w-none md:w-[50%] md:h-[90%] rounded-none md:rounded-md"
           QRETitle="User Additional Information"
           questionImage={
             <Image
@@ -155,12 +190,14 @@ const Form = () => {
               alt="Questify"
               width={70}
               height={16}
+              className="hidden md:block"
             />
           }
           questionNum={
             <QuestionNum
+              isRequired={true}
               questionNum={currentStep}
-              isSection={false}
+              isSection={true}
               sectionText="This section is made to add a personal touch to your account."
             />
           }
@@ -169,19 +206,18 @@ const Form = () => {
               <QuestionLayout
                 role="RESPONDENT"
                 numbering={1}
-                required={true}
                 question="What's your gender?"
                 answer={
                   <div>
-                    <RadioGroup
-                      className="flex flex-col gap-2"
-                      {...register("gender")}
-                    >
+                    <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2">
-                        <RadioGroupItem
+                        <Input
+                          type="radio"
                           value="Male"
                           id="option-one"
                           className="flex h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                          {...register("gender")}
+                          name="gender"
                         />
                         <Label
                           className="text-base font-medium"
@@ -191,16 +227,19 @@ const Form = () => {
                         </Label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <RadioGroupItem
+                        <Input
+                          type="radio"
                           value="Female"
                           id="option-two"
                           className="flex h-4 w-4 border-[1px] border-solid border-[#CDDDE1]"
+                          {...register("gender")}
+                          name="gender"
                         />
                         <Label className="text-base" htmlFor="option-two">
                           Female
                         </Label>
                       </div>
-                    </RadioGroup>
+                    </div>
                     {errors.gender && (
                       <div className="text-red-500 font-normal text-xs mt-0.5">
                         {errors.gender.message}
@@ -249,6 +288,26 @@ const Form = () => {
                   </div>
                 }
               ></QuestionLayout>
+              <QuestionLayout
+                role="RESPONDENT"
+                numbering={4}
+                question="Company Name"
+                answer={
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="Your company name here"
+                      {...register("companyName")}
+                      className="text-base placeholder:text-primary/40 border-none rounded-none p-0 focus-visible:ring-background h-fit"
+                    />
+                    {errors.companyName && (
+                      <div className="text-red-500 font-normal text-xs mt-0.5">
+                        {errors.companyName.message}
+                      </div>
+                    )}
+                  </div>
+                }
+              ></QuestionLayout>
             </div>
           }
           prevButton={prev}
@@ -267,6 +326,7 @@ const Form = () => {
               alt="Questify"
               width={70}
               height={16}
+              className="hidden md:block"
             />
           }
           terminusSectionTitle="Ending"
@@ -275,6 +335,8 @@ const Form = () => {
           buttonText="Finish"
           buttonIcon={<LuCheckCheck className="w-5 h-5" />}
           buttonType="submit"
+          buttonDisabled={isPending}
+          className="w-full max-w-96 md:max-w-none md:w-[50%] h-[90%]"
         />
       )}
     </form>

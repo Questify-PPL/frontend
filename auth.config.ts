@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import { UserRole, UserRoleEnum } from "./lib/types/auth/user";
+import { NextResponse } from "next/server";
 
 /**
  * Array to specify public routes. By default, unspecified routes is protected.
@@ -7,6 +8,8 @@ import { UserRole, UserRoleEnum } from "./lib/types/auth/user";
 export const publicRoutes = ["/login", "/register"];
 export const disabledRoutesAfterAuthenticated = ["/login", "/register"];
 export const homepageRoute = "/home";
+export const additionalInfoRoute = "/additional-info";
+export const blockedPageRoute = "/blocked";
 
 /**
  * Array to specify which routes should be accessed with appropritae role
@@ -33,9 +36,17 @@ export const authConfig = {
         (route) => nextUrl.pathname.startsWith(route),
       );
       const isLoggedIn = !!auth?.user;
+      const authUserAccessDisabledRoute = isAuthDisabledRoute && isLoggedIn;
+      const authUserHasCompletedProfileAccessAdditionalInfoRoute =
+        nextUrl.pathname === additionalInfoRoute &&
+        isLoggedIn &&
+        auth.user.hasCompletedProfile;
 
-      if (isAuthDisabledRoute && isLoggedIn) {
-        return Response.redirect(new URL(homepageRoute, nextUrl));
+      if (
+        authUserAccessDisabledRoute ||
+        authUserHasCompletedProfileAccessAdditionalInfoRoute
+      ) {
+        return NextResponse.redirect(new URL(homepageRoute, nextUrl));
       }
 
       // Public routes
@@ -43,6 +54,26 @@ export const authConfig = {
         nextUrl.pathname.startsWith(route),
       );
       if (isPublic) return true;
+
+      // Blocked page
+      if (nextUrl.pathname === blockedPageRoute) {
+        return isLoggedIn && auth.user.isBlocked;
+      }
+
+      // Redirect blocked user to blocked page
+      if (isLoggedIn && auth.user.isBlocked) {
+        return NextResponse.redirect(new URL(blockedPageRoute, nextUrl));
+      }
+
+      // Check authenticated user has completed additional info
+      const authUserHasNotCompletedProfile =
+        isLoggedIn &&
+        !auth.user.hasCompletedProfile &&
+        nextUrl.pathname !== additionalInfoRoute;
+
+      if (authUserHasNotCompletedProfile) {
+        return NextResponse.redirect(new URL(additionalInfoRoute, nextUrl));
+      }
 
       // Check role
       let hasAccess = false;

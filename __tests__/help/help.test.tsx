@@ -341,6 +341,10 @@ describe("Contact Modal", () => {
 });
 
 describe("FAQ Section", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should render FAQ section", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
 

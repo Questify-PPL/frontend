@@ -42,6 +42,10 @@ describe("JoinForm Component", () => {
 });
 
 describe("Saved As Draft Functionality", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders saved as draft modal", async () => {
     render(
       <QuestionnaireProvider>

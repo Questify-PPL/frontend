@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { useCallback, useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
+import { exportForm } from "../helper";
 import { Questions, SummarizeFormAsProps } from "../types";
 
 type SummaryProviderProps = {
@@ -18,6 +20,7 @@ export function SummaryProvider({
   const [activeTab, setActiveTab] = useState<
     "summary" | "question" | "individual"
   >(initialActiveTab);
+  const { toast } = useToast();
 
   const [graphType, setGraphType] = useState<"bar" | "pie" | "doughnut">("pie");
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,6 +29,27 @@ export function SummaryProvider({
   const [individualFormQuestions, setIndividualFormQuestions] = useState<
     Questions | undefined
   >(undefined);
+
+  const exportData = useCallback(async () => {
+    if (!session?.user?.accessToken || !formStatistics) return;
+
+    setIsFinishedFetching(true);
+
+    await exportForm(
+      formId,
+      session.user.accessToken,
+      formStatistics.title,
+      () => {
+        toast({
+          title: "Failed to export data",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      },
+    );
+
+    setIsFinishedFetching(false);
+  }, [formStatistics, formId, session?.user?.accessToken, toast]);
 
   const returns = useMemo(() => {
     return {
@@ -49,6 +73,7 @@ export function SummaryProvider({
       individualFormQuestions,
       setIndividualFormQuestions,
       initialActiveTab,
+      exportData,
     };
   }, [
     formStatistics,
@@ -62,6 +87,7 @@ export function SummaryProvider({
     session,
     individualFormQuestions,
     initialActiveTab,
+    exportData,
   ]);
 
   return (

@@ -12,7 +12,7 @@ const QuestionNum: React.FC<QuestionNumProps> = ({
   sectionText = "",
 }) => {
   return (
-    <div className="flex flex-col gap-1.5 text-base text-primary w-full justify-start">
+    <div className="flex flex-col gap-1.5 text-xs md:text-base text-primary w-full justify-start">
       <div className="flex flex-row w-full h-fit gap-3">
         {isRequired && (
           <span className="flex w-1.5 h-6 bg-[#FE476C] rounded-md"></span>
@@ -24,7 +24,9 @@ const QuestionNum: React.FC<QuestionNumProps> = ({
           </div>
         )}
       </div>
-      {isSection && <div className="text-xl text-black">{sectionText}</div>}
+      {isSection && (
+        <div className="text-base md:text-xl text-black">{sectionText}</div>
+      )}
     </div>
   );
 };

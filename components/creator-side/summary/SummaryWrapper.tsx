@@ -1,12 +1,11 @@
 "use client";
 
-import { SummarizeFormAsProps } from "@/lib/types";
-import SummaryNav from "./SummaryNav";
-import { BackAndExport } from "@/components/dashboard/BackAndExport";
 import { SummaryProvider } from "@/lib/provider/SummaryProvider";
-import { SummaryTitle } from "./SummaryTitle";
+import { SummarizeFormAsProps } from "@/lib/types";
 import { ContentBox } from "./ContentBox";
 import { LoadingModal } from "./LoadingModal";
+import { SummaryDesktopHeader } from "./SummaryDesktopHeader";
+import SummaryNav from "./SummaryNav";
 
 export function SummaryWrapper(props: Readonly<SummarizeFormAsProps>) {
   return (
@@ -15,8 +14,7 @@ export function SummaryWrapper(props: Readonly<SummarizeFormAsProps>) {
         <SummaryNav></SummaryNav>
         <div className="flex flex-col w-full space-y-4 flex-1 overflow-x-hidden">
           <div className="md:flex hidden flex-col justify-center items-start gap-[12px] self-stretch px-5 py-[10px] rounded-[6px] bg-[#E5EEF0]">
-            <BackAndExport />
-            <SummaryTitle />
+            <SummaryDesktopHeader />
           </div>
           <ContentBox />
         </div>

@@ -40,6 +40,10 @@ jest.mock("next/navigation", () => {
 });
 
 describe("Login", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", async () => {
     global.fetch = jest.fn(
       () =>
@@ -89,6 +93,10 @@ describe("Login", () => {
 });
 
 describe("LoginForm", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", () => {
     render(LoginForm());
 
@@ -134,6 +142,10 @@ describe("LoginForm", () => {
 });
 
 describe("SSOForm", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should renders without crashing", () => {
     render(SSOForm({ accessToken: "token" }));
 
@@ -149,6 +161,10 @@ describe("SSOForm", () => {
 });
 
 describe("Error Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should renders without crashing", () => {
     const error = new Error("error");
     render(ErrorPage({ error }));

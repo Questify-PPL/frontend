@@ -45,6 +45,8 @@ export default async function Summary({ params }: Readonly<Props>) {
               ? form.title
               : form?.formStatistics?.title
           }
+          session={session}
+          formId={id}
         />
       </header>
       <div className="flex h-full w-full absolute">

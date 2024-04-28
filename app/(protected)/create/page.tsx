@@ -1,9 +1,12 @@
 import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
+import { getQuestionnairesOwned } from "@/lib/action";
 
 export default async function Create() {
+  const forms = await getQuestionnairesOwned("UNPUBLISHED");
+
   return (
     <section className="flex flex-col h-full w-full absolute">
-      <CreateWrapper />
+      <CreateWrapper forms={forms} />
     </section>
   );
 }

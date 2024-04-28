@@ -76,6 +76,10 @@ jest.mock("@/auth", () => {
 });
 
 describe("Login", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", async () => {
     global.fetch = jest.fn(
       () =>
@@ -247,6 +251,10 @@ describe("Login", () => {
 });
 
 describe("Admin", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders home page with no problem", async () => {
     const session = {
       user: {

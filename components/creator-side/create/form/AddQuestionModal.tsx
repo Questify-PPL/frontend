@@ -4,32 +4,56 @@ import QuestionType from "../../QuestionType";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { LuX } from "react-icons/lu";
+import { QuestionTypeNames as qtn } from "@/lib/services/form";
 
 interface AddQuestionModalProps {
   className?: string;
   onCancel: () => void;
   onShortTextClick?: () => void;
+  onLongTextClick?: () => void;
+  onCheckboxClick?: () => void;
+  onMultipleChoiceClick?: () => void;
+  onYesNoClick?: () => void;
 }
 
 export function AddQuestionModal({
   className = "",
   onCancel,
   onShortTextClick = () => {},
+  onLongTextClick = () => {},
+  onCheckboxClick = () => {},
+  onMultipleChoiceClick = () => {},
+  onYesNoClick = () => {},
 }: Readonly<AddQuestionModalProps>) {
-  const QuestionTypeList = ({ types }: { types: string[] }) => (
-    <>
-      {types.map((type) => (
-        <div
-          key={type}
-          className="flex flex-row py-2.5 px-2 gap-1.5 hover:bg-[#F3F8F9] items-center rounded-md cursor-pointer"
-          onClick={type === "Short Text" ? onShortTextClick : undefined}
-        >
-          <QuestionType type={type} noText={true} />
-          <span className="flex-grow-0 w-full truncate text-xs">{type}</span>
-        </div>
-      ))}
-    </>
-  );
+  const QuestionTypeList = ({ types }: { types: string[] }) => {
+    const clickHandlers: { [key: string]: () => void } = {
+      [qtn.SHORT_TEXT]: onShortTextClick,
+      [qtn.LONG_TEXT]: onLongTextClick,
+      [qtn.CHECKBOX]: onCheckboxClick,
+      [qtn.MULTIPLE_CHOICE]: onMultipleChoiceClick,
+      [qtn.YES_NO]: onYesNoClick,
+    };
+
+    const handleClick = (type: string) => {
+      const handler = clickHandlers[type] || (() => {});
+      handler();
+    };
+
+    return (
+      <>
+        {types.map((type) => (
+          <div
+            key={type}
+            className="flex flex-row py-2.5 px-2 gap-1.5 hover:bg-[#F3F8F9] items-center rounded-md cursor-pointer"
+            onClick={() => handleClick(type)}
+          >
+            <QuestionType type={type} noText={true} />
+            <span className="flex-grow-0 w-full truncate text-xs">{type}</span>
+          </div>
+        ))}
+      </>
+    );
+  };
 
   return (
     <div
@@ -61,7 +85,7 @@ export function AddQuestionModal({
               Numeric
             </span>
             <Separator className="bg-[#F3F8F9]" />
-            <QuestionTypeList types={["Number", "Date", "Time"]} />
+            <QuestionTypeList types={[qtn.NUMBER, qtn.DATE, qtn.TIME]} />
           </div>
           <div className="flex flex-col w-[30%] gap-1">
             <span className="text-primary/40 font-semibold text-sm">
@@ -70,11 +94,11 @@ export function AddQuestionModal({
             <Separator className="bg-[#F3F8F9]" />
             <QuestionTypeList
               types={[
-                "Multiple Choice",
-                "Checkboxes",
-                "Picture Choice",
-                "Yes/No",
-                "Dropdown",
+                qtn.MULTIPLE_CHOICE,
+                qtn.CHECKBOX,
+                qtn.PICTURE_CHOICE,
+                qtn.YES_NO,
+                qtn.DROPDOWN,
               ]}
             />
           </div>

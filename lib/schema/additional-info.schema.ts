@@ -20,6 +20,7 @@ export const AdditionalInfo = z.object({
     .string()
     .min(10, "Phone number must be at least 10 digits")
     .max(15, "Phone number must be less than 15 digits"),
+  companyName: z.string().min(2),
 });
 
 export type AdditionalInfo = z.infer<typeof AdditionalInfo>;

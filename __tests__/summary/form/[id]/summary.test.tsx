@@ -2,15 +2,21 @@ import Summary from "@/app/(protected)/summary/form/[id]/page";
 import { auth } from "@/auth";
 import {
   getCompletedQuestionnaireForRespondent,
-  getSummaries,
   getInitialActiveTab,
+  getSummaries,
 } from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
 import { UserRole } from "@/lib/types/auth";
+import * as utils from "@/lib/utils";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Session } from "next-auth";
-import React from "react";
+
+// Mock the entire module containing convertToCSV
+jest.mock("@/lib/utils", () => ({
+  ...jest.requireActual("@/lib/utils"), // Keep the real implementation for other functions
+  convertToCSV: jest.fn(), // Mock convertToCSV as a Jest mock function
+}));
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -26,6 +32,16 @@ jest.mock("@/lib/action/form", () => ({
 
 jest.mock("next/navigation", () => {
   return { useRouter: jest.fn(), usePathname: jest.fn() };
+});
+
+jest.mock("@/auth", () => {
+  return {
+    __esModule: true,
+    signIn: jest.fn(),
+    signOut: jest.fn(),
+    auth: jest.fn(),
+    unstable_update: jest.fn(),
+  };
 });
 
 const mockedDispact = jest.fn();
@@ -66,11 +82,19 @@ Object.defineProperty(window, "matchMedia", {
 });
 
 describe("Summary Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   const session = {
     user: {
       email: "questify@gmail.com",
-      id: "1",
-      roles: ["CREATOR"] as UserRole[],
+      id: "UI2100000000",
+      roles: ["CREATOR", "RESPONDENT"] as UserRole[],
       ssoUsername: null,
       firstName: null,
       lastName: null,
@@ -82,6 +106,7 @@ describe("Summary Page", () => {
       isVerified: true,
       isBlocked: false,
       hasCompletedProfile: false,
+      accessToken: "token",
       activeRole: "CREATOR",
     },
     expires: new Date().toISOString(),
@@ -190,10 +215,6 @@ describe("Summary Page", () => {
       },
     },
   ];
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
 
   test("renders with no problems as creator", async () => {
     (getSummaries as jest.Mock).mockResolvedValue({
@@ -510,7 +531,8 @@ describe("Summary Page", () => {
     });
 
     (auth as jest.Mock).mockResolvedValue(session);
-    (getInitialActiveTab as jest.Mock).mockReturnValue("summary");
+
+    (utils.convertToCSV as jest.Mock).mockResolvedValueOnce(undefined);
 
     // Click export button
     render(
@@ -521,8 +543,59 @@ describe("Summary Page", () => {
       }),
     );
 
-    const exportButton = screen.getAllByTestId("export-button");
+    const exportButton = await screen.findAllByTestId("export-button");
 
-    expect(exportButton[0]).toBeInTheDocument();
+    expect(exportButton[1]).toBeInTheDocument();
+
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          blob: () => Promise.resolve(new Blob()),
+        }) as Promise<Response>,
+    );
+
+    fireEvent.click(exportButton[1] as Element);
+    // Mock fetch exportData function
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("should throw error when export csv failed", async () => {
+    (getSummaries as jest.Mock).mockResolvedValue({
+      formStatistics,
+      questionsWithAnswers,
+      allIndividuals: [],
+    });
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    (utils.convertToCSV as jest.Mock).mockRejectedValueOnce(undefined);
+
+    // Click export button
+    render(
+      await Summary({
+        params: {
+          id: "1",
+        },
+      }),
+    );
+
+    const exportButton = await screen.findAllByTestId("export-button");
+
+    expect(exportButton[1]).toBeInTheDocument();
+
+    // mock error fetch
+
+    global.fetch = jest.fn(() => Promise.reject(new Error("Failed to fetch")));
+
+    fireEvent.click(exportButton[1] as Element);
+
+    await waitFor(() => {
+      // Assert that fetch was called
+      expect(global.fetch).toHaveBeenCalled();
+      expect(global.fetch).rejects.toThrow("Failed to fetch");
+    });
   });
 });

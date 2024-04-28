@@ -96,6 +96,7 @@ export async function updateProfile(
         gender: parsedFormData.gender,
         companyName: parsedFormData.companyName,
         birthDate: parsedFormData.birthDate,
+        hasCompletedProfile: true,
       },
       {
         headers: {
@@ -117,6 +118,7 @@ export async function updateProfile(
         gender: parsedFormData.gender,
         companyName: parsedFormData.companyName,
         birthDate: parsedFormData.birthDate.toISOString(),
+        hasCompletedProfile: true,
       },
     });
   } catch (error) {

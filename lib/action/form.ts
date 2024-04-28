@@ -305,6 +305,25 @@ export async function deleteQuestionnaire(formId: string) {
   }
 }
 
+export async function deleteQuestion(formId: string, questionId: number) {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}/question/${questionId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+      },
+      method: "DELETE",
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to delete question");
+  }
+}
+
 export async function postParticipation(formId: string) {
   const session = await auth();
   const user = session?.user;

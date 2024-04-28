@@ -1,5 +1,6 @@
 import { QuestionnaireItem, Answer } from "@/lib/context";
 import { BareForm } from "./types";
+import { processTopUp } from "./action/topup";
 
 export const BENEFIT = [
   {
@@ -45,6 +46,8 @@ export const URL = {
   withdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/all`,
   validateWithdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/validate`,
   shop: `${process.env.NEXT_PUBLIC_API_URL}/shop`,
+  topUpCreator: `${process.env.NEXT_PUBLIC_API_URL}/topup/creator`,
+  processTopUp: `${process.env.NEXT_PUBLIC_API_URL}/topup/create?type=creator`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
@@ -270,4 +273,22 @@ export const SHOP_IMAGE = [
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/wfpzalfbqoqjdffgr0nf",
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/e8mioxl5zsxkfvsv4htt",
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/rbefqvlej3svjp932bdd",
+];
+
+export const CreatorInfo = [
+  "First Name",
+  "Last Name",
+  "Gender",
+  "Email",
+  "Phone Number",
+  "Company",
+];
+
+export const RespondentInfo = [
+  "First Name",
+  "Last Name",
+  "Gender",
+  "Email",
+  "Phone Number",
+  "Company",
 ];

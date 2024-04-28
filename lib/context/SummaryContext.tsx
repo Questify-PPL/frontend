@@ -25,6 +25,8 @@ export type SummaryContextValue = SummarizeFormAsProps & {
   individualFormQuestions: Questions | undefined;
   // eslint-disable-next-line no-unused-vars
   setIndividualFormQuestions: Dispatch<SetStateAction<Questions | undefined>>;
+
+  exportData: () => Promise<void>;
 };
 
 export const SummaryContext = createContext({} as SummaryContextValue);

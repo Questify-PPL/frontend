@@ -98,14 +98,14 @@ export function InfoTable({
   return (
     <div className={`flex flex-col overflow-y-scroll`}>
       <div>
-        <div className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 hidden">
+        <div className="md:flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3 pr-6 hidden">
           {!isRespondent && (
             <>
               {tableColumnsCreator.map((column, index) => (
                 <div
                   key={`column-${index + 1}`}
                   className={` ${
-                    index === 0 ? "pl-4" : ""
+                    index === 0 ? "pl-[34px]" : ""
                   } flex text-[#32636A] justify-start text-[10px] leading-3 text-left font-normal md:text-sm text-wrap items-center ${decidePercentage(index, tableColumnsCreator)} ${index == 5 ? "md:hidden lg:flex" : ""}`}
                 >
                   {column.icon}
