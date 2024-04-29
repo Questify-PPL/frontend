@@ -598,4 +598,246 @@ describe("Summary Page", () => {
       expect(global.fetch).rejects.toThrow("Failed to fetch");
     });
   });
+
+  it('should show respondent summary page when active role is "RESPONDENT"', async () => {
+    const newSession = {
+      user: {
+        ...session.user,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue({
+      id: "2452fdc0-2b2a-4e2d-b373-612fb323017f",
+      creatorId: "4ec14456-88ed-41b0-b961-164e23506335",
+      title: "Oreo Official: Exploring Consumer Insights on Oreo Products",
+      prize: 1000000,
+      isDraft: true,
+      isPublished: true,
+      maxParticipant: null,
+      prizeType: "EVEN",
+      maxWinner: null,
+      createdAt: "2024-04-21T11:45:29.688Z",
+      updatedAt: "2024-04-21T11:45:29.688Z",
+      endedAt: null,
+      isWinnerProcessed: false,
+      totalPity: 0,
+      questions: [
+        {
+          sectionId: 112,
+          name: "Opening",
+          description:
+            "Hello! I’m Ruben. I’m a Scientist at Oreo. Through this questionnaire I’d like to know consumer’s preferences for Oreo flavors and packaging.",
+          questions: [],
+        },
+        {
+          sectionId: 113,
+          name: "Oreo Special Edition Motivation",
+          description: "Let's talk about the Oreo Special Edition.",
+          questions: [
+            {
+              sectionId: 113,
+              questionId: 221,
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: true,
+              question:
+                "What motivated your purchase of the Oreo Special Edition?",
+              description:
+                "Please share what factors influenced your decision to buy the Oreo Special Edition, such as flavor, packaging, advertising, or other reasons",
+              answer:
+                "I bought the Oreo Special Edition because I saw an advertisement on Instagram that featured a new flavor I wanted to try. The packaging design also caught my eye, and I was curious about the limited edition release.",
+            },
+            {
+              sectionId: 113,
+              questionId: 222,
+              questionType: "RADIO",
+              questionTypeName: "Radio",
+              isRequired: true,
+              question:
+                "How likely are you to recommend the Oreo Special Edition to a friend or family member?",
+              description:
+                'On a scale of 1 to 10, with 1 being "Not Likely" and 10 being "Very Likely," how likely are you to recommend the Oreo Special Edition to someone you know?',
+              choice: ["1", "2", "3", "4", "5"],
+              answer: ["5"],
+            },
+          ],
+        },
+        {
+          sectionId: 114,
+          name: "Feedback on Oreo's Online Advertising Campaigns",
+          description: "Let’s talk about Oreo’s online advertising campaigns.",
+          questions: [
+            {
+              sectionId: 114,
+              questionId: 223,
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: true,
+              question:
+                "How frequently do you recall seeing Oreo's advertisements online?",
+              description:
+                "Consider the past month and indicate how often you encountered Oreo's online ads, whether on social media, websites, or video platforms.",
+              answer: "I saw Oreo ads online about once a week.",
+            },
+            {
+              sectionId: 114,
+              questionId: 224,
+              questionType: "TEXT",
+              questionTypeName: "Long Text",
+              isRequired: true,
+              question:
+                "Which element of Oreo's online advertisements caught your attention the most?",
+              description:
+                "Please describe the features (such as visual design, message, special offers, or product showcased) of the online ads that made the most significant impression on you.",
+              answer:
+                "The vibrant colors and playful animations in Oreo ads always grab my attention. The ads are visually appealing and make me want to learn more about the product.",
+            },
+            {
+              sectionId: 114,
+              questionId: 225,
+              questionType: "CHECKBOX",
+              questionTypeName: "Checkbox",
+              isRequired: true,
+              question:
+                "Which of the following online platforms have you seen Oreo ads on?",
+              description:
+                "Please select all the online platforms where you have encountered Oreo advertisements.",
+              choice: [
+                "Facebook",
+                "Instagram",
+                "YouTube",
+                "Twitter",
+                "TikTok",
+                "Snapchat",
+              ],
+              answer: ["Instagram", "YouTube"],
+            },
+          ],
+        },
+        {
+          sectionId: 115,
+          name: "Preferences for Oreo Flavor Innovations",
+          description: "Let’s talk about Oreo flavor innovations.",
+          questions: [
+            {
+              sectionId: 115,
+              questionId: 226,
+              questionType: "TEXT",
+              questionTypeName: "Short Text",
+              isRequired: true,
+              question:
+                "Which new Oreo flavor would you be most excited to try?",
+              description:
+                "Considering potential future flavor innovations such as Matcha Green Tea, Salted Caramel, or Spicy Chili, please share which one appeals to you the most and why.",
+              answer:
+                "I would love to try the Salted Caramel Oreo flavor. The combination of sweet and salty flavors sounds delicious, and I think it would be a unique addition to the Oreo lineup.",
+            },
+            {
+              sectionId: 115,
+              questionId: 227,
+              questionType: "RADIO",
+              questionTypeName: "Radio",
+              isRequired: true,
+              question: "Which of the following Oreo flavors have you tried?",
+              description:
+                "Please select all the Oreo flavors you have tasted in the past.",
+              choice: [
+                "Original",
+                "Double Stuf",
+                "Golden",
+                "Mint",
+                "Peanut Butter",
+              ],
+              answer: ["Original"],
+            },
+          ],
+        },
+        {
+          sectionId: 116,
+          name: "Ending",
+          description:
+            "Thank you for participating in this survey. Your feedback is valuable to us. We appreciate your time and insights.",
+          questions: [],
+        },
+      ],
+      canRespond: false,
+      questionAmount: 7,
+    });
+
+    (auth as jest.Mock).mockResolvedValue(newSession);
+
+    render(
+      await Summary({
+        params: {
+          id: "1",
+        },
+      }),
+    );
+
+    expect(
+      screen.getByText(
+        "Oreo Official: Exploring Consumer Insights on Oreo Products",
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "What motivated your purchase of the Oreo Special Edition?",
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "How likely are you to recommend the Oreo Special Edition to a friend or family member?",
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "How frequently do you recall seeing Oreo's advertisements online?",
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "Which element of Oreo's online advertisements caught your attention the most?",
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "The vibrant colors and playful animations in Oreo ads always grab my attention. The ads are visually appealing and make me want to learn more about the product.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("should show error if fetch as respondent failed", async () => {
+    const newSession = {
+      user: {
+        ...session.user,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
+      new Error("Failed to fetch"),
+    );
+
+    (auth as jest.Mock).mockResolvedValue(newSession);
+
+    render(
+      await Summary({
+        params: {
+          id: "1",
+        },
+      }),
+    );
+
+    expect(
+      screen.getByText("There's an issue with fetching the data"),
+    ).toBeInTheDocument();
+  });
 });
