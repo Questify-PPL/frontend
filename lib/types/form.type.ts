@@ -110,9 +110,10 @@ export type SectionGroupedWithAnswer = SectionParent & {
   questions: QuestionGroupedWithAnswerAndChoice[];
 };
 
-export type Questions =
-  | SectionGroupedWithAnswer[]
-  | QuestionGroupedWithAnswerAndChoice[];
+export type Questions = (
+  | SectionGroupedWithAnswer
+  | QuestionGroupedWithAnswerAndChoice
+)[];
 
 export type QuestionDetailResponse = {
   questions: Questions;

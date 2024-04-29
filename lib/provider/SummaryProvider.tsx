@@ -1,7 +1,7 @@
 import { useToast } from "@/components/ui/use-toast";
 import { useCallback, useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
-import { exportForm } from "../helper";
+import { exportForm, removeUnnecessaryQuestions } from "../helper";
 import { Questions, SummarizeFormAsProps } from "../types";
 
 type SummaryProviderProps = {
@@ -51,6 +51,10 @@ export function SummaryProvider({
     setIsFinishedFetching(false);
   }, [formStatistics, formId, session?.user?.accessToken, toast]);
 
+  const individualFormQuestionsToBeShown = useMemo(() => {
+    return removeUnnecessaryQuestions(individualFormQuestions);
+  }, [individualFormQuestions]);
+
   const returns = useMemo(() => {
     return {
       formStatistics,
@@ -70,7 +74,7 @@ export function SummaryProvider({
       setIsFinishedFetching,
       formId,
       session,
-      individualFormQuestions,
+      individualFormQuestions: individualFormQuestionsToBeShown,
       setIndividualFormQuestions,
       initialActiveTab,
       exportData,
@@ -85,7 +89,7 @@ export function SummaryProvider({
     isFinishedFetching,
     formId,
     session,
-    individualFormQuestions,
+    individualFormQuestionsToBeShown,
     initialActiveTab,
     exportData,
   ]);

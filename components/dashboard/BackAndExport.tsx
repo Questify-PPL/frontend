@@ -3,7 +3,8 @@ import { LuChevronLeft, LuUpload } from "react-icons/lu";
 
 export function BackAndExport({
   onExport,
-}: Readonly<{ onExport: () => void }>) {
+  canExport,
+}: Readonly<{ onExport: () => void; canExport: boolean }>) {
   const router = useRouter();
 
   return (
@@ -19,16 +20,18 @@ export function BackAndExport({
           Back
         </p>
       </button>
-      <button
-        className="flex gap-1 items-center"
-        onClick={onExport}
-        data-testid="export-button"
-      >
-        <LuUpload className="text-[#95B0B4] h-4 w-4" />
-        <p className="text-[#95B0B4] text-[14px] font-semibold leading-normal">
-          Export
-        </p>
-      </button>
+      {canExport && (
+        <button
+          className="flex gap-1 items-center"
+          onClick={onExport}
+          data-testid="export-button"
+        >
+          <LuUpload className="text-[#95B0B4] h-4 w-4" />
+          <p className="text-[#95B0B4] text-[14px] font-semibold leading-normal">
+            Export
+          </p>
+        </button>
+      )}
     </div>
   );
 }
