@@ -19,7 +19,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
   function onClick() {
     !form.isCompleted
       ? router.push(`questionnaire/join/${form.id}`)
-      : router.push(`response/`); // This should be directed to report summary
+      : router.push(`summary/form/${form.id}`); // This should be directed to report summary
   }
 
   return (

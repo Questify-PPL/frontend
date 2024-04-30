@@ -178,7 +178,9 @@ export async function getCompletedQuestionnaireForRespondent(formId: string) {
     throw new Error("Failed to get questionnaire");
   }
 
-  return await response.json();
+  const result = await response.json();
+
+  return result.data;
 }
 
 export async function getSummaries(formId: string) {

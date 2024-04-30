@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { SummaryWrapper } from "@/components/creator-side/summary/SummaryWrapper";
 import TertiaryNavbar from "@/components/dashboard/TertiaryNavbar";
+import { SummaryResponseWrapper } from "@/components/respondent-side/summary/SummaryResponseWrapper";
 import {
   getCompletedQuestionnaireForRespondent,
   getInitialActiveTab,
@@ -51,7 +52,7 @@ export default async function Summary({ params }: Readonly<Props>) {
       </header>
       <div className="flex h-full w-full absolute">
         {session.user.activeRole === UserRoleEnum.Respondent ? (
-          <></>
+          <SummaryResponseWrapper questions={form.questions} />
         ) : (
           <SummaryWrapper
             formStatistics={form.formStatistics}

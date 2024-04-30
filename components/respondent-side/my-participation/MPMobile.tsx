@@ -16,14 +16,15 @@ export function MPMobile({
   function onClick() {
     !form.isCompleted
       ? router.push(`questionnaire/join/${form.id}`)
-      : router.push(`response/`); // This should be directed to report summary
+      : router.push(`summary/form/${form.id}`); // This should be directed to report summary
   }
 
   return (
     <div
-      className={`flex flex-row justify-between items-center justify-center ${className} gap-[60px]`}
+      className={`flex flex-row justify-between items-center ${className} gap-[60px]`}
       onClick={onClick}
       data-testid={`mp-mobile-${form.id}`}
+      role="none"
     >
       <div className="flex flex-col justify-center">
         <div className="flex flex-row px-[5px] gap-[10px]">
