@@ -12,13 +12,13 @@ export function TerminusRenderer({
   const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
   const label = sectionKey.charAt(0) + sectionKey.slice(1).toLowerCase();
   const section = questionnaire.find(
-    (item) => item.type === "SECTION" && item.sectionName === sectionKey
+    (item) => item.type === "SECTION" && item.sectionName === sectionKey,
   ) as Section | undefined;
 
   if (!section) return null;
 
   const handleSectionDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const updatedQuestionnaire = questionnaire.map((item) => {
       if (item.type === "SECTION" && item.sectionName === sectionKey) {

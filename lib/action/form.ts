@@ -228,6 +228,12 @@ export async function getSummaries(formId: string) {
   };
 }
 
+export async function getInitialActiveTab(): Promise<
+  "summary" | "question" | "individual"
+> {
+  return Promise.resolve("summary");
+}
+
 export async function patchQuestionnaire(
   formId: string,
   data: any[] | QuestionnaireItem[],

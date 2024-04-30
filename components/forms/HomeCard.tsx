@@ -37,7 +37,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
   const router = useRouter();
 
   const toFormShop = () => {
-    router.push("/home");
+    router.push("/shop");
   };
   const toFormPromo = () => {
     router.push("/home");
@@ -155,7 +155,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
             <LuCoins className="w-4 h-4 flex-shrink-0 text-[#E2B720]" />
             <div className="flex-1 flex flex-col gap-0 justify-start items-start">
               <div className="text-[#1D245] font-bold text-[16px] leading-normal">
-                22000
+                {creditsBalance}
               </div>
               <div className="text-[#1D245] font-semibold text-[14px] leading-normal">
                 credits

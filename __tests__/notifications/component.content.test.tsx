@@ -8,14 +8,14 @@ describe("NotificationCard", () => {
       <NotificationCard
         title="Congratulations!"
         message="You have won questionnaire A. We have added the price to your credit."
-      />
+      />,
     );
 
     expect(screen.getByText("Congratulations!")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "You have won questionnaire A. We have added the price to your credit."
-      )
+        "You have won questionnaire A. We have added the price to your credit.",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -25,8 +25,8 @@ describe("NotificationCard", () => {
     expect(screen.queryByText("Congratulations!")).toBeNull();
     expect(
       screen.queryByText(
-        "You have won questionnaire A. We have added the price to your credit."
-      )
+        "You have won questionnaire A. We have added the price to your credit.",
+      ),
     ).toBeNull();
   });
 });

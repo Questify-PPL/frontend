@@ -3,6 +3,7 @@ import { SummaryWrapper } from "@/components/creator-side/summary/SummaryWrapper
 import TertiaryNavbar from "@/components/dashboard/TertiaryNavbar";
 import {
   getCompletedQuestionnaireForRespondent,
+  getInitialActiveTab,
   getSummaries,
 } from "@/lib/action/form";
 import { UserRoleEnum } from "@/lib/types/auth";
@@ -19,6 +20,7 @@ export default async function Summary({ params }: Readonly<Props>) {
   const session = (await auth()) as Session;
 
   const form = await getQuestionnaireSummmary();
+  const initialActiveTab = await getInitialActiveTab();
 
   async function getQuestionnaireSummmary() {
     try {
@@ -57,6 +59,7 @@ export default async function Summary({ params }: Readonly<Props>) {
             allIndividuals={form.allIndividuals}
             formId={id}
             session={session}
+            initialActiveTab={initialActiveTab}
           />
         )}
       </div>

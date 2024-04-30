@@ -1,6 +1,6 @@
 "use client";
 
-import { FormsAsProps } from "@/lib/types";
+import { FormsAsProps, SessionAsProps } from "@/lib/types";
 import { useRouter } from "next/navigation";
 
 import Image from "next/image";
@@ -13,10 +13,11 @@ import { Fragment } from "react";
 export default function RespondentHomePage({
   forms,
   isRespondent,
+  session,
 }: Readonly<
   FormsAsProps & {
     isRespondent: boolean;
-  }
+  } & SessionAsProps
 >) {
   const router = useRouter();
 
@@ -40,7 +41,7 @@ export default function RespondentHomePage({
               />
             </div>
             <div className="flex flex-row gap-1">
-              You&apos;ve responded 22 Questionnaire (QRE)!
+              You&apos;ve responded {forms.length} Questionnaire (QRE)!
             </div>
           </div>
           <Button
@@ -54,7 +55,11 @@ export default function RespondentHomePage({
         <RespondentNav className="" state="home"></RespondentNav>
 
         <div className="flex flex-col w-full flex-1">
-          <HomeCard className="w-full" isRespondent={isRespondent}></HomeCard>
+          <HomeCard
+            className="w-full"
+            isRespondent={isRespondent}
+            creditsBalance={session.user.credit}
+          />
 
           {forms && forms.length !== 0 && (
             <>
