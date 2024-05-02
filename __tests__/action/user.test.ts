@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { UserRole } from "@/lib/types/auth/user";
 import { logoutUrl as ssoLogoutUrl } from "@/lib/services";
 import axios from "axios";
+import { createReport } from "@/lib/action/user";
 
 jest.mock("@/auth", () => {
   return {
@@ -29,7 +30,7 @@ describe("Authenticate action", () => {
     const errorMessage = "error";
     (signIn as jest.Mock).mockRejectedValue(new Error(errorMessage));
     await expect(authenticate(undefined, new FormData())).rejects.toThrow(
-      errorMessage,
+      errorMessage
     );
   });
 });
@@ -275,5 +276,37 @@ describe("Update user information", () => {
     expect(result).toEqual({
       message: "Failed to update profile",
     });
+  });
+});
+
+describe("Create Report", () => {
+  it("should create report with valid information", async () => {
+    const expectedResponse = {
+      status: 200,
+    };
+    mockedAxios.post.mockResolvedValue(expectedResponse);
+
+    const response = await createReport({
+      reportToId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+      formId: "eaf76e52-4d64-4085-a6d1-c7058d402d40",
+      message: "creatornya gk jelas",
+    });
+
+    expect(response).toBeUndefined();
+  });
+
+  it("should return error message when creating report with invalid information", async () => {
+    const expectedResponse = {
+      status: 400,
+    };
+    mockedAxios.post.mockResolvedValue(expectedResponse);
+
+    const response = await createReport({
+      reportToId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+      formId: "eaf76e52-4d64-4085-a6d1-c7058d402d40",
+      message: "creatornya gk jelas",
+    });
+
+    expect(response).toEqual({ message: "Failed to create report" });
   });
 });
