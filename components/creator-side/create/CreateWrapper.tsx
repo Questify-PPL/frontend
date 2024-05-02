@@ -8,7 +8,6 @@ import { Fragment, useState } from "react";
 import { DraftContent } from "./DraftContent";
 import { FormsAsProps } from "@/lib/types";
 
-
 export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
   const [createModalState, setCreateModalState] = useState("hidden");
 

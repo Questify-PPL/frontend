@@ -134,12 +134,12 @@ export default function FormWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -170,7 +170,7 @@ export default function FormWrapper({ id }: { id: string }) {
         setActiveQuestionId(
           lastQuestionnaireItem.questions[
             lastQuestionnaireItem.questions.length - 1
-          ].questionId
+          ].questionId,
         );
       }
     } catch (error) {

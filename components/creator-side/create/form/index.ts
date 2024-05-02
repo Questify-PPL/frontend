@@ -8,4 +8,4 @@ export * from "./AddQuestionModal";
 export * from "./SavedAsDraftModal";
 export * from "./PublishNowModal";
 export * from "./Renderer";
-export * from "./OpeningChildren"
+export * from "./OpeningChildren";

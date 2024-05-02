@@ -48,6 +48,10 @@ export const URL = {
   shop: `${process.env.NEXT_PUBLIC_API_URL}/shop`,
   topUpCreator: `${process.env.NEXT_PUBLIC_API_URL}/topup/creator`,
   processTopUp: `${process.env.NEXT_PUBLIC_API_URL}/topup/create?type=creator`,
+  report: {
+    create: `${process.env.NEXT_PUBLIC_API_URL}/report`,
+    update: (id: string) =>  `${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
+  }
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [

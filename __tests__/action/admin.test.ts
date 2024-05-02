@@ -4,6 +4,7 @@ import {
   updateTopupInvoiceStatus,
   updateWithdrawInvoiceStatus,
 } from "@/lib/action/admin";
+import { updateReport } from '@/lib/action/user';
 import { mergeInvoicesByDate } from "@/lib/action/utils/mergeInvoice";
 import axios from "axios";
 
@@ -345,5 +346,35 @@ describe("Invoices", () => {
         payment: "Bank Transfer",
       },
     ]);
+  });
+});
+
+describe('Update Report', () => {
+  it("should update report with valid information", async () => {
+    const expectedResponse = {
+      status: 200,
+    };
+    mockedAxios.patch.mockResolvedValue(expectedResponse);
+
+    const response = await updateReport({
+      reportId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+      isApproved: true,
+    });
+
+    expect(response).toBeUndefined();
+  });
+
+  it("should return error message when update report with invalid information", async () => {
+    const expectedResponse = {
+      status: 400,
+    };
+    mockedAxios.patch.mockResolvedValue(expectedResponse);
+
+    const response = await updateReport({
+      reportId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+      isApproved: true,
+    });
+
+    expect(response).toEqual({ message: "Failed to update report" });
   });
 });

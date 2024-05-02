@@ -3,7 +3,7 @@ import { DefaultQuestion, QuestionnaireItem, Section } from "../context";
 import { QuestionGet, QuestionnaireGetItem, SectionGet } from "../types";
 
 export function transformData(
-  data: QuestionnaireGetItem[]
+  data: QuestionnaireGetItem[],
 ): QuestionnaireItem[] {
   return data.map((item) => {
     if (

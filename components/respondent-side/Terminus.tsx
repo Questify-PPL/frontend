@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import ClickEnter from "@/components/ui/click-enter";
 import { Card } from "@/components/ui/card";
 import { Loading } from "../common";
 
@@ -44,7 +43,6 @@ const Terminus: React.FC<TerminusProps> = ({
         </div>
         <div className="text-base md:text-xl">{terminusText}</div>
         <div className="max-w-[330px] w-full flex flex-col gap-1">
-          <ClickEnter />
           <Button
             className="gap-2"
             type={buttonType}
