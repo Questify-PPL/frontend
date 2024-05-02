@@ -1,29 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { format, parseISO } from "date-fns";
 import { LuCheckCircle2, LuClock, LuCoins, LuXCircle } from "react-icons/lu";
+import { InvoiceItem } from "@/lib/types/topup.type";
 
-const TopUpInfoTable = ({ invoiceItems }: { invoiceItems: any[] }) => {
+enum Status {
+  APPROVED = "APPROVED",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
+}
+
+const statusConfig = {
+  [Status.APPROVED]: {
+    style: "bg-[#DDFAD6] text-[#39A014]",
+    Icon: LuCheckCircle2,
+  },
+  [Status.PENDING]: {
+    style: "bg-[#FDF8EA] text-[#E2B720]",
+    Icon: LuClock,
+  },
+  [Status.REJECTED]: {
+    style: "bg-[#FDEDEA] text-[#E24F20]",
+    Icon: LuXCircle,
+  },
+};
+
+const TopUpInfoTable = ({ invoiceItems }: { invoiceItems: InvoiceItem[] }) => {
   const hasInvoices = invoiceItems && invoiceItems.length > 0;
-  const statusStyles = {
-    APPROVED: "bg-[#DDFAD6] text-[#39A014]",
-    PENDING: "bg-[#FDF8EA] text-[#E2B720]",
-    REJECTED: "bg-[#FDEDEA] text-[#E24F20]",
-  };
 
-  const [formattedDates, setFormattedDates] = useState<{
-    [key: string]: string;
-  }>({});
-
-  useEffect(() => {
+  const formattedDates = useMemo(() => {
     const newFormattedDates: { [key: string]: string } = {};
+
     invoiceItems.forEach((item) => {
-      // Ensure dates are parsed in a universal format like ISO and then formatted
       newFormattedDates[item.id] = format(
         parseISO(item.createdAt),
         "dd/MM/yyyy",
       );
     });
-    setFormattedDates(newFormattedDates);
+
+    return newFormattedDates;
   }, [invoiceItems]);
 
   return (
@@ -62,15 +76,15 @@ const TopUpInfoTable = ({ invoiceItems }: { invoiceItems: any[] }) => {
               </td>
               <td className="w-1/3 px-6 py-4 whitespace-nowrap">
                 <span
-                  className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${statusStyles[item.status as keyof typeof statusStyles]}`}
+                  className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${statusConfig[item.status as keyof typeof statusConfig].style}`}
                 >
-                  <span
-                    className={`pr-1 py-1 ${statusStyles[item.status as keyof typeof statusStyles]}`}
-                  >
-                    {item.status === "APPROVED" && <LuCheckCircle2 />}
-                    {item.status === "PENDING" && <LuClock />}
-                    {item.status === "REJECTED" && <LuXCircle />}
-                  </span>
+                  {React.createElement(
+                    statusConfig[item.status as keyof typeof statusConfig].Icon,
+                    {
+                      className: "pr-1 py-1",
+                      style: { verticalAlign: "middle" },
+                    },
+                  )}
                   {item.status}
                 </span>
               </td>

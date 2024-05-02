@@ -18,9 +18,6 @@ export async function getInvoiceCreator() {
 
   const res = await response.json();
 
-  // console.log(res);
-  // console.log(res.data);
-
   if (response.status > 400) {
     throw new Error(res.message);
   }

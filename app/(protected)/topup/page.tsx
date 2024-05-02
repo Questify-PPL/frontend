@@ -11,7 +11,6 @@ export default async function TopUp() {
     let res = {} as TopUpFetchResponse;
 
     res = await getInvoiceCreator();
-    console.log(res);
 
     return res;
   }
