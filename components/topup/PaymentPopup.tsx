@@ -9,7 +9,7 @@ const PaymentPopup = ({
   amount,
 }: {
   onClose: () => void;
-  amount: number;
+  amount: number | undefined;
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
@@ -25,16 +25,16 @@ const PaymentPopup = ({
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
+    if (amount === undefined || amount < 10000) {
+      toast({
+        title: "Error",
+        description: "Please enter the correct amount",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    formData.append("amount", amount.toString());
-    formData.append("payment", "BCA");
-    formData.append("exchange", "Top Up");
-
-    if (file) {
-      formData.append("buktiPembayaran", file);
-      console.log("FormData:", formData.get("buktiPembayaran"));
-    } else {
+    if (!file) {
       toast({
         title: "Error",
         description: "Please upload your proof of payment",
@@ -42,6 +42,12 @@ const PaymentPopup = ({
       });
       return;
     }
+    const formData = new FormData();
+
+    formData.append("amount", (amount ?? 0).toString());
+    formData.append("payment", "BCA");
+    formData.append("exchange", "Top Up");
+    formData.append("buktiPembayaran", file);
 
     try {
       const response = await processTopUp(formData);
@@ -84,7 +90,9 @@ const PaymentPopup = ({
                 className="text-[#E2B720]"
                 style={{ width: "1.25rem", height: "1.25rem" }}
               />
-              <span className="ml-1">{amount.toLocaleString()} credits</span>
+              <span className="ml-1">
+                {(amount ?? 0).toLocaleString()} credits
+              </span>
             </div>
           </div>
           <div className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 p-4 w-full max-w-xs">
@@ -97,6 +105,7 @@ const PaymentPopup = ({
               type="file"
               className="text-center w-full text-sm"
               onChange={handleFileChange}
+              accept="image/png, image/jpeg"
             />
           </div>
           <button
