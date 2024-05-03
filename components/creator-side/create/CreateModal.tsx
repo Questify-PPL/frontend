@@ -12,6 +12,8 @@ import { CreateQuestionnaire } from "@/lib/schema/create-questionnaire.schema";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { QuestionGroup as qg } from "@/lib/services/form";
+import { QuestionnaireItem } from "@/lib/context";
 
 interface CreateModalProps {
   className?: string;
@@ -57,31 +59,19 @@ export function CreateModal({
       const initSection = [
         {
           type: "SECTION",
-          sectionName: "OPENING",
+          sectionId: null,
+          sectionName: qg.OPENING,
           sectionDescription: "",
-          questions: [
-            {
-              questionType: "TEXT",
-              questionTypeName: "Short Text",
-              isRequired: false,
-              question: "What are you majoring in?",
-            },
-          ],
+          questions: [],
         },
         {
           type: "SECTION",
-          sectionName: "ENDING",
+          sectionId: null,
+          sectionName: qg.ENDING,
           sectionDescription: "",
-          questions: [
-            {
-              questionType: "TEXT",
-              questionTypeName: "Short Text",
-              isRequired: false,
-              question: "Was the questionnaire helpful?",
-            },
-          ],
+          questions: [],
         },
-      ];
+      ] as QuestionnaireItem[];
       await patchQuestionnaire(formId, initSection);
       router.push(`/create/form/${formId}`);
     } catch (error) {

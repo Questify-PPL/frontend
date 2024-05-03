@@ -5,4 +5,4 @@ export const UpdateReport = z.object({
   isApproved: z.boolean(),
 });
 
-export type UpdateReport = Zod.infer<typeof UpdateReport>
+export type UpdateReport = Zod.infer<typeof UpdateReport>;

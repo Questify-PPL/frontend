@@ -52,7 +52,7 @@ export function QuestionRenderer(q: Question, index: number) {
         <Text
           role="CREATOR"
           numbering={index + 1}
-          questionId={q.questionId}
+          questionId={q.questionId as number}
           questionTypeName={q.questionTypeName}
           isRequired={q.isRequired}
           question={q.question}
@@ -64,7 +64,7 @@ export function QuestionRenderer(q: Question, index: number) {
         <Checkboxes
           role="CREATOR"
           numbering={index + 1}
-          questionId={q.questionId}
+          questionId={q.questionId as number}
           questionTypeName={q.questionTypeName}
           isRequired={q.isRequired}
           question={q.question}
@@ -76,7 +76,7 @@ export function QuestionRenderer(q: Question, index: number) {
         <RadioButton
           role="CREATOR"
           numbering={index + 1}
-          questionId={q.questionId}
+          questionId={q.questionId as number}
           questionTypeName={q.questionTypeName}
           isRequired={q.isRequired}
           question={q.question}

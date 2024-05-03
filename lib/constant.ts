@@ -50,8 +50,8 @@ export const URL = {
   processTopUp: `${process.env.NEXT_PUBLIC_API_URL}/topup/create?type=creator`,
   report: {
     create: `${process.env.NEXT_PUBLIC_API_URL}/report`,
-    update: (id: string) =>  `${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
-  }
+    update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
+  },
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [

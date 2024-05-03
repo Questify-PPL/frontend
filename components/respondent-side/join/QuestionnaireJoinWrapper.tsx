@@ -149,7 +149,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           <Text
             role="RESPONDENT"
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -164,7 +164,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           <Checkboxes
             role="RESPONDENT"
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -177,7 +177,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           <RadioButton
             role="RESPONDENT"
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -356,7 +356,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                             ? section.questions.map((question, index) => {
                                 const renderedQuestion = findQuestionById(
                                   questionnaire,
-                                  question.questionId,
+                                  question.questionId as number,
                                 ) as Question;
                                 return renderQuestion(renderedQuestion, index);
                               })
