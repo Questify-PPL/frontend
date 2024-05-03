@@ -4,6 +4,13 @@ import { PaymentInfo } from "@/components/admin-side/AdminHomePage";
 import { Invoice } from "@/lib/types/admin";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { getReports } from "@/lib/action/admin";
+
+jest.mock("@/lib/action/admin", () => {
+  return {
+    getReports: jest.fn(),
+  };
+});
 
 describe("PaymentInfo Component", () => {
   const invoices: Invoice[] = [
@@ -88,10 +95,10 @@ describe("PaymentInfo Component", () => {
 });
 
 describe("Reports Page", () => {
-  test("renders the Reports page without any issues", () => {
-    render(<ReportsPage />);
-
-    expect(screen.getByText("Report")).toBeInTheDocument();
+  test("renders the Reports page without any issues", async () => {
+    (getReports as jest.Mock).mockResolvedValue([]);
+    render(await ReportsPage());
+    expect(screen.getByTestId("admin-homepage")).toBeInTheDocument();
   });
 });
 

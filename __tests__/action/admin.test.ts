@@ -1,11 +1,14 @@
 import {
+  getReports,
   getTopupInvoices,
   getWithdrawalInvoices,
+  updateReport,
   updateTopupInvoiceStatus,
   updateWithdrawInvoiceStatus,
 } from "@/lib/action/admin";
-import { updateReport } from "@/lib/action/user";
 import { mergeInvoicesByDate } from "@/lib/action/utils/mergeInvoice";
+import { ReportStatus } from "@/lib/types/admin/report";
+import { UserRole } from "@/lib/types/auth";
 import axios from "axios";
 
 jest.mock("axios");
@@ -349,32 +352,151 @@ describe("Invoices", () => {
   });
 });
 
-describe("Update Report", () => {
-  it("should update report with valid information", async () => {
-    const expectedResponse = {
-      status: 200,
-    };
-    mockedAxios.patch.mockResolvedValue(expectedResponse);
-
-    const response = await updateReport({
-      reportId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
-      isApproved: true,
-    });
-
-    expect(response).toBeUndefined();
+describe("Reports", () => {
+  beforeEach(() => {
+    mockedAxios.patch.mockClear();
   });
 
-  it("should return error message when update report with invalid information", async () => {
-    const expectedResponse = {
-      status: 400,
+  it("should return reports", async () => {
+    const response = {
+      status: 200,
+      data: [
+        {
+          id: "a56396b9-86bf-4174-bed2-ad4401bcb785",
+          toUserId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+          fromUserId: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+          formId: "6ab1a40b-2713-4cba-ada2-56e09c0c9dda",
+          message: "creatornya gk jelas",
+          status: "REJECTED",
+          createdAt: "2024-04-30T07:41:34.806Z",
+          fromUser: {
+            id: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+            firstName: "Creator",
+            lastName: "",
+            email: "creator@questify.com",
+            roles: ["CREATOR"],
+          },
+          toUser: {
+            id: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+            firstName: "Respondent",
+            lastName: "Questify 2",
+            email: "respondent2@questify.com",
+            roles: ["RESPONDENT"],
+          },
+          form: {
+            id: "6ab1a40b-2713-4cba-ada2-56e09c0c9dda",
+            creatorId: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+          },
+        },
+      ],
     };
-    mockedAxios.patch.mockResolvedValue(expectedResponse);
 
-    const response = await updateReport({
-      reportId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
-      isApproved: true,
+    mockedAxios.get.mockResolvedValueOnce(response);
+    const invoices = await getReports();
+
+    expect(invoices).toEqual(response.data);
+  });
+
+  it("should throw error when request failed", async () => {
+    const response = {
+      status: 400,
+      data: [],
+    };
+
+    mockedAxios.get.mockResolvedValueOnce(response);
+
+    await expect(getReports()).rejects.toThrow(
+      new Error("Failed to fetch reports"),
+    );
+  });
+
+  it("should update report status succesfully", async () => {
+    const report = {
+      id: "a56396b9-86bf-4174-bed2-ad4401bcb785",
+      toUserId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+      fromUserId: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+      formId: "6ab1a40b-2713-4cba-ada2-56e09c0c9dda",
+      message: "creatornya gk jelas",
+      status: ReportStatus.PENDING,
+      createdAt: "2024-04-30T07:41:34.806Z",
+      fromUser: {
+        id: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+        firstName: "Creator",
+        lastName: "",
+        email: "creator@questify.com",
+        roles: ["CREATOR"] as UserRole[],
+      },
+      toUser: {
+        id: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+        firstName: "Respondent",
+        lastName: "Questify 2",
+        email: "respondent2@questify.com",
+        roles: ["RESPONDENT"] as UserRole[],
+        _count: {
+          ReportTo: 4,
+        },
+      },
+      form: {
+        id: "6ab1a40b-2713-4cba-ada2-56e09c0c9dda",
+        creatorId: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+      },
+    };
+
+    const response = {
+      data: {
+        statusCode: 200,
+      },
+    };
+
+    mockedAxios.patch.mockResolvedValueOnce(response);
+
+    await updateReport(report, ReportStatus.APPROVED);
+
+    expect(mockedAxios.patch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error message when update report failed", async () => {
+    const report = {
+      id: "a56396b9-86bf-4174-bed2-ad4401bcb785",
+      toUserId: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+      fromUserId: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+      formId: "6ab1a40b-2713-4cba-ada2-56e09c0c9dda",
+      message: "creatornya gk jelas",
+      status: ReportStatus.PENDING,
+      createdAt: "2024-04-30T07:41:34.806Z",
+      fromUser: {
+        id: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+        firstName: "Creator",
+        lastName: "",
+        email: "creator@questify.com",
+        roles: ["CREATOR"] as UserRole[],
+      },
+      toUser: {
+        id: "2dfe14d5-85a8-45d3-8e69-a9955e98dd09",
+        firstName: "Respondent",
+        lastName: "Questify 2",
+        email: "respondent2@questify.com",
+        roles: ["RESPONDENT"] as UserRole[],
+        _count: {
+          ReportTo: 4,
+        },
+      },
+      form: {
+        id: "6ab1a40b-2713-4cba-ada2-56e09c0c9dda",
+        creatorId: "08312d19-51d1-45cc-a4f6-e93786efa59a",
+      },
+    };
+
+    const response = {
+      data: {
+        statusCode: 500,
+      },
+    };
+
+    mockedAxios.patch.mockResolvedValueOnce(response);
+
+    await expect(updateReport(report, ReportStatus.APPROVED)).resolves.toEqual({
+      message: "Failed to update report",
     });
-
-    expect(response).toEqual({ message: "Failed to update report" });
   });
 });

@@ -49,6 +49,7 @@ export const URL = {
   topUpCreator: `${process.env.NEXT_PUBLIC_API_URL}/topup/creator`,
   processTopUp: `${process.env.NEXT_PUBLIC_API_URL}/topup/create?type=creator`,
   report: {
+    all: `${process.env.NEXT_PUBLIC_API_URL}/report`,
     create: `${process.env.NEXT_PUBLIC_API_URL}/report`,
     update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
   },
