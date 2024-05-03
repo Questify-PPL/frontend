@@ -4,7 +4,7 @@ import {
   updateTopupInvoiceStatus,
   updateWithdrawInvoiceStatus,
 } from "@/lib/action/admin";
-import { updateReport } from '@/lib/action/user';
+import { updateReport } from "@/lib/action/user";
 import { mergeInvoicesByDate } from "@/lib/action/utils/mergeInvoice";
 import axios from "axios";
 
@@ -349,7 +349,7 @@ describe("Invoices", () => {
   });
 });
 
-describe('Update Report', () => {
+describe("Update Report", () => {
   it("should update report with valid information", async () => {
     const expectedResponse = {
       status: 200,

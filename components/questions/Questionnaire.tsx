@@ -44,7 +44,7 @@ export function Questionnaire({ status = false }) {
           <Text
             role={currentRole}
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -57,7 +57,7 @@ export function Questionnaire({ status = false }) {
           <Checkboxes
             role={currentRole}
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -69,7 +69,7 @@ export function Questionnaire({ status = false }) {
           <RadioButton
             role={currentRole}
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}

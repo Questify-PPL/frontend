@@ -309,3 +309,105 @@ describe("Delete Question Functionality", () => {
     await screen.findByText("Contents");
   });
 });
+
+describe("Duplicate Question Functionality", () => {
+  test("duplicate question button cant be found in opening", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    expect(screen.queryByTestId("duplicate-question")).toBeNull();
+  });
+
+  test("renders duplicate question button", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    await screen.findByTestId("duplicate-question");
+  });
+
+  test("renders duplicate question button and duplicate", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    await screen.findByTestId("duplicate-question");
+    const duplicateButton = screen.getByTestId(
+      "duplicate-question",
+    ) as HTMLInputElement;
+    duplicateButton.click();
+    expect(patchQuestionnaire).toHaveBeenCalled();
+    await screen.findByText("Contents");
+  });
+});
+
+describe("Move Up Question Functionality", () => {
+  test("move up question button cant be found in opening", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    expect(screen.queryByTestId("move-up-question")).toBeNull();
+  });
+
+  test("renders move up question button and move up question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    await screen.findByTestId("move-up-question");
+    const moveUpButton = screen.getByTestId(
+      "move-up-question",
+    ) as HTMLInputElement;
+    moveUpButton.click();
+    expect(patchQuestionnaire).toHaveBeenCalled();
+    await screen.findByText("Contents");
+  });
+});
+
+describe("Move Down Question Functionality", () => {
+  test("move down question button cant be found in opening", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    expect(screen.queryByTestId("move-down-question")).toBeNull();
+  });
+
+  test("renders move down question button and move down question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    contentButton.click();
+    await screen.findByTestId("move-down-question");
+    const moveDownButton = screen.getByTestId(
+      "move-down-question",
+    ) as HTMLInputElement;
+    moveDownButton.click();
+    expect(patchQuestionnaire).toHaveBeenCalled();
+    await screen.findByText("Contents");
+  });
+});

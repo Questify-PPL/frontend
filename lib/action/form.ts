@@ -238,7 +238,7 @@ export async function getInitialActiveTab(): Promise<
 
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[],
+  data: QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;

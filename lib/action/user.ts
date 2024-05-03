@@ -19,7 +19,7 @@ const logoutRedirectUrl = "/";
 
 export async function authenticate(
   prevState: string | undefined,
-  formData: FormData
+  formData: FormData,
 ) {
   try {
     await signIn("credentials", formData);
@@ -74,7 +74,7 @@ export async function getUserCredit() {
 
 export async function updateProfile(
   prevState: UpdateState,
-  formData: FormData
+  formData: FormData,
 ) {
   try {
     const data = {
@@ -105,7 +105,7 @@ export async function updateProfile(
           Authorization: `Bearer ${user?.accessToken}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.status !== 200) {
@@ -151,7 +151,7 @@ export async function createReport(createReport: CreateReport) {
           Authorization: `Bearer ${user?.accessToken}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.status !== 200) {
@@ -179,7 +179,7 @@ export async function updateReport(updateReport: UpdateReport) {
           Authorization: `Bearer ${user?.accessToken}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (response.status !== 200) {

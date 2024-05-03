@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { Questionnaire } from "@/components/questions";
 import { DefaultQuestion, QuestionnaireItem, Section } from "../context";
 import { QuestionGet, QuestionnaireGetItem, SectionGet } from "../types";
 
@@ -7,8 +8,10 @@ export function transformData(
 ): QuestionnaireItem[] {
   return data.map((item) => {
     if (
-      (item as SectionGet).sectionId !== null &&
-      (item as SectionGet).questions
+      item &&
+      "sectionId" in item &&
+      item.sectionId !== null &&
+      "questions" in item
     ) {
       const section = item as SectionGet;
       const questions = section.questions.map((question) => ({
@@ -73,6 +76,11 @@ export enum QuestionTypeNames {
   NUMBER = "Number",
   FILE_UPLOAD = "File Upload",
   LINK = "Link",
+}
+
+export enum QuestionGroup {
+  OPENING = "Opening",
+  ENDING = "Ending",
 }
 
 const questionTemplates: { [key in QuestionTypeNames]: any } = {

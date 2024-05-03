@@ -30,7 +30,7 @@ describe("Authenticate action", () => {
     const errorMessage = "error";
     (signIn as jest.Mock).mockRejectedValue(new Error(errorMessage));
     await expect(authenticate(undefined, new FormData())).rejects.toThrow(
-      errorMessage
+      errorMessage,
     );
   });
 });

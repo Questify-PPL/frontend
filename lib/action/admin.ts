@@ -61,7 +61,7 @@ export async function getInvoices(): Promise<Invoice[]> {
 
 export async function updateTopupInvoiceStatus(
   invoice: Invoice,
-  value: InvoiceStatus
+  value: InvoiceStatus,
 ) {
   try {
     const sesison = (await auth()) as Session;
@@ -77,7 +77,7 @@ export async function updateTopupInvoiceStatus(
             Authorization: `Bearer ${admin?.accessToken}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       )
     ).data;
     if (response.statusCode !== 200)
@@ -91,7 +91,7 @@ export async function updateTopupInvoiceStatus(
 
 export async function updateWithdrawInvoiceStatus(
   invoice: Invoice,
-  value: InvoiceStatus
+  value: InvoiceStatus,
 ) {
   try {
     const sesison = (await auth()) as Session;
@@ -107,7 +107,7 @@ export async function updateWithdrawInvoiceStatus(
             Authorization: `Bearer ${admin?.accessToken}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       )
     ).data;
     if (response.statusCode !== 200)

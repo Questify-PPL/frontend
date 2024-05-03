@@ -130,7 +130,7 @@ export type QuestionGet = {
 };
 
 export type SectionGet = {
-  sectionId: number;
+  sectionId: number | null;
   name: string;
   description: string;
   questions: QuestionGet[];
