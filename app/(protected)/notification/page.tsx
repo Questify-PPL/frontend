@@ -1,8 +1,18 @@
 "use client";
 import { motion } from "framer-motion";
 import NotificationCard from "@/components/notification/NotificationCard";
+import React, { useState } from "react";
+import NotificationModal from "@/components/notification/NotificationModal";
 
-export default async function notification() {
+export default function notification() {
+  // const [modalOpen, setModalOpen] = useState(false);
+
+  // const toggleModal = () => {
+  //   setModalOpen(!modalOpen);
+  // };
+
+  // uncomment if you want to see the UI
+
   return (
     <div className="flex flex-col">
       <div>
@@ -24,6 +34,11 @@ export default async function notification() {
           }
         ></NotificationCard>
       </div>
+
+      {/* <button onClick={toggleModal}>Toggle Modal</button>
+      <NotificationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} /> Render NotificationModal */}
     </div>
+
+    // uncomment if you want to see the modal
   );
 }
