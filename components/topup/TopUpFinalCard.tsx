@@ -4,14 +4,14 @@ import React from "react";
 import { LuPlusCircle, LuUploadCloud } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 
-interface HomeNavProps {
+interface TopUpFinalCardProps {
   isOpen: boolean;
   onClose: () => void;
 
   onCancel?: () => void;
 }
 
-const HomeNav: React.FC<HomeNavProps> = ({ isOpen, onClose }) => {
+const TopUpFinalCard: React.FC<TopUpFinalCardProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -42,4 +42,4 @@ const HomeNav: React.FC<HomeNavProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default HomeNav;
+export default TopUpFinalCard;

@@ -3,7 +3,7 @@
 import { createContext } from "react";
 
 export interface Question {
-  questionId: number;
+  questionId: number | null;
   questionType: string;
   questionTypeName: string;
   isRequired: boolean;
@@ -19,7 +19,7 @@ export interface Answer {
 
 export interface Section {
   type: "SECTION";
-  sectionId: number;
+  sectionId: number | null;
   sectionName: string;
   sectionDescription: string;
   questions: Question[];

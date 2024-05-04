@@ -1,46 +1,47 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import {
+  AddQuestionModal,
   FormLeftMenu,
+  FormLowerMenu,
   FormRightMenu,
   FormUpperMenu,
-  FormLowerMenu,
-  QuestionToggle,
-  SectionToggle,
-  SavedAsDraftModal,
-  AddQuestionModal,
   OpeningChildren,
+  QuestionToggle,
+  SavedAsDraftModal,
+  SectionToggle,
 } from "@/components/creator-side/create/form";
-import {
-  Section,
-  DefaultQuestion,
-  Question,
-  QuestionnaireItem,
-} from "@/lib/context";
-import { useQuestionnaireContext } from "@/lib/hooks";
-import { patchQuestionnaire, getQuestionnaire } from "@/lib/action";
-import { LuGlobe, LuPlusSquare, LuTrash } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
+import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
+import { Question, QuestionnaireItem } from "@/lib/context";
+import { useQuestionnaireContext } from "@/lib/hooks";
 import {
+  FormLeftMenuState as flms,
+  FormRightMenuState as frms,
+  QuestionGroup as qg,
   QuestionTypeNames as qtn,
   questionTypeHandler,
   transformData,
 } from "@/lib/services/form";
-import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
+import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  LuChevronDown,
+  LuChevronUp,
+  LuCopy,
+  LuGlobe,
+  LuPlusSquare,
+  LuTrash,
+} from "react-icons/lu";
 import PublishNowModal from "./PublishNowModal";
 import { EmptyRenderer, QuestionRenderer, TerminusRenderer } from "./Renderer";
-import {
-  FormLeftMenuState as flms,
-  FormRightMenuState as frms,
-} from "@/lib/services/form";
 
-export default function FormWrapper({ id }: { id: string }) {
+export default function FormWrapper({ id }: Readonly<{ id: string }>) {
   const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
-  const [QRETitle, setQRETitle] = useState("");
+  const [QRETitle, setQRETitle] = useState<string>("");
 
   // Open Add Question Modal
   const [addQuestionState, setAddQuestionState] = useState("hidden");
@@ -63,7 +64,7 @@ export default function FormWrapper({ id }: { id: string }) {
 
   const router = useRouter();
 
-  const fetchQuestionnaire = async () => {
+  const fetchQuestionnaire = useCallback(async () => {
     try {
       const response = await getQuestionnaire(id);
       const transformed = transformData(response.data.questions);
@@ -73,7 +74,7 @@ export default function FormWrapper({ id }: { id: string }) {
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
-  };
+  }, [id, setQuestionnaire]);
 
   // Get Specific Question to be displayed
   const [activeQuestionId, setActiveQuestionId] = useState(-1);
@@ -125,6 +126,83 @@ export default function FormWrapper({ id }: { id: string }) {
     }
   };
 
+  const handleMoveUp = async () => {
+    try {
+      const activeQuestionnaireIndex = questionnaire.findIndex(
+        (item) =>
+          item.type === "DEFAULT" &&
+          item.question.questionId === activeQuestionId,
+      );
+      const newQuestionnaire = questionnaire.slice();
+      if (activeQuestionnaireIndex > 1) {
+        const temp = newQuestionnaire[activeQuestionnaireIndex];
+        newQuestionnaire[activeQuestionnaireIndex] =
+          newQuestionnaire[activeQuestionnaireIndex - 1];
+        newQuestionnaire[activeQuestionnaireIndex - 1] = temp;
+      } else {
+        return;
+      }
+      await patchQuestionnaire(id, newQuestionnaire);
+      await fetchQuestionnaire();
+    } catch (error) {
+      console.error("Failed to move the question up", error);
+    }
+  };
+
+  const handleMoveDown = async () => {
+    try {
+      const activeQuestionnaireIndex = questionnaire.findIndex(
+        (item) =>
+          item.type === "DEFAULT" &&
+          item.question.questionId === activeQuestionId,
+      );
+      const newQuestionnaire = questionnaire.slice();
+      if (activeQuestionnaireIndex < newQuestionnaire.length - 2) {
+        const temp = newQuestionnaire[activeQuestionnaireIndex];
+        newQuestionnaire[activeQuestionnaireIndex] =
+          newQuestionnaire[activeQuestionnaireIndex + 1];
+        newQuestionnaire[activeQuestionnaireIndex + 1] = temp;
+      } else {
+        return;
+      }
+      await patchQuestionnaire(id, newQuestionnaire);
+      await fetchQuestionnaire();
+    } catch (error) {
+      console.error("Failed to move the question down", error);
+    }
+  };
+
+  const handleDuplicate = async () => {
+    try {
+      const questionToDuplicate = findQuestionById(
+        questionnaire,
+        activeQuestionId,
+      );
+      const duplicatedQuestion = {
+        questionId: null,
+        questionType: questionToDuplicate?.questionType,
+        questionTypeName: questionToDuplicate?.questionTypeName,
+        question: questionToDuplicate?.question,
+        description: questionToDuplicate?.description,
+        isRequired: questionToDuplicate?.isRequired,
+      };
+      const activeQuestionnaireIndex = questionnaire.findIndex(
+        (item) =>
+          item.type === "DEFAULT" &&
+          item.question.questionId === activeQuestionId,
+      );
+      const newQuestionnaire = questionnaire.slice();
+      newQuestionnaire.splice(activeQuestionnaireIndex + 1, 0, {
+        type: "DEFAULT",
+        question: duplicatedQuestion as Question,
+      });
+      await patchQuestionnaire(id, newQuestionnaire);
+      await fetchQuestionnaire();
+    } catch (error) {
+      console.error("Failed to duplicate the question", error);
+    }
+  };
+
   // Mobile Toggle Handler
   const [isMobile, setIsMobile] = useState(true);
   const handleMobileToggle = () => {
@@ -134,12 +212,12 @@ export default function FormWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -157,30 +235,47 @@ export default function FormWrapper({ id }: { id: string }) {
   const questionToRender = findQuestionById(questionnaire, activeQuestionId);
 
   const addQuestionHandler = async (questionType: qtn) => {
-    const newQuestion = questionTypeHandler(questionType);
+    const newQuestion = questionTypeHandler(
+      questionType,
+    ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, questionnaire);
       await patchQuestionnaire(id, newQuestion);
       toggleAddQuestion();
       await fetchQuestionnaire();
-      const lastQuestionnaireItem = questionnaire[questionnaire.length - 1];
+      const lastQuestionnaireItem: QuestionnaireItem =
+        questionnaire[questionnaire.length - 1];
       if (lastQuestionnaireItem.type === "DEFAULT") {
-        setActiveQuestionId(lastQuestionnaireItem.question.questionId);
+        setActiveQuestionId(lastQuestionnaireItem.question.questionId ?? 0);
       } else if (lastQuestionnaireItem.type === "SECTION") {
-        setActiveQuestionId(
+        const lastQuestion =
           lastQuestionnaireItem.questions[
             lastQuestionnaireItem.questions.length - 1
-          ].questionId
-        );
+          ];
+        setActiveQuestionId(lastQuestion?.questionId ?? 0);
       }
     } catch (error) {
       console.error("Failed to update questionnaire", error);
     }
   };
 
+  function decideWhichToRender() {
+    if (leftMenuState === flms.OPENING) {
+      return TerminusRenderer({ sectionKey: qg.OPENING });
+    }
+    if (leftMenuState === flms.ENDING) {
+      return TerminusRenderer({ sectionKey: qg.ENDING });
+    }
+
+    if (activeQuestionId !== -1 && questionToRender) {
+      return QuestionRenderer(questionToRender, -1);
+    }
+    return EmptyRenderer();
+  }
+
   useEffect(() => {
     fetchQuestionnaire();
-  }, [id]);
+  }, [fetchQuestionnaire]);
 
   return (
     <div className="flex w-full h-full" data-testid="form-wrapper">
@@ -237,13 +332,13 @@ export default function FormWrapper({ id }: { id: string }) {
               <div className="flex flex-col overflow-y-auto gap-1.5">
                 {questionnaire.map((questionnaireItem, index) => {
                   const item = questionnaireItem;
-                  let questionNum = index - 1;
+                  let questionNum = index;
 
                   if (item.type === "SECTION") {
-                    const section = item as Section;
+                    const section = item;
                     if (
-                      section.sectionName === "OPENING" ||
-                      section.sectionName === "ENDING"
+                      section.sectionName === qg.OPENING ||
+                      section.sectionName === qg.ENDING
                     ) {
                       return null;
                     }
@@ -265,7 +360,9 @@ export default function FormWrapper({ id }: { id: string }) {
                               questionType={question?.questionTypeName}
                               question={question.question}
                               onSelect={() =>
-                                handleQuestionToggleSelect(question.questionId)
+                                handleQuestionToggleSelect(
+                                  question.questionId ?? 0,
+                                )
                               }
                             />
                           );
@@ -273,7 +370,7 @@ export default function FormWrapper({ id }: { id: string }) {
                       </SectionToggle>
                     );
                   } else {
-                    const defaultQuestion = item as DefaultQuestion;
+                    const defaultQuestion = item;
                     const question = defaultQuestion.question;
                     return (
                       <QuestionToggle
@@ -287,7 +384,7 @@ export default function FormWrapper({ id }: { id: string }) {
                             : question.question
                         }
                         onSelect={() =>
-                          handleQuestionToggleSelect(question.questionId)
+                          handleQuestionToggleSelect(question.questionId ?? 0)
                         }
                       />
                     );
@@ -317,16 +414,34 @@ export default function FormWrapper({ id }: { id: string }) {
                   >
                     <LuTrash className="w-3 h-3" />
                   </Button>
+                  <Button
+                    variant="outline"
+                    className="h-full text-primary hover:text-primary p-2"
+                    onClick={handleDuplicate}
+                    data-testid="duplicate-question"
+                  >
+                    <LuCopy className="w-3 h-3" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-full text-primary hover:text-primary p-2"
+                    onClick={handleMoveUp}
+                    data-testid="move-up-question"
+                  >
+                    <LuChevronUp className="w-3 h-3" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-full text-primary hover:text-primary p-2"
+                    onClick={handleMoveDown}
+                    data-testid="move-down-question"
+                  >
+                    <LuChevronDown className="w-3 h-3" />
+                  </Button>
                 </div>
               )}
             <Card className="flex w-1/2 h-full rounded-md p-5">
-              {leftMenuState === flms.OPENING
-                ? TerminusRenderer({ sectionKey: "OPENING" })
-                : leftMenuState === flms.ENDING
-                  ? TerminusRenderer({ sectionKey: "ENDING" })
-                  : activeQuestionId !== -1 && questionToRender
-                    ? QuestionRenderer(questionToRender, 0)
-                    : EmptyRenderer()}
+              {decideWhichToRender()}
             </Card>
           </div>
           <FormLowerMenu onChange={handleMobileToggle} isMobile={isMobile} />

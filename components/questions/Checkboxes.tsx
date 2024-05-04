@@ -62,8 +62,6 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
     setOptions(newOptions);
   };
 
-  console.log(selectedOptionsValues);
-  console.log("====================================");
   const handleOptionToggle = (index: number, optionValue: string) => {
     if (selectedOptionsValues.includes(optionValue)) {
       setSelectedOptionsValues(

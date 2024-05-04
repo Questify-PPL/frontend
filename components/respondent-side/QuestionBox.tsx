@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import ClickEnter from "@/components/ui/click-enter";
 import { Card } from "@/components/ui/card";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
@@ -41,15 +40,24 @@ const QuestionBox: React.FC<QuestionBoxProps> = ({
       </div>
       <div className="flex flex-row bg-transparent h-[15%] justify-between items-end text-xl p-6 gap-1 rounded-t-md">
         <div className="flex gap-1">
-          <Button variant="outline" id="prev" onClick={prevButton}>
+          <Button
+            type="button"
+            variant="outline"
+            id="prev"
+            onClick={prevButton}
+          >
             <LuChevronUp className="w-5 h-5" />
           </Button>
-          <Button variant="outline" id="next" onClick={nextButton}>
+          <Button
+            type="button"
+            variant="outline"
+            id="next"
+            onClick={nextButton}
+          >
             <LuChevronDown className="w-5 h-5" />
           </Button>
         </div>
         <div className="w-[45%] flex flex-col gap-1">
-          <ClickEnter></ClickEnter>
           <Button className="gap-2" onClick={nextButton}>
             {buttonText}
             {buttonIcon}

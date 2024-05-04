@@ -12,13 +12,13 @@ export function TerminusRenderer({
   const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
   const label = sectionKey.charAt(0) + sectionKey.slice(1).toLowerCase();
   const section = questionnaire.find(
-    (item) => item.type === "SECTION" && item.sectionName === sectionKey
+    (item) => item.type === "SECTION" && item.sectionName === sectionKey,
   ) as Section | undefined;
 
   if (!section) return null;
 
   const handleSectionDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const updatedQuestionnaire = questionnaire.map((item) => {
       if (item.type === "SECTION" && item.sectionName === sectionKey) {
@@ -52,7 +52,7 @@ export function QuestionRenderer(q: Question, index: number) {
         <Text
           role="CREATOR"
           numbering={index + 1}
-          questionId={q.questionId}
+          questionId={q.questionId as number}
           questionTypeName={q.questionTypeName}
           isRequired={q.isRequired}
           question={q.question}
@@ -64,7 +64,7 @@ export function QuestionRenderer(q: Question, index: number) {
         <Checkboxes
           role="CREATOR"
           numbering={index + 1}
-          questionId={q.questionId}
+          questionId={q.questionId as number}
           questionTypeName={q.questionTypeName}
           isRequired={q.isRequired}
           question={q.question}
@@ -76,7 +76,7 @@ export function QuestionRenderer(q: Question, index: number) {
         <RadioButton
           role="CREATOR"
           numbering={index + 1}
-          questionId={q.questionId}
+          questionId={q.questionId as number}
           questionTypeName={q.questionTypeName}
           isRequired={q.isRequired}
           question={q.question}

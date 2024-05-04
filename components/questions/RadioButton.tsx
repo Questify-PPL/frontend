@@ -69,9 +69,6 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
   const handleOptionSelect = (index: number, optionValue: string) => {
     setSelectedOptionIndex(index);
     setSelectedOptionsValues(optionValue);
-    console.log("====================================");
-    console.log(optionValue);
-    console.log("====================================");
   };
 
   const handleSwitchChange = () => {

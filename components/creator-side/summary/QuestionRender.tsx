@@ -1,6 +1,6 @@
 import { useSummaryContext } from "@/lib/context/SummaryContext";
 import { QuestionStatistic, RadioStatistic } from "@/lib/types";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar, Pie, Doughnut } from "react-chartjs-2";
 
 export function QuestionRender({
   question,
@@ -47,6 +47,29 @@ export function QuestionRender({
 
             {graphType === "pie" && (
               <Pie
+                options={{
+                  responsive: false,
+                  maintainAspectRatio: false,
+                }}
+                data={{
+                  labels: (question.statistics as RadioStatistic).choices,
+                  datasets: [
+                    {
+                      label: "Amount",
+                      data: (question.statistics as RadioStatistic).amounts,
+                      backgroundColor: (
+                        question.statistics as RadioStatistic
+                      ).choices.map((_, index) => {
+                        return `hsl(${(index * 360) / (question.statistics as RadioStatistic).choices.length}, 100%, 45%)`;
+                      }),
+                    },
+                  ],
+                }}
+              />
+            )}
+
+            {graphType === "doughnut" && (
+              <Doughnut
                 options={{
                   responsive: false,
                   maintainAspectRatio: false,

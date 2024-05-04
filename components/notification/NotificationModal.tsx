@@ -12,7 +12,7 @@ const NotificationModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#324B4F] bg-opacity-50">
       <div
-        className="bg-white p-5 rounded-lg shadow-lg w-80 h-52 items-center justify-center"
+        className="bg-white p-5 rounded-lg shadow-lg w-4/5 sm:w-3/5 md:w-1/2 lg:w-2/5 h-1/2 md:h-52 items-center justify-center"
         data-testid="notification-modal"
       >
         <div className="flex justify-end">

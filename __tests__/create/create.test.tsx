@@ -147,7 +147,7 @@ describe("CreateWrapper Component", () => {
   test("renders with error", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(<CreateWrapper forms={mockedForms}/>);
+    render(<CreateWrapper forms={mockedForms} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -157,7 +157,7 @@ describe("CreateWrapper Component", () => {
       pending: true,
     });
 
-    render(<CreateWrapper forms={mockedForms}/>);
+    render(<CreateWrapper forms={mockedForms} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -165,7 +165,7 @@ describe("CreateWrapper Component", () => {
   test("renders create with error when fetching", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(<CreateWrapper forms={mockedForms}/>);
+    render(<CreateWrapper forms={mockedForms} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });

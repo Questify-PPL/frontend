@@ -1,10 +1,8 @@
+import { useToast } from "@/components/ui/use-toast";
 import { useCallback, useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
-import { QuestionDetailResponse, SummarizeFormAsProps } from "../types";
-import { convertToCSV } from "../utils";
-import { useToast } from "@/components/ui/use-toast";
-import { URL as fetchURL } from "../constant";
-import { exportForm } from "../helper";
+import { exportForm, removeUnnecessaryQuestions } from "../helper";
+import { Questions, SummarizeFormAsProps } from "../types";
 
 type SummaryProviderProps = {
   children: React.ReactNode;
@@ -17,17 +15,19 @@ export function SummaryProvider({
   allIndividuals,
   formId,
   session,
+  initialActiveTab,
 }: Readonly<SummaryProviderProps>) {
   const [activeTab, setActiveTab] = useState<
     "summary" | "question" | "individual"
-  >("summary");
+  >(initialActiveTab);
   const { toast } = useToast();
-  const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
+
+  const [graphType, setGraphType] = useState<"bar" | "pie" | "doughnut">("pie");
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isFinishedFetching, setIsFinishedFetching] = useState(false);
   const [individualFormQuestions, setIndividualFormQuestions] = useState<
-    QuestionDetailResponse | undefined
+    Questions | undefined
   >(undefined);
 
   const exportData = useCallback(async () => {
@@ -51,6 +51,10 @@ export function SummaryProvider({
     setIsFinishedFetching(false);
   }, [formStatistics, formId, session?.user?.accessToken, toast]);
 
+  const individualFormQuestionsToBeShown = useMemo(() => {
+    return removeUnnecessaryQuestions(individualFormQuestions);
+  }, [individualFormQuestions]);
+
   const returns = useMemo(() => {
     return {
       formStatistics,
@@ -70,6 +74,9 @@ export function SummaryProvider({
       setIsFinishedFetching,
       formId,
       session,
+      individualFormQuestions: individualFormQuestionsToBeShown,
+      setIndividualFormQuestions,
+      initialActiveTab,
       exportData,
     };
   }, [
@@ -82,6 +89,8 @@ export function SummaryProvider({
     isFinishedFetching,
     formId,
     session,
+    individualFormQuestionsToBeShown,
+    initialActiveTab,
     exportData,
   ]);
 

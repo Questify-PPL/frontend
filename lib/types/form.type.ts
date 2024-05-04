@@ -1,5 +1,4 @@
 import { Session } from "next-auth";
-import { Section } from "../context";
 
 export type BareForm = {
   id: string;
@@ -89,9 +88,14 @@ export type QuestionWithAnswerSection = {
 export type SummarizeFormAsProps = {
   formStatistics: SummarizeForm;
   questionsWithAnswers: QuestionAnswer[] | QuestionWithAnswerSection[];
-  allIndividuals: string[];
+  allIndividuals: {
+    respondentId: string;
+    name: string;
+    email: string;
+  }[];
   formId: string;
   session: Session;
+  initialActiveTab: "summary" | "question" | "individual";
 };
 
 export type AnswerAndChoice = {
@@ -103,11 +107,16 @@ export type QuestionGroupedWithAnswerAndChoice = QuestionGrouped &
   AnswerAndChoice;
 
 export type SectionGroupedWithAnswer = SectionParent & {
-  questions: QuestionGrouped & AnswerAndChoice[];
+  questions: QuestionGroupedWithAnswerAndChoice[];
 };
 
+export type Questions = (
+  | SectionGroupedWithAnswer
+  | QuestionGroupedWithAnswerAndChoice
+)[];
+
 export type QuestionDetailResponse = {
-  questions: SectionGroupedWithAnswer[] | QuestionGroupedWithAnswerAndChoice[];
+  questions: Questions;
 };
 
 export type QuestionGet = {
@@ -121,7 +130,7 @@ export type QuestionGet = {
 };
 
 export type SectionGet = {
-  sectionId: number;
+  sectionId: number | null;
   name: string;
   description: string;
   questions: QuestionGet[];

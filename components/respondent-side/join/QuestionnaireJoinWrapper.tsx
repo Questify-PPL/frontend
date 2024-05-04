@@ -59,8 +59,6 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       await fetchQuestionnaire();
     };
 
-    console.log("answers: ", answers);
-
     fetchData().catch(console.error);
   }, []);
 
@@ -145,16 +143,13 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
 
     const answer = answers[existingAnswerIndex]?.answer ?? "";
 
-    console.log("Answer Value: ", answers);
-    console.log("Existing Answer Index: ", answer);
-
     return (
       <div className="flex flex-col w-full" key={questionId}>
         {questionType === "TEXT" ? (
           <Text
             role="RESPONDENT"
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -169,7 +164,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           <Checkboxes
             role="RESPONDENT"
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -182,7 +177,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           <RadioButton
             role="RESPONDENT"
             numbering={index + 1}
-            questionId={questionId}
+            questionId={questionId as number}
             questionTypeName={questionTypeName}
             isRequired={isRequired}
             question={question}
@@ -284,7 +279,6 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
     } else if (activeSectionId + 1 <= questionnaire.length - 1) {
       await handleSectionChanges(activeSectionId + 1);
     } else if (activeSectionId + 1 === questionnaire.length) {
-      console.log("Masuk finalization");
       await handleSubmit();
     }
   };
@@ -326,9 +320,6 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
 
           {activeSectionId === 0
             ? (() => {
-                console.log(
-                  "Rendering the opening section: activeSectionId is 0",
-                );
                 const item = questionnaire[0];
                 if (item !== undefined) {
                   const section = item as Section;
@@ -348,7 +339,6 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                 }
               })()
             : (() => {
-                console.log("Rendering section: " + activeSectionId);
                 const item = questionnaire[activeSectionId];
                 if (
                   item !== undefined &&
@@ -366,7 +356,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                             ? section.questions.map((question, index) => {
                                 const renderedQuestion = findQuestionById(
                                   questionnaire,
-                                  question.questionId,
+                                  question.questionId as number,
                                 ) as Question;
                                 return renderQuestion(renderedQuestion, index);
                               })
@@ -380,9 +370,6 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                     />
                   );
                 } else {
-                  console.log(
-                    `End of sections, activeSectionId: ${activeSectionId}`,
-                  );
                   const item = questionnaire[activeSectionId];
                   if (
                     item !== undefined &&
