@@ -73,6 +73,10 @@ export async function processPurchase(
       user: {
         ...session.user,
         credit: res.data.userBalance,
+        Creator: {
+          ...session.user.Creator!,
+          emptyForms: res.data.emptyForms,
+        },
       },
     });
 
