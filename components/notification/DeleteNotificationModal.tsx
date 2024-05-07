@@ -45,12 +45,15 @@ const DeleteNotificationModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             Are you sure you want to delete the notifications?
           </p>
           <div className="flex flex-row gap-5">
-          <Button className="w-32 h-9 mt-5" onClick={onClose}>
-            Yes
-          </Button>
-          <Button className="w-32 h-9 mt-5 bg-[#FE476C] hover:bg-[#FE476C]" onClick={onClose}>
-            No
-          </Button>
+            <Button className="w-32 h-9 mt-5" onClick={onClose}>
+              Yes
+            </Button>
+            <Button
+              className="w-32 h-9 mt-5 bg-[#FE476C] hover:bg-[#FE476C]"
+              onClick={onClose}
+            >
+              No
+            </Button>
           </div>
         </div>
       </div>
