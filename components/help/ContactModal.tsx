@@ -105,7 +105,7 @@ export function ContactModal(contactModalProps: Readonly<ContactModalProps>) {
   return (
     <form
       data-testid="contact-modal"
-      className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
+      className={`fixed inset-0 pointer-events-auto w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
       onSubmit={handleSubmit}
     >
       <Card className="flex flex-col xl:w-[35%] lg:w-[50%] w-[80%] p-5 justify-center items-center gap-6">
