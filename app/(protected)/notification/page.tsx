@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import NotificationCard from "@/components/notification/NotificationCard";
 import React, { useState } from "react";
 import NotificationModal from "@/components/notification/NotificationModal";
+import DeleteNotificationModal from "@/components/notification/DeleteNotificationModal";
 
 export default function notification() {
   // const [modalOpen, setModalOpen] = useState(false);
@@ -36,7 +37,7 @@ export default function notification() {
       </div>
 
       {/* <button onClick={toggleModal}>Toggle Modal</button>
-      <NotificationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} /> Render NotificationModal */}
+      <DeleteNotificationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />  */}
     </div>
 
     // uncomment if you want to see the modal
