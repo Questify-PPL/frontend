@@ -42,7 +42,7 @@ const DeleteNotificationModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             <LuAlertCircle className="text-[#32636A] w-11 h-11"></LuAlertCircle>
           </div>
           <p className="text-[#1D2425] text-lg font-bold">
-            Are you sure you want to delete all the notifications?
+            Are you sure you want to delete the notifications?
           </p>
           <div className="flex flex-row gap-5">
           <Button className="w-32 h-9 mt-5" onClick={onClose}>
