@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { User } from "@/lib/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContactModal } from "@/components/help";
 import { useRouter } from "next/navigation";
 import FAQSection from "./FAQSection";
@@ -10,6 +10,14 @@ import FAQSection from "./FAQSection";
 export function HelpWrapper({ user }: Readonly<{ user: User }>) {
   const [contactModalState, setContactModalState] = useState("hidden");
   const router = useRouter();
+
+  useEffect(() => {
+    if (contactModalState === "flex") {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [contactModalState]);
 
   const handleContactModal = () => {
     const newClass = contactModalState === "hidden" ? "flex" : "hidden";
