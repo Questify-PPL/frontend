@@ -19,5 +19,4 @@ describe("NotificationModal", () => {
     const modal = queryByTestId("delete-modal");
     expect(modal).not.toBeInTheDocument();
   });
-
 });
