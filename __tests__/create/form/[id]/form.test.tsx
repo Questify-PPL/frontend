@@ -51,24 +51,25 @@ describe("Add Question Functionality", () => {
       </QuestionnaireProvider>,
     );
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("add-question");
   });
 
-  test("renders add question modal", async () => {
+  test("renders add question modal and cancel", async () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
+    const cancelButton = screen.getByTestId("cancel-add-question");
+    fireEvent.click(cancelButton);
+    await screen.findByText("Contents");
   });
 
   test("renders add question modal with question type", async () => {
@@ -77,11 +78,9 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
     expect(screen.getByText("Text")).toBeInTheDocument();
@@ -98,16 +97,12 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
-    const cancelButton = screen.getByTestId(
-      "cancel-add-question",
-    ) as HTMLInputElement;
+    const cancelButton = screen.getByTestId("cancel-add-question");
     fireEvent.click(cancelButton);
     await screen.findByText("Contents");
   });
@@ -118,14 +113,12 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
-    const shortTextButton = screen.getByText("Short Text") as HTMLInputElement;
+    const shortTextButton = screen.getByText("Short Text");
     shortTextButton.click();
 
     expect(patchQuestionnaire).toHaveBeenCalled();
@@ -137,14 +130,12 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
-    const numberButton = screen.getByText("Long Text") as HTMLInputElement;
+    const numberButton = screen.getByText("Long Text");
     numberButton.click();
 
     expect(patchQuestionnaire).toHaveBeenCalled();
@@ -156,14 +147,12 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
-    const numberButton = screen.getByText("Checkboxes") as HTMLInputElement;
+    const numberButton = screen.getByText("Checkboxes");
     numberButton.click();
 
     expect(patchQuestionnaire).toHaveBeenCalled();
@@ -175,16 +164,12 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
-    const numberButton = screen.getByText(
-      "Multiple Choice",
-    ) as HTMLInputElement;
+    const numberButton = screen.getByText("Multiple Choice");
     numberButton.click();
 
     expect(patchQuestionnaire).toHaveBeenCalled();
@@ -196,14 +181,12 @@ describe("Add Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const addQuestionButton = screen.getByTestId(
-      "add-question",
-    ) as HTMLInputElement;
+    const addQuestionButton = screen.getByTestId("add-question");
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
-    const numberButton = screen.getByText("Yes/No") as HTMLInputElement;
+    const numberButton = screen.getByText("Yes/No");
     numberButton.click();
 
     expect(patchQuestionnaire).toHaveBeenCalled();
@@ -221,11 +204,9 @@ describe("Saved As Draft Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft",
-    ) as HTMLInputElement;
+    const saveAsDraftButton = screen.getByTestId("save-as-draft");
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
   });
@@ -236,16 +217,12 @@ describe("Saved As Draft Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
-    const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft",
-    ) as HTMLInputElement;
+    const saveAsDraftButton = screen.getByTestId("save-as-draft");
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
-    const closeButton = screen.getByTestId(
-      "cancel-saved-as-draft",
-    ) as HTMLInputElement;
+    const closeButton = screen.getByTestId("cancel-saved-as-draft");
     fireEvent.click(closeButton);
     await screen.findByText("Contents");
   });
@@ -256,13 +233,11 @@ describe("Saved As Draft Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Publish") as HTMLInputElement;
+    const contentButton = screen.getByText("Publish");
     contentButton.click();
 
     await screen.findByTestId("publish-button");
-    const publishButton = screen.getByTestId(
-      "publish-button",
-    ) as HTMLInputElement;
+    const publishButton = screen.getByTestId("publish-button");
     publishButton.click();
     await screen.findByText("Published!");
   });
@@ -285,7 +260,7 @@ describe("Delete Question Functionality", () => {
       </QuestionnaireProvider>,
     );
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("delete-question");
   });
@@ -298,12 +273,10 @@ describe("Delete Question Functionality", () => {
     );
 
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("delete-question");
-    const deleteButton = screen.getByTestId(
-      "delete-question",
-    ) as HTMLInputElement;
+    const deleteButton = screen.getByTestId("delete-question");
     deleteButton.click();
     expect(deleteQuestion).toHaveBeenCalled();
     await screen.findByText("Contents");
@@ -327,7 +300,7 @@ describe("Duplicate Question Functionality", () => {
       </QuestionnaireProvider>,
     );
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("duplicate-question");
   });
@@ -340,12 +313,10 @@ describe("Duplicate Question Functionality", () => {
     );
 
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("duplicate-question");
-    const duplicateButton = screen.getByTestId(
-      "duplicate-question",
-    ) as HTMLInputElement;
+    const duplicateButton = screen.getByTestId("duplicate-question");
     duplicateButton.click();
     expect(patchQuestionnaire).toHaveBeenCalled();
     await screen.findByText("Contents");
@@ -370,12 +341,27 @@ describe("Move Up Question Functionality", () => {
     );
 
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("move-up-question");
-    const moveUpButton = screen.getByTestId(
-      "move-up-question",
-    ) as HTMLInputElement;
+    const moveUpButton = screen.getByTestId("move-up-question");
+    moveUpButton.click();
+    expect(patchQuestionnaire).toHaveBeenCalled();
+    await screen.findByText("Contents");
+  });
+
+  test("not render move up question button when it is the first question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents");
+    contentButton.click();
+    await screen.findByTestId("move-up-question");
+    const moveUpButton = screen.getByTestId("move-up-question");
     moveUpButton.click();
     expect(patchQuestionnaire).toHaveBeenCalled();
     await screen.findByText("Contents");
@@ -400,12 +386,27 @@ describe("Move Down Question Functionality", () => {
     );
 
     expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents") as HTMLInputElement;
+    const contentButton = screen.getByText("Contents");
     contentButton.click();
     await screen.findByTestId("move-down-question");
-    const moveDownButton = screen.getByTestId(
-      "move-down-question",
-    ) as HTMLInputElement;
+    const moveDownButton = screen.getByTestId("move-down-question");
+    moveDownButton.click();
+    expect(patchQuestionnaire).toHaveBeenCalled();
+    await screen.findByText("Contents");
+  });
+
+  test("not render move down question button when it is the last question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    expect(screen.getByText("Contents")).toBeInTheDocument();
+    const contentButton = screen.getByText("Contents");
+    contentButton.click();
+    await screen.findByTestId("move-down-question");
+    const moveDownButton = screen.getByTestId("move-down-question");
     moveDownButton.click();
     expect(patchQuestionnaire).toHaveBeenCalled();
     await screen.findByText("Contents");

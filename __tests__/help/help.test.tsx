@@ -170,7 +170,7 @@ describe("Contact Modal", () => {
     fireEvent.click(contactButton);
 
     expect(
-      screen.getByText("Please set your name in your profile")
+      screen.getByText("Please set your name in your profile"),
     ).toBeInTheDocument();
 
     const inputSubject = screen.getByTestId("subject");
@@ -301,7 +301,7 @@ describe("Contact Modal", () => {
   it("should not reset or close modal upon failed email sending", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (sendContactForm as jest.Mock).mockRejectedValue(
-      new Error("Internal server error")
+      new Error("Internal server error"),
     );
 
     render(await Help());

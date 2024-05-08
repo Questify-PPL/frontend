@@ -33,20 +33,20 @@ export function FormLowerMenu({
       </Button>
 
       <div className="flex flex-row bg-[#95B0B4] h-full rounded-md">
-        <div
+        <button
           className={isMobile ? activeLButton : inactiveButton}
           onClick={onChange}
         >
           <LuSmartphone className="w-4 h-4" />
           <span>Mobile</span>
-        </div>
-        <div
+        </button>
+        <button
           className={!isMobile ? activeRButton : inactiveButton}
           onClick={onChange}
         >
           <LuMonitor className="w-4 h-4" />
           <span>Desktop</span>
-        </div>
+        </button>
       </div>
       <Button
         variant="outline"

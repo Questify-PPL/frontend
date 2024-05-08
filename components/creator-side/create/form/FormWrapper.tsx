@@ -3,28 +3,37 @@
 import {
   AddQuestionModal,
   FormLeftMenu,
+  FormLeftContents,
   FormLowerMenu,
   FormRightMenu,
   FormUpperMenu,
   OpeningChildren,
-  QuestionToggle,
   SavedAsDraftModal,
-  SectionToggle,
 } from "@/components/creator-side/create/form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
 import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
-import { Question, QuestionnaireItem } from "@/lib/context";
+import {
+  DefaultQuestion,
+  Question,
+  QuestionnaireItem,
+  QuestionnaireItemTypes,
+  Section,
+} from "@/lib/context";
 import { useQuestionnaireContext } from "@/lib/hooks";
 import {
   FormLeftMenuState as flms,
   FormRightMenuState as frms,
   QuestionGroup as qg,
   QuestionTypeNames as qtn,
-  questionTypeHandler,
+  templateHandler,
   transformData,
+  handleMoveUp,
+  handleMoveDown,
+  handleDuplicate,
+  findQuestionById,
 } from "@/lib/services/form";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
@@ -40,8 +49,9 @@ import PublishNowModal from "./PublishNowModal";
 import { EmptyRenderer, QuestionRenderer, TerminusRenderer } from "./Renderer";
 
 export default function FormWrapper({ id }: Readonly<{ id: string }>) {
-  const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
-  const [QRETitle, setQRETitle] = useState<string>("");
+  const { questionnaire, setQuestionnaire, activeQuestion, setActiveQuestion } =
+    useQuestionnaireContext();
+  const [title, setTitle] = useState<string>("");
 
   // Open Add Question Modal
   const [addQuestionState, setAddQuestionState] = useState("hidden");
@@ -69,18 +79,12 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
       const response = await getQuestionnaire(id);
       const transformed = transformData(response.data.questions);
       setQuestionnaire(transformed);
-      setQRETitle(response.data.title);
+      setTitle(response.data.title);
       console.log(transformed);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
   }, [id, setQuestionnaire]);
-
-  // Get Specific Question to be displayed
-  const [activeQuestionId, setActiveQuestionId] = useState(-1);
-  const handleQuestionToggleSelect = async (questionId: number) => {
-    setActiveQuestionId(questionId);
-  };
 
   // Change Left and Right Menu
   const [leftMenuState, setLeftMenuState] = useState(flms.OPENING);
@@ -119,87 +123,36 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
 
   const handleDelete = async () => {
     try {
-      await deleteQuestion(id, activeQuestionId);
+      await deleteQuestion(id, activeQuestion as number);
+      const index = questionnaire.findIndex(
+        (item) =>
+          (item.type === QuestionnaireItemTypes.DEFAULT &&
+            item.question?.questionId === activeQuestion) ||
+          (item.type === QuestionnaireItemTypes.SECTION &&
+            item.questions?.some((q) => q.questionId === activeQuestion)),
+      );
+
+      if (index !== -1) {
+        // Remove the question from the questionnaire
+        questionnaire.splice(index, 1);
+
+        // Update the numbering of the remaining questions
+        for (let i = index; i < questionnaire.length; i++) {
+          if (questionnaire[i].type === QuestionnaireItemTypes.DEFAULT) {
+            (questionnaire[i] as DefaultQuestion).question.number -= 1;
+          } else if (questionnaire[i].type === QuestionnaireItemTypes.SECTION) {
+            (questionnaire[i] as Section).questions.forEach((q) => {
+              q.number -= 1;
+            });
+          }
+        }
+      }
+
+      setActiveQuestion(undefined);
+      await patchQuestionnaire(id, questionnaire);
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to delete the question", error);
-    }
-  };
-
-  const handleMoveUp = async () => {
-    try {
-      const activeQuestionnaireIndex = questionnaire.findIndex(
-        (item) =>
-          item.type === "DEFAULT" &&
-          item.question.questionId === activeQuestionId,
-      );
-      const newQuestionnaire = questionnaire.slice();
-      if (activeQuestionnaireIndex > 1) {
-        const temp = newQuestionnaire[activeQuestionnaireIndex];
-        newQuestionnaire[activeQuestionnaireIndex] =
-          newQuestionnaire[activeQuestionnaireIndex - 1];
-        newQuestionnaire[activeQuestionnaireIndex - 1] = temp;
-      } else {
-        return;
-      }
-      await patchQuestionnaire(id, newQuestionnaire);
-      await fetchQuestionnaire();
-    } catch (error) {
-      console.error("Failed to move the question up", error);
-    }
-  };
-
-  const handleMoveDown = async () => {
-    try {
-      const activeQuestionnaireIndex = questionnaire.findIndex(
-        (item) =>
-          item.type === "DEFAULT" &&
-          item.question.questionId === activeQuestionId,
-      );
-      const newQuestionnaire = questionnaire.slice();
-      if (activeQuestionnaireIndex < newQuestionnaire.length - 2) {
-        const temp = newQuestionnaire[activeQuestionnaireIndex];
-        newQuestionnaire[activeQuestionnaireIndex] =
-          newQuestionnaire[activeQuestionnaireIndex + 1];
-        newQuestionnaire[activeQuestionnaireIndex + 1] = temp;
-      } else {
-        return;
-      }
-      await patchQuestionnaire(id, newQuestionnaire);
-      await fetchQuestionnaire();
-    } catch (error) {
-      console.error("Failed to move the question down", error);
-    }
-  };
-
-  const handleDuplicate = async () => {
-    try {
-      const questionToDuplicate = findQuestionById(
-        questionnaire,
-        activeQuestionId,
-      );
-      const duplicatedQuestion = {
-        questionId: null,
-        questionType: questionToDuplicate?.questionType,
-        questionTypeName: questionToDuplicate?.questionTypeName,
-        question: questionToDuplicate?.question,
-        description: questionToDuplicate?.description,
-        isRequired: questionToDuplicate?.isRequired,
-      };
-      const activeQuestionnaireIndex = questionnaire.findIndex(
-        (item) =>
-          item.type === "DEFAULT" &&
-          item.question.questionId === activeQuestionId,
-      );
-      const newQuestionnaire = questionnaire.slice();
-      newQuestionnaire.splice(activeQuestionnaireIndex + 1, 0, {
-        type: "DEFAULT",
-        question: duplicatedQuestion as Question,
-      });
-      await patchQuestionnaire(id, newQuestionnaire);
-      await fetchQuestionnaire();
-    } catch (error) {
-      console.error("Failed to duplicate the question", error);
     }
   };
 
@@ -209,51 +162,16 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
     setIsMobile(!isMobile);
   };
 
-  // Find Question by ID
-  function findQuestionById(
-    questionnaire: QuestionnaireItem[],
-    questionId: number,
-  ): Question | undefined {
-    for (const item of questionnaire) {
-      if (item.type === "SECTION") {
-        const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
-        );
-        if (foundQuestion) {
-          return foundQuestion;
-        }
-      } else if (
-        item.type === "DEFAULT" &&
-        item.question.questionId === questionId
-      ) {
-        return item.question;
-      }
-    }
-    return undefined;
-  }
-
-  const questionToRender = findQuestionById(questionnaire, activeQuestionId);
-
-  const addQuestionHandler = async (questionType: qtn) => {
-    const newQuestion = questionTypeHandler(
+  const handleAddQuestion = async (questionType: qtn) => {
+    const newQuestion = templateHandler(
       questionType,
+      questionnaire.length - 1,
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, questionnaire);
       await patchQuestionnaire(id, newQuestion);
       toggleAddQuestion();
       await fetchQuestionnaire();
-      const lastQuestionnaireItem: QuestionnaireItem =
-        questionnaire[questionnaire.length - 1];
-      if (lastQuestionnaireItem.type === "DEFAULT") {
-        setActiveQuestionId(lastQuestionnaireItem.question.questionId ?? 0);
-      } else if (lastQuestionnaireItem.type === "SECTION") {
-        const lastQuestion =
-          lastQuestionnaireItem.questions[
-            lastQuestionnaireItem.questions.length - 1
-          ];
-        setActiveQuestionId(lastQuestion?.questionId ?? 0);
-      }
     } catch (error) {
       console.error("Failed to update questionnaire", error);
     }
@@ -262,15 +180,15 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
   function decideWhichToRender() {
     if (leftMenuState === flms.OPENING) {
       return TerminusRenderer({ sectionKey: qg.OPENING });
-    }
-    if (leftMenuState === flms.ENDING) {
+    } else if (leftMenuState === flms.ENDING) {
       return TerminusRenderer({ sectionKey: qg.ENDING });
+    } else if (activeQuestion) {
+      return QuestionRenderer(
+        findQuestionById(activeQuestion, questionnaire).question as Question,
+      );
+    } else {
+      return EmptyRenderer();
     }
-
-    if (activeQuestionId !== -1 && questionToRender) {
-      return QuestionRenderer(questionToRender, -1);
-    }
-    return EmptyRenderer();
   }
 
   useEffect(() => {
@@ -282,24 +200,24 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
       <AddQuestionModal
         className={`${addQuestionState}`}
         onCancel={toggleAddQuestion}
-        onShortTextClick={() => addQuestionHandler(qtn.SHORT_TEXT)}
-        onLongTextClick={() => addQuestionHandler(qtn.LONG_TEXT)}
-        onCheckboxClick={() => addQuestionHandler(qtn.CHECKBOX)}
-        onMultipleChoiceClick={() => addQuestionHandler(qtn.MULTIPLE_CHOICE)}
-        onYesNoClick={() => addQuestionHandler(qtn.YES_NO)}
-      ></AddQuestionModal>
+        onShortTextClick={() => handleAddQuestion(qtn.SHORT_TEXT)}
+        onLongTextClick={() => handleAddQuestion(qtn.LONG_TEXT)}
+        onCheckboxClick={() => handleAddQuestion(qtn.CHECKBOX)}
+        onMultipleChoiceClick={() => handleAddQuestion(qtn.MULTIPLE_CHOICE)}
+        onYesNoClick={() => handleAddQuestion(qtn.YES_NO)}
+      />
 
       <SavedAsDraftModal
         className={`${savedAsDraftState}`}
-        QRETitle={QRETitle}
+        title={title}
         onCancel={toggleSavedAsDraft}
-      ></SavedAsDraftModal>
+      />
 
       <PublishNowModal
         className={`${openPublishNowState}`}
-        QRETitle={QRETitle}
+        title={title}
         onCancel={togglePublishNow}
-      ></PublishNowModal>
+      />
 
       <div className="flex flex-row w-full h-full gap-4 p-5">
         <FormLeftMenu
@@ -328,69 +246,8 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                 <LuPlusSquare className="w-5 h-5" />
                 <span>Add Question</span>
               </Button>
-              <Separator className="bg-[#E5EEF0]"></Separator>
-              <div className="flex flex-col overflow-y-auto gap-1.5">
-                {questionnaire.map((questionnaireItem, index) => {
-                  const item = questionnaireItem;
-                  let questionNum = index;
-
-                  if (item.type === "SECTION") {
-                    const section = item;
-                    if (
-                      section.sectionName === qg.OPENING ||
-                      section.sectionName === qg.ENDING
-                    ) {
-                      return null;
-                    }
-                    let sectionNum = 0;
-                    return (
-                      <SectionToggle
-                        numbering={questionNum}
-                        key={section.sectionId}
-                      >
-                        {section.questions?.map((question, innerIndex) => {
-                          sectionNum = innerIndex + 1;
-                          return (
-                            <QuestionToggle
-                              key={question.questionId}
-                              isActive={
-                                activeQuestionId === question.questionId
-                              }
-                              numbering={sectionNum}
-                              questionType={question?.questionTypeName}
-                              question={question.question}
-                              onSelect={() =>
-                                handleQuestionToggleSelect(
-                                  question.questionId ?? 0,
-                                )
-                              }
-                            />
-                          );
-                        })}
-                      </SectionToggle>
-                    );
-                  } else {
-                    const defaultQuestion = item;
-                    const question = defaultQuestion.question;
-                    return (
-                      <QuestionToggle
-                        key={question.questionId}
-                        isActive={activeQuestionId === question.questionId}
-                        numbering={questionNum}
-                        questionType={question.questionTypeName}
-                        question={
-                          question.question === ""
-                            ? "Your question here"
-                            : question.question
-                        }
-                        onSelect={() =>
-                          handleQuestionToggleSelect(question.questionId ?? 0)
-                        }
-                      />
-                    );
-                  }
-                })}
-              </div>
+              <Separator className="bg-[#E5EEF0]" />
+              <FormLeftContents />
             </div>
           }
           endingChildren={<div>Ending Children</div>}
@@ -400,7 +257,7 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
           <FormUpperMenu
             onBack={handleBack}
             onSave={handleSave}
-            QRETitle={QRETitle}
+            QRETitle={title}
           />
           <div className="flex flex-col w-full h-full items-center gap-2">
             {leftMenuState !== flms.OPENING &&
@@ -417,7 +274,11 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                   <Button
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
-                    onClick={handleDuplicate}
+                    onClick={() => {
+                      handleDuplicate(questionnaire, activeQuestion as number);
+                      patchQuestionnaire(id, questionnaire);
+                      fetchQuestionnaire();
+                    }}
                     data-testid="duplicate-question"
                   >
                     <LuCopy className="w-3 h-3" />
@@ -425,7 +286,11 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                   <Button
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
-                    onClick={handleMoveUp}
+                    onClick={() => {
+                      handleMoveUp(questionnaire, activeQuestion as number);
+                      patchQuestionnaire(id, questionnaire);
+                      fetchQuestionnaire();
+                    }}
                     data-testid="move-up-question"
                   >
                     <LuChevronUp className="w-3 h-3" />
@@ -433,7 +298,11 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                   <Button
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
-                    onClick={handleMoveDown}
+                    onClick={() => {
+                      handleMoveDown(questionnaire, activeQuestion as number);
+                      patchQuestionnaire(id, questionnaire);
+                      fetchQuestionnaire();
+                    }}
                     data-testid="move-down-question"
                   >
                     <LuChevronDown className="w-3 h-3" />
@@ -441,6 +310,7 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                 </div>
               )}
             <Card className="flex w-1/2 h-full rounded-md p-5">
+              {decideWhichToRender()}
               {decideWhichToRender()}
             </Card>
           </div>

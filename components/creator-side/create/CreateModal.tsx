@@ -60,6 +60,7 @@ export function CreateModal({
         {
           type: "SECTION",
           sectionId: null,
+          number: -1,
           sectionName: qg.OPENING,
           sectionDescription: "",
           questions: [],
@@ -67,6 +68,7 @@ export function CreateModal({
         {
           type: "SECTION",
           sectionId: null,
+          number: 0,
           sectionName: qg.ENDING,
           sectionDescription: "",
           questions: [],

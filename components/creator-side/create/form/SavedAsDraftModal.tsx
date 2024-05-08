@@ -4,13 +4,13 @@ import { LuX, LuSave } from "react-icons/lu";
 
 interface SavedAsDraftModalProps {
   className?: string;
-  QRETitle?: string;
+  title?: string;
   onCancel?: () => void;
 }
 
 export function SavedAsDraftModal({
   className = "",
-  QRETitle = "",
+  title = "",
   onCancel = () => {},
 }: Readonly<SavedAsDraftModalProps>) {
   return (
@@ -31,7 +31,7 @@ export function SavedAsDraftModal({
           <div className="flex flex-col justify-center items-center">
             <span className="flex font-extrabold text-xl">Saved As Draft!</span>
             <span className="flex font-regular text-sm text-primary/40">
-              {QRETitle}
+              {title}
             </span>
           </div>
         </div>

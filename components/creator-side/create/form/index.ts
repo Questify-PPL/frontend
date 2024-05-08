@@ -1,4 +1,5 @@
 export * from "./FormLeftMenu";
+export * from "./FormLeftContents";
 export * from "./FormRightMenu";
 export * from "./FormUpperMenu";
 export * from "./FormLowerMenu";

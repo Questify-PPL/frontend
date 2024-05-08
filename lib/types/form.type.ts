@@ -124,6 +124,7 @@ export type QuestionDetailResponse = {
 export type QuestionGet = {
   sectionId: number | null;
   questionId: number;
+  number: number;
   questionType: string;
   questionTypeName: string;
   isRequired: boolean;
@@ -133,6 +134,7 @@ export type QuestionGet = {
 
 export type SectionGet = {
   sectionId: number | null;
+  number: number;
   name: string;
   description: string;
   questions: QuestionGet[];

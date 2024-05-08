@@ -6,7 +6,13 @@ import {
   SavedAsDraftModal,
 } from "@/components/creator-side/create/form";
 import { RadioButton, Text, Checkboxes } from "@/components/questions";
-import { Section, DefaultQuestion, Question, Answer } from "@/lib/context";
+import {
+  Section,
+  DefaultQuestion,
+  Question,
+  Answer,
+  QuestionnaireItemTypes,
+} from "@/lib/context";
 import { LuCheck, LuCheckCheck, LuChevronRight } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { useQuestionnaireContext } from "@/lib/hooks";
@@ -111,8 +117,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   ): Question | undefined {
     console.log("Questionnaire from Find: ", questionnaire);
     for (const item of questionnaire) {
-      console.log("Item: ", item);
-      if (item.type === "SECTION") {
+      if (item.type === QuestionnaireItemTypes.SECTION) {
         const foundQuestion = item.questions.find(
           (question) => question.questionId === questionId
         );
@@ -121,7 +126,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           return foundQuestion;
         }
       } else if (
-        item.type === "DEFAULT" &&
+        item.type === QuestionnaireItemTypes.DEFAULT &&
         item.question.questionId === questionId
       ) {
         return item.question;
@@ -264,7 +269,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
         }) as Question[];
 
         return {
-          type: "SECTION",
+          type: QuestionnaireItemTypes.SECTION,
           sectionId: section.sectionId,
           sectionName: section.name,
           sectionDescription: section.description,
@@ -273,7 +278,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       } else {
         const question = item as QuestionGet;
         return {
-          type: "DEFAULT",
+          type: QuestionnaireItemTypes.DEFAULT,
           question: {
             questionId: question.questionId,
             questionType: question.questionType,
@@ -335,7 +340,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
     <div className="flex w-full h-full" data-testid="form-wrapper">
       <SavedAsDraftModal
         className={`${savedAsDraftState}`}
-        QRETitle={QRETitle}
+        title={QRETitle}
         onCancel={OpenSavedAsDraft}
       ></SavedAsDraftModal>
       <FinalizationCard

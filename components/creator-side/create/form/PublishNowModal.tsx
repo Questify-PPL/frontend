@@ -4,13 +4,13 @@ import { LuX, LuGlobe } from "react-icons/lu";
 
 interface PublishNowModalProps {
   className?: string;
-  QRETitle?: string;
+  title?: string;
   onCancel?: () => void;
 }
 
 export function PublishNowModal({
   className = "",
-  QRETitle = "",
+  title = "",
   onCancel = () => {},
 }: Readonly<PublishNowModalProps>) {
   return (
@@ -31,7 +31,7 @@ export function PublishNowModal({
           <div className="flex flex-col justify-center items-center">
             <span className="flex font-extrabold text-xl">Published!</span>
             <span className="flex font-regular text-sm text-primary/40">
-              {QRETitle}
+              {title}
             </span>
           </div>
         </div>
