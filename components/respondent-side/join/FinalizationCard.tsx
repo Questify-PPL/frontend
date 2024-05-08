@@ -7,7 +7,7 @@ import { LuCheckCircle, LuX } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { LucideClipboardCheck } from "lucide-react";
 
-interface HomeNavProps {
+interface FinalizationCardProps {
   className?: string;
   winningChance?: number;
   prizeType?: string;
@@ -18,7 +18,7 @@ interface HomeNavProps {
   onCancel?: () => void;
 }
 
-const HomeNav: React.FC<HomeNavProps> = ({
+const FinalizationCard: React.FC<FinalizationCardProps> = ({
   className = "",
   QRETitle = "",
   prizeType = "EVEN",
@@ -46,7 +46,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
       data-testid="finalization-modal"
     >
-      <Card className="flex flex-col w-[35%] p-5 justify-center items-center gap-6">
+      <Card className="flex flex-col p-5 justify-center items-center gap-6">
         <div className="flex flex-row justify-between items-center w-full">
           <div className="flex flex-row gap-2"></div>
           <LuX className="w-5 h-5" onClick={onCancel}></LuX>
@@ -99,4 +99,4 @@ const HomeNav: React.FC<HomeNavProps> = ({
   );
 };
 
-export default HomeNav;
+export default FinalizationCard;
