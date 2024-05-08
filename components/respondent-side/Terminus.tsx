@@ -14,6 +14,7 @@ interface TerminusProps {
   buttonText?: string;
   buttonIcon?: ReactNode;
   buttonDisabled?: boolean;
+  isParticipate?: boolean;
 }
 
 const Terminus: React.FC<TerminusProps> = ({
@@ -27,10 +28,11 @@ const Terminus: React.FC<TerminusProps> = ({
   buttonText = "",
   buttonIcon = null,
   buttonDisabled = false,
+  isParticipate = false,
 }) => {
   return (
     <Card
-      className={`flex flex-col w-[50%] h-[90%] ${className}`}
+      className={`flex flex-col ${isParticipate ? "w-full" : "w-[50%]"} h-[90%] ${className}`}
       data-testid="terminus"
     >
       <div className="flex flex-col bg-secondary md:h-[15%] justify-center font-semibold text-[14px] md:text-xl px-[20px] py-[10px] md:p-6 gap-1 md:rounded-t-md">

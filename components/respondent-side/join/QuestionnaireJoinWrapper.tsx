@@ -22,7 +22,6 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
     useQuestionnaireContext();
   const [QRETitle, setQRETitle] = useState("");
   const router = useRouter();
-  const [isMobile, setIsMobile] = useState(true);
   const [activeQuestionId, setActiveQuestionId] = useState(0);
   const [activeSectionId, setActiveSectionId] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
@@ -34,7 +33,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   const handleAnswerChange = (questionId: number, newAnswer: string) => {
     setAnswers((prevAnswers) => {
       const answerIndex = prevAnswers.findIndex(
-        (answer) => answer.questionId === questionId,
+        (answer) => answer.questionId === questionId
       );
 
       if (answerIndex >= 0) {
@@ -60,7 +59,9 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
     };
 
     fetchData().catch(console.error);
-  }, []);
+  });
+  // How to make this persist?
+  // Choices are not persistent, sometimes it's empty
 
   // Get Specific Question to be displayed
   const handleQuestionToggleSelect = async (questionId: number) => {
@@ -106,14 +107,17 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number,
+    questionId: number
   ): Question | undefined {
+    console.log("Questionnaire from Find: ", questionnaire);
     for (const item of questionnaire) {
+      console.log("Item: ", item);
       if (item.type === "SECTION") {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
+          (question) => question.questionId === questionId
         );
         if (foundQuestion) {
+          console.log("Found Question: ", foundQuestion);
           return foundQuestion;
         }
       } else if (
@@ -138,9 +142,11 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       choice,
     } = q;
     let existingAnswerIndex = answers.findIndex(
-      (answer) => answer.questionId === questionId,
+      (answer) => answer.questionId === questionId
     );
 
+    console.log("Rendering Question Type: ", questionType);
+    console.log("Rendering Choice: ", choice);
     const answer = answers[existingAnswerIndex]?.answer ?? "";
 
     return (
@@ -161,18 +167,23 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
             }
           />
         ) : questionType === "CHECKBOX" ? (
-          <Checkboxes
-            role="RESPONDENT"
-            numbering={index + 1}
-            questionId={questionId as number}
-            questionTypeName={questionTypeName}
-            isRequired={isRequired}
-            question={question}
-            description={description ?? ""}
-            choice={choice ?? []}
-            // answer={answer as string[]}
-            answer={answer as string[]}
-          />
+          (console.log("Rendering Checkbox"),
+          console.log("Answer: ", answer),
+          console.log("Choice: ", choice),
+          (
+            <Checkboxes
+              role="RESPONDENT"
+              numbering={index + 1}
+              questionId={questionId as number}
+              questionTypeName={questionTypeName}
+              isRequired={isRequired}
+              question={question}
+              description={description ?? ""}
+              choice={choice ?? []}
+              // answer={answer as string[]}
+              answer={answer as string[]}
+            />
+          ))
         ) : (
           <RadioButton
             role="RESPONDENT"
@@ -201,6 +212,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
     question: string;
     description: string;
     answer: string;
+    choice: string[];
   }
 
   interface SectionGet {
@@ -212,8 +224,9 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
 
   type QuestionnaireGetItem = SectionGet | QuestionGet;
 
-  // Transform Data before Fetching
-  function transformData(data: QuestionnaireGetItem[]): QuestionnaireItem[] {
+  async function transformData(
+    data: QuestionnaireGetItem[]
+  ): Promise<QuestionnaireItem[]> {
     return data.map((item) => {
       if (
         (item as SectionGet).sectionId !== null &&
@@ -222,16 +235,33 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
         const section = item as SectionGet;
         const questions = section.questions.map((question) => {
           handleAnswerChange(question.questionId, question.answer);
-          return {
-            questionId: question.questionId,
-            questionType: question.questionType,
-            questionTypeName: question.questionTypeName,
-            isRequired: question.isRequired,
-            question: question.question,
-            description: question.description,
-            choice: [question.answer], // needs refactoring
-          };
-        });
+          const existingQuestion = findQuestionById(
+            questionnaire,
+            question.questionId
+          );
+          if (existingQuestion) {
+            const choice = existingQuestion.choice ?? question.choice;
+            return {
+              questionId: question.questionId,
+              questionType: question.questionType,
+              questionTypeName: question.questionTypeName,
+              isRequired: question.isRequired,
+              question: question.question,
+              description: question.description,
+              choice: choice,
+            };
+          } else {
+            return {
+              questionId: question.questionId,
+              questionType: question.questionType,
+              questionTypeName: question.questionTypeName,
+              isRequired: question.isRequired,
+              question: question.question,
+              description: question.description,
+              choice: question.choice,
+            };
+          }
+        }) as Question[];
 
         return {
           type: "SECTION",
@@ -251,7 +281,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
             isRequired: question.isRequired,
             question: question.question,
             description: question.description,
-            choice: [question.answer], // Needs refactoring
+            choice: question.choice,
           },
         } as DefaultQuestion;
       }
@@ -262,12 +292,18 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   const fetchQuestionnaire = async () => {
     try {
       const response = await getQuestionnaireRespondent(id);
-      const transformed = transformData(response.data.questions);
-      setQuestionnaire(transformed);
+      const transformed = await transformData(response.data.questions);
       setQRETitle(response.data.title);
       setPrizeType(response.data.prizeType);
       setPrize(response.data.prize);
       setMaxWinner(response.data.maxWinner);
+
+      console.log(
+        "Transformed: ",
+        transformed.map((item) => item)
+      );
+
+      setQuestionnaire(transformed);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
@@ -324,9 +360,10 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                 if (item !== undefined) {
                   const section = item as Section;
                   return (
-                    <Card className="flex flex-row w-full h-full justify-center items-center">
+                    <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
                       <Terminus
                         QRETitle=""
+                        isParticipate={true}
                         terminusSectionTitle={section.sectionName}
                         terminusText={section.sectionDescription}
                         buttonClickHandler={next}
@@ -339,35 +376,51 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                 }
               })()
             : (() => {
+                console.log("Rendering section: " + activeSectionId);
+                console.log("Questionnaire UI: ", questionnaire);
                 const item = questionnaire[activeSectionId];
                 if (
                   item !== undefined &&
                   activeSectionId + 1 <= questionnaire.length - 1
                 ) {
                   const section = item as Section;
+                  console.log("choice: ", section.questions);
                   return (
-                    <QuestionUI
-                      questionSectionTitle={"Section " + activeSectionId}
-                      questionSectionText={section.sectionName}
-                      required={true}
-                      questions={
-                        <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
-                          {section.questions?.length >= 1
-                            ? section.questions.map((question, index) => {
-                                const renderedQuestion = findQuestionById(
-                                  questionnaire,
-                                  question.questionId as number,
-                                ) as Question;
-                                return renderQuestion(renderedQuestion, index);
-                              })
-                            : ""}
-                        </div>
-                      }
-                      prevButton={prev}
-                      nextButton={next}
-                      buttonText="Next"
-                      buttonIcon={<LuCheck className="w-5 h-5" />}
-                    />
+                    <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
+                      <QuestionUI
+                        questionSectionTitle={"Section " + activeSectionId}
+                        questionSectionText={section.sectionName}
+                        required={true}
+                        isParticipate={true}
+                        questions={
+                          <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
+                            {section.questions?.length >= 1
+                              ? section.questions.map((question, index) => {
+                                  console.log("Question UI: ", question);
+                                  const renderedQuestion = findQuestionById(
+                                    questionnaire,
+                                    question.questionId as number
+                                  ) as Question;
+
+                                  console.log(
+                                    "Rendered Question: ",
+                                    renderedQuestion
+                                  );
+
+                                  return renderQuestion(
+                                    renderedQuestion,
+                                    index
+                                  );
+                                })
+                              : ""}
+                          </div>
+                        }
+                        prevButton={prev}
+                        nextButton={next}
+                        buttonText="Next"
+                        buttonIcon={<LuCheck className="w-5 h-5" />}
+                      />
+                    </Card>
                   );
                 } else {
                   const item = questionnaire[activeSectionId];
@@ -377,9 +430,10 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                   ) {
                     const section = item as Section;
                     return (
-                      <Card className="flex flex-row w-full h-full justify-center items-center">
+                      <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
                         <Terminus
                           QRETitle=""
+                          isParticipate={true}
                           terminusSectionTitle={section.sectionName}
                           terminusText={section.sectionDescription}
                           buttonClickHandler={next}
