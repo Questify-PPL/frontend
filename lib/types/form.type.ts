@@ -92,6 +92,7 @@ export type SummarizeFormAsProps = {
     respondentId: string;
     name: string;
     email: string;
+    isReported: boolean;
   }[];
   formId: string;
   session: Session;

@@ -1,9 +1,15 @@
 import AdminNav from "@/components/admin-side/AdminNav";
 import { getReports } from "@/lib/action/admin";
 import { ReportInfo } from "@/components/admin/ReportInfo";
+import { Report } from "@/lib/types/admin/report";
 
 export default async function ReportPage() {
-  const reports = await getReports();
+  let reports: Report[] = [];
+
+  try {
+    reports = await getReports();
+  } catch (error) {}
+
   return (
     <div
       className="flex flex-col w-full h-full absolute"
