@@ -11,9 +11,10 @@ import {
 import { URL } from "@/lib/constant";
 import { useSummaryContext } from "@/lib/context/SummaryContext";
 import { Fragment, useEffect, useState } from "react";
+import { ReportDialog } from "@/components/report/ReportDialog";
 
 export function IndividualContent() {
-  const {
+  let {
     allIndividuals,
     formId,
     setIndividualFormQuestions,
@@ -23,6 +24,18 @@ export function IndividualContent() {
   const [individual, setIndividual] = useState(
     allIndividuals ? allIndividuals[0] : null,
   );
+
+  const handleIndividualReportChange = (isReported: boolean) => {
+    if (!individual) return;
+
+    const updatedIndividual = { ...individual, isReported };
+
+    const individualIndex = allIndividuals.findIndex(
+      (val) => val === individual,
+    );
+    allIndividuals[individualIndex] = updatedIndividual;
+    setIndividual(updatedIndividual);
+  };
 
   const [error, setError] = useState<string | null>(null);
 
@@ -60,43 +73,51 @@ export function IndividualContent() {
   ]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 w-full">
+    <div className="flex flex-col items-center justify-center gap-4 w-full relative">
       <h2 className="text-[#32636A] text-[14px] leading-normal font-bold">
         Choose an individual to view their response
       </h2>
 
       {individual && (
-        <Select
-          onValueChange={(e) => {
-            setIndividual(
-              allIndividuals.find((val) => val.respondentId === e) as {
-                respondentId: string;
-                name: string;
-                email: string;
-              } | null,
-            );
-          }}
-          defaultValue={individual.respondentId.toString()}
-        >
-          <SelectTrigger className="md:w-3/5 w-4/5">
-            <SelectValue>
-              {individual.name ? individual.name : individual.email}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Individuals</SelectLabel>
-              {allIndividuals.map((curr) => (
-                <SelectItem
-                  key={curr.respondentId}
-                  value={curr.respondentId.toString()}
-                >
-                  {curr.name ? curr.name : curr.email}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-3 self-stretch mb-2">
+          <Select
+            onValueChange={(e) => {
+              setIndividual(
+                allIndividuals.find((val) => val.respondentId === e) as {
+                  respondentId: string;
+                  name: string;
+                  email: string;
+                  isReported: boolean;
+                } | null,
+              );
+            }}
+            defaultValue={individual.respondentId.toString()}
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue>
+                {individual.name ? individual.name : individual.email}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Individuals</SelectLabel>
+                {allIndividuals.map((curr) => (
+                  <SelectItem
+                    key={curr.respondentId}
+                    value={curr.respondentId.toString()}
+                  >
+                    {curr.name ? curr.name : curr.email}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <ReportDialog
+            formId={formId}
+            individual={individual}
+            handleReport={handleIndividualReportChange}
+          />
+        </div>
       )}
 
       {!error && individualFormQuestions && (

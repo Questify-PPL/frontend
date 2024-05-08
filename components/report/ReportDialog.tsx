@@ -1,6 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { createReport } from "@/lib/action/user";
+import clsx from "clsx";
+import { useState, useTransition } from "react";
+import { Loading } from "../common";
 import {
   Dialog,
   DialogContent,
@@ -12,35 +16,87 @@ import {
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 const max_characters = 200;
 
 export type ReportDialogProps = {
-  reportedUser: {
+  individual: {
+    respondentId: string;
     name: string;
-    id: string;
+    email: string;
+    isReported: boolean;
   };
+  formId: string;
+  handleReport: (isReported: boolean) => void;
 };
 
-export function ReportDialog({ reportedUser }: Readonly<ReportDialogProps>) {
+export function ReportDialog({
+  individual,
+  formId,
+  handleReport,
+}: Readonly<ReportDialogProps>) {
   const [characterCount, setCharacterCount] = useState(0);
   const [reason, setReason] = useState("");
 
+  const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+
+  const handleSubmitReport = () => {
+    startTransition(async () => {
+      const response = await createReport({
+        reportToId: individual.respondentId,
+        formId: formId,
+        message: reason,
+      });
+      const notificationMessage = response
+        ? {
+            title: "Failed to create report",
+            description:
+              "Please try again in a few minutes or contact our support team",
+          }
+        : {
+            title: "Success to create report",
+          };
+      toast(notificationMessage);
+
+      if (response === undefined) {
+        handleReport(true);
+        setOpen(false);
+        setReason("");
+      }
+    });
+  };
+
+  const disabled = individual.isReported;
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-rose-700 text-white">
-          Report
+        <Button
+          variant="outline"
+          className={clsx({
+            "bg-rose-700 text-white": !disabled,
+            "bg-gray-300 text-gray-500": disabled,
+          })}
+          disabled={disabled}
+        >
+          {disabled ? "Reported" : "Report"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form action="">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmitReport();
+          }}
+        >
           <DialogHeader>
             <DialogTitle>Report</DialogTitle>
             <DialogDescription>
-              Report <span className="font-bold">{reportedUser.name}</span> to
-              the Admin
+              Report <span className="font-bold">{individual.name}</span> to the
+              Admin
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
@@ -53,24 +109,27 @@ export function ReportDialog({ reportedUser }: Readonly<ReportDialogProps>) {
                 className="h-40 resize-none"
                 placeholder="Elaborate the reason so that we can take appropriate action"
                 onChange={(e) => {
-                  if (e.target.value.length === max_characters + 1) {
-                    e.target.value = reason;
-                  } else if (e.target.value.length > max_characters + 1) {
-                    e.target.value = e.target.value.slice(0, max_characters);
-                  }
                   setCharacterCount(e.target.value.length);
                   setReason(e.target.value);
                 }}
                 value={reason}
                 required={true}
+                maxLength={200}
+                minLength={20}
               />
             </div>
-            <div className="text-right">
-              {characterCount}/{max_characters}
+            <div className="flex justify-between">
+              <span>Minimum 20 characters</span>
+              <span>
+                {characterCount}/{max_characters}
+              </span>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isPending}>
+              {" "}
+              {isPending && <Loading />} Submit
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

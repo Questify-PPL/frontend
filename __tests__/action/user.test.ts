@@ -282,7 +282,7 @@ describe("Update user information", () => {
 describe("Create Report", () => {
   it("should create report with valid information", async () => {
     const expectedResponse = {
-      status: 200,
+      status: 201,
     };
     mockedAxios.post.mockResolvedValue(expectedResponse);
 

@@ -154,38 +154,10 @@ export async function createReport(createReport: CreateReport) {
       },
     );
 
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       throw new Error("Failed to create report");
     }
   } catch (error) {
     return { message: "Failed to create report" };
-  }
-}
-
-export async function updateReport(updateReport: UpdateReport) {
-  try {
-    const parsedData = UpdateReport.parse(updateReport);
-
-    const session = await auth();
-    const user = session?.user;
-
-    const response = await axios.patch(
-      URL.report.update(updateReport.reportId),
-      {
-        isApproved: parsedData.isApproved,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${user?.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    if (response.status !== 200) {
-      throw new Error("Failed to update report");
-    }
-  } catch (error) {
-    return { message: "Failed to update report" };
   }
 }

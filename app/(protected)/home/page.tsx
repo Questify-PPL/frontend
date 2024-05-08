@@ -10,6 +10,7 @@ import { UserRoleEnum } from "@/lib/types/auth";
 import { BareForm } from "@/lib/types/form.type";
 import { Session } from "next-auth";
 import { getInvoices } from "@/lib/action";
+import { Invoice } from "@/lib/types";
 
 export default async function Home() {
   const session = (await auth()) as Session;
@@ -32,6 +33,14 @@ export default async function Home() {
     return forms;
   }
 
+  let invoices: Invoice[] = [];
+
+  if (session.user.activeRole === UserRoleEnum.Admin) {
+    try {
+      invoices = await getInvoices();
+    } catch (error) {}
+  }
+
   return (
     <>
       {session.user.activeRole === UserRoleEnum.Creator && (
@@ -45,7 +54,7 @@ export default async function Home() {
         />
       )}
       {session.user.activeRole === UserRoleEnum.Admin && (
-        <AdminHomePage invoices={await getInvoices()} />
+        <AdminHomePage invoices={invoices} />
       )}
     </>
   );
