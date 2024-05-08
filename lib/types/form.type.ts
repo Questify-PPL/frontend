@@ -18,6 +18,7 @@ export type BareForm = {
   canRespond?: boolean;
   winningChance?: number;
   winningStatus?: boolean;
+  winnerAmount?: number;
 };
 
 export type FetchListForm = {
