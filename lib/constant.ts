@@ -153,13 +153,14 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     createdAt: "2024-03-18T12:00:00",
     updatedAt: "2024-03-18T12:00:00",
     endedAt: "2024-03-31T12:00:00",
-    ongoingParticipation: 10,
-    completedParticipation: 0,
+    ongoingParticipation: 7,
+    completedParticipation: 3,
     questionFilled: 10,
-    isCompleted: false,
+    isCompleted: true,
     questionAmount: 20,
     winningChance: 100,
     winningStatus: true,
+    winnerAmount: 3,
   },
   {
     id: "form456",
@@ -176,8 +177,9 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionFilled: 25,
     isCompleted: true,
     questionAmount: 25,
-    winningChance: 0.15,
+    winningChance: 17.2342835,
     winningStatus: true, // LUCKY
+    winnerAmount: 2,
   },
   {
     id: "form789",
@@ -194,8 +196,9 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionFilled: 30,
     isCompleted: true,
     questionAmount: 30,
-    winningChance: 0.1,
+    winningChance: 10.5,
     winningStatus: false,
+    winnerAmount: 1,
   },
   {
     id: "form234",
@@ -203,7 +206,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     title: "Sample Form 4",
     prize: 100,
     prizeType: "EVEN",
-    maxWinner: 1,
+    maxWinner: 5,
     createdAt: "2024-03-17T12:00:00",
     updatedAt: "2024-03-17T12:00:00",
     endedAt: "2024-03-19T12:00:00",
@@ -214,6 +217,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionAmount: 30,
     winningChance: 100,
     winningStatus: true,
+    winnerAmount: 5,
   },
   {
     id: "form567",
@@ -230,8 +234,9 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionFilled: 30,
     isCompleted: true,
     questionAmount: 30,
-    winningChance: 0.01,
+    winningChance: 17.3538,
     winningStatus: false,
+    winnerAmount: 1,
   },
 ];
 

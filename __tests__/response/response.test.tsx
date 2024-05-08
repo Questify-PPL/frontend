@@ -125,7 +125,7 @@ describe("Responder Response", () => {
   it("renders ResponsesWrapper with form data when user is a creator with forms", async () => {
     (auth as jest.Mock).mockResolvedValue(mockCreatorSession);
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -137,7 +137,7 @@ describe("Responder Response", () => {
   it("should not render ResponsesWrapper when user is not a creator", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -160,7 +160,7 @@ describe("Responder Response", () => {
   it("renders MPWrapper with form data when user is a respondent with forms", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -183,7 +183,7 @@ describe("Responder Response", () => {
     };
     (auth as jest.Mock).mockResolvedValue(modifiedMockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -193,7 +193,7 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("mp-table")).not.toBeInTheDocument();
     QUESTIONNAIRES_FILLED.forEach((form) => {
       expect(
-        screen.queryByTestId(`mp-content-${form.id}`),
+        screen.queryByTestId(`mp-content-${form.id}`)
       ).not.toBeInTheDocument();
     });
   });
@@ -209,7 +209,7 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("mp-table")).toBeInTheDocument();
 
     const formData = screen.queryAllByTestId((id) =>
-      id.startsWith("mp-content-"),
+      id.startsWith("mp-content-")
     );
 
     expect(formData.length).toBe(0);
@@ -296,8 +296,12 @@ describe("Responder Response", () => {
     expect(screen.queryByText("prized on 20/")).toBeInTheDocument();
   });
 
-  it('renders "Done" when the form is complete', async () => {
-    const form = { ...QUESTIONNAIRES_FILLED[0], isCompleted: true };
+  it('renders "Done" when form is fully completed', async () => {
+    const form = {
+      ...QUESTIONNAIRES_FILLED[0],
+      questionFilled: 15,
+      questionAmount: 15,
+    };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
 
@@ -307,12 +311,11 @@ describe("Responder Response", () => {
     expect(screen.queryByText("Done")).toBeInTheDocument();
   });
 
-  it("renders the number of questions filled when the form is incomplete", async () => {
+  it("renders the number of questions filled when the form is partially completed", async () => {
     const form = {
       ...QUESTIONNAIRES_FILLED[0],
       questionFilled: 5,
       questionAmount: 15,
-      isCompleted: false,
     };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
@@ -353,6 +356,21 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("status-ended")).toBeInTheDocument();
   });
 
+  it("should show max 2 precision for winning chance", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    expect(screen.queryAllByText(new RegExp(/\d+\,\d{3,}/)).length).toBe(0);
+    expect(
+      screen.queryAllByText(new RegExp(/\d+(\,\d{1,2})?$/)).length
+    ).toBeGreaterThan(0);
+  });
+
   it('renders "?" as prize amount when the form is ongoing', async () => {
     const form = {
       ...QUESTIONNAIRES_FILLED[0],
@@ -376,6 +394,7 @@ describe("Responder Response", () => {
       endedAt: "2024-03-20T12:00:00",
       winningStatus: true,
       prize: 100,
+      winnerAmount: 1,
     };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
@@ -384,10 +403,31 @@ describe("Responder Response", () => {
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
 
     const formData = screen.queryAllByTestId((id) =>
-      id.startsWith("prize-amount-"),
+      id.startsWith("prize-amount-")
     );
 
     expect(formData.length).toBeGreaterThan(0);
+  });
+
+  it("renders the prize amount divided by winnerAmount when the form has ended and winningStatus is true", async () => {
+    const form = {
+      ...QUESTIONNAIRES_FILLED[0],
+      createdAt: "2024-03-15T12:00:00",
+      endedAt: "2024-03-20T12:00:00",
+      winningStatus: true,
+      prize: 100,
+      winnerAmount: 5,
+    };
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    const result = screen.queryAllByText(
+      `${Math.floor(form.prize / Number(form.winnerAmount))}`
+    );
+    expect(result.length).toBe(1);
   });
 
   it('renders "0" as prize amount when the form has ended and winningStatus is false', async () => {
@@ -410,7 +450,7 @@ describe("Responder Response", () => {
   it('filters forms when "All" filter is selected', async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -432,7 +472,7 @@ describe("Responder Response", () => {
   it('filters forms when "On Going" filter is selected', async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -443,7 +483,7 @@ describe("Responder Response", () => {
     await waitFor(() => {});
 
     const onGoingForms = QUESTIONNAIRES_FILLED.filter(
-      (form) => !isEnded(form.endedAt),
+      (form) => !isEnded(form.endedAt)
     );
     onGoingForms.forEach((form) => {
       expect(screen.queryByTestId(`mp-content-${form.id}`)).toBeInTheDocument();
@@ -451,7 +491,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!onGoingForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -460,7 +500,7 @@ describe("Responder Response", () => {
   it('filters forms when "Ended" filter is selected', async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -471,7 +511,7 @@ describe("Responder Response", () => {
     await waitFor(() => {});
 
     const endedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      isEnded(form.endedAt),
+      isEnded(form.endedAt)
     );
     endedForms.forEach((form) => {
       expect(screen.queryByTestId(`mp-content-${form.id}`)).toBeInTheDocument();
@@ -479,7 +519,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!endedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -488,7 +528,7 @@ describe("Responder Response", () => {
   it('filters forms based on query when "All" filter is selected', async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -507,7 +547,7 @@ describe("Responder Response", () => {
     searchInput.dispatchEvent(new Event("input"));
 
     const queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      form.title.startsWith("Sample Form 1"),
+      form.title.startsWith("Sample Form 1")
     );
 
     queriedForms.forEach((form) => {
@@ -517,7 +557,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!queriedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -526,7 +566,7 @@ describe("Responder Response", () => {
   it('filters forms by "All", then by query, then by "Ended", then by query again, then by "On Going"', async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -547,7 +587,7 @@ describe("Responder Response", () => {
     searchInput.dispatchEvent(new Event("input"));
 
     let queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      form.title.startsWith("Sample Form"),
+      form.title.startsWith("Sample Form")
     );
 
     queriedForms.forEach((form) => {
@@ -557,7 +597,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!queriedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -576,7 +616,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!endedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -586,7 +626,7 @@ describe("Responder Response", () => {
     searchInput.dispatchEvent(new Event("input"));
 
     queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      form.title.startsWith("Sample Form 3"),
+      form.title.startsWith("Sample Form 3")
     );
 
     endedForms = queriedForms.filter((form) => isEnded(form.endedAt));
@@ -598,7 +638,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!endedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -609,7 +649,7 @@ describe("Responder Response", () => {
     await waitFor(() => {});
 
     queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      form.title.startsWith("Sample Form 3"),
+      form.title.startsWith("Sample Form 3")
     );
 
     const onGoingForms = queriedForms.filter((form) => !isEnded(form.endedAt));
@@ -620,7 +660,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!onGoingForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-content-${form.id}`),
+          screen.queryByTestId(`mp-content-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -639,7 +679,7 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -650,7 +690,7 @@ describe("Responder Response", () => {
     });
     QUESTIONNAIRES_FILLED.forEach((form) => {
       expect(
-        screen.queryByTestId(`mp-content-${form.id}`),
+        screen.queryByTestId(`mp-content-${form.id}`)
       ).not.toBeInTheDocument();
     });
   });
@@ -668,7 +708,7 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
@@ -683,7 +723,7 @@ describe("Responder Response", () => {
     searchInput.dispatchEvent(new Event("input"));
 
     const queriedForms = QUESTIONNAIRES_FILLED.filter((form) =>
-      form.title.startsWith("Sample Form 1"),
+      form.title.startsWith("Sample Form 1")
     );
 
     queriedForms.forEach((form) => {
@@ -693,7 +733,7 @@ describe("Responder Response", () => {
     QUESTIONNAIRES_FILLED.forEach((form) => {
       if (!queriedForms.includes(form)) {
         expect(
-          screen.queryByTestId(`mp-mobile-${form.id}`),
+          screen.queryByTestId(`mp-mobile-${form.id}`)
         ).not.toBeInTheDocument();
       }
     });
@@ -712,17 +752,17 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED,
+      QUESTIONNAIRES_FILLED
     );
 
     render(await Response());
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
 
     const webContent = screen.queryAllByTestId((id) =>
-      id.startsWith("mp-content-"),
+      id.startsWith("mp-content-")
     );
     const mobileContent = screen.queryAllByTestId((id) =>
-      id.startsWith("mp-mobile-"),
+      id.startsWith("mp-mobile-")
     );
 
     expect(webContent.length).toBe(0);
@@ -733,10 +773,76 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("filter-ended")).not.toBeInTheDocument();
   });
 
+  it("should not show prize for on going forms in mobile view", async () => {
+    mockedMatchMedia.mockImplementationOnce((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED.map((form) => ({
+        ...form,
+        endedAt: "2027-03-20T12:00:00",
+      }))
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    QUESTIONNAIRES_FILLED.forEach((form) => {
+      expect(screen.queryByTestId(`mp-mobile-${form.id}`)).toBeInTheDocument();
+    });
+
+    const formData = screen.queryAllByTestId((id) =>
+      id.startsWith("prize-amount-")
+    );
+
+    expect(formData.length).toBe(0);
+  });
+
+  it("should show prize for ended forms in mobile view", async () => {
+    mockedMatchMedia.mockImplementationOnce((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED.map((form) => ({
+        ...form,
+        endedAt: "2024-03-20T12:00:00",
+      }))
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    QUESTIONNAIRES_FILLED.forEach((form) => {
+      expect(screen.queryByTestId(`mp-mobile-${form.id}`)).toBeInTheDocument();
+    });
+
+    const formData = screen.queryAllByTestId((id) =>
+      id.startsWith("prize-amount-")
+    );
+
+    expect(formData.length).toBeGreaterThan(0);
+  });
+
   it("should not error when failed to fetch", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
-      new Error("Failed to get questionnaires filled"),
+      new Error("Failed to get questionnaires filled")
     );
 
     render(await Response());
@@ -749,7 +855,7 @@ describe("Responder Response", () => {
   it("shows message when failed to fetch in web view", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
-      new Error("Failed to get questionnaires filled"),
+      new Error("Failed to get questionnaires filled")
     );
 
     render(await Response());
@@ -759,7 +865,7 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("mp-table")).toBeInTheDocument();
 
     const errorMessage = screen.queryAllByText(
-      "There's an issue with fetching the data",
+      "There's an issue with fetching the data"
     );
     expect(errorMessage.length).toBe(1);
   });
@@ -777,7 +883,7 @@ describe("Responder Response", () => {
     }));
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
-      new Error("Failed to get questionnaires filled"),
+      new Error("Failed to get questionnaires filled")
     );
 
     render(await Response());
@@ -787,7 +893,7 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("mp-table")).not.toBeInTheDocument();
 
     const errorMessage = screen.queryAllByText(
-      "There's an issue with fetching the data",
+      "There's an issue with fetching the data"
     );
     expect(errorMessage.length).toBe(2);
   });
