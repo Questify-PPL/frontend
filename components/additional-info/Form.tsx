@@ -86,7 +86,6 @@ const Form = () => {
   };
 
   const next = async () => {
-    console.log("next");
     const fields = steps[currentStep].fields;
     const output = await trigger(fields as FieldName[], { shouldFocus: true });
 
@@ -98,7 +97,6 @@ const Form = () => {
   };
 
   const prev = () => {
-    console.log("prev");
     if (currentStep > 0) {
       setCurrentStep((step) => step - 1);
     }

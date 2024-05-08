@@ -5,16 +5,11 @@ import { TopUpFetchResponse } from "@/lib/types/topup.type";
 
 export default async function TopUp() {
   const session = await auth();
-  const { statusCode, message, data } = await fetchInvoices();
+  const { data } = await fetchInvoices();
 
   async function fetchInvoices() {
-    let res = {} as TopUpFetchResponse;
-
-    res = await getInvoiceCreator();
-
-    return res;
+    return (await getInvoiceCreator()) as TopUpFetchResponse;
   }
 
-  console.log("invoices:", data);
   return <TopUpWrapper invoiceItems={data} session={session} />;
 }

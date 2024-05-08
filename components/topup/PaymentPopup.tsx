@@ -52,8 +52,6 @@ const PaymentPopup = ({
     try {
       const response = await processTopUp(formData);
 
-      console.log(response);
-
       if (response.statusCode === 201) {
         setConfirmationOpen(true);
       } else {

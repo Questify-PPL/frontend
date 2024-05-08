@@ -39,7 +39,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   const handleAnswerChange = (questionId: number, newAnswer: string) => {
     setAnswers((prevAnswers) => {
       const answerIndex = prevAnswers.findIndex(
-        (answer) => answer.questionId === questionId
+        (answer) => answer.questionId === questionId,
       );
 
       if (answerIndex >= 0) {
@@ -113,13 +113,13 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     console.log("Questionnaire from Find: ", questionnaire);
     for (const item of questionnaire) {
       if (item.type === QuestionnaireItemTypes.SECTION) {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           console.log("Found Question: ", foundQuestion);
@@ -147,7 +147,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
       choice,
     } = q;
     let existingAnswerIndex = answers.findIndex(
-      (answer) => answer.questionId === questionId
+      (answer) => answer.questionId === questionId,
     );
 
     console.log("Rendering Question Type: ", questionType);
@@ -230,7 +230,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
   type QuestionnaireGetItem = SectionGet | QuestionGet;
 
   async function transformData(
-    data: QuestionnaireGetItem[]
+    data: QuestionnaireGetItem[],
   ): Promise<QuestionnaireItem[]> {
     return data.map((item) => {
       if (
@@ -242,7 +242,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
           handleAnswerChange(question.questionId, question.answer);
           const existingQuestion = findQuestionById(
             questionnaire,
-            question.questionId
+            question.questionId,
           );
           if (existingQuestion) {
             const choice = existingQuestion.choice ?? question.choice;
@@ -305,7 +305,7 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
 
       console.log(
         "Transformed: ",
-        transformed.map((item) => item)
+        transformed.map((item) => item),
       );
 
       setQuestionnaire(transformed);
@@ -404,17 +404,17 @@ export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
                                   console.log("Question UI: ", question);
                                   const renderedQuestion = findQuestionById(
                                     questionnaire,
-                                    question.questionId as number
+                                    question.questionId as number,
                                   ) as Question;
 
                                   console.log(
                                     "Rendered Question: ",
-                                    renderedQuestion
+                                    renderedQuestion,
                                   );
 
                                   return renderQuestion(
                                     renderedQuestion,
-                                    index
+                                    index,
                                   );
                                 })
                               : ""}

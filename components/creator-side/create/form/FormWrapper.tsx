@@ -80,7 +80,6 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
       const transformed = transformData(response.data.questions);
       setQuestionnaire(transformed);
       setTitle(response.data.title);
-      console.log(transformed);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
