@@ -1,5 +1,5 @@
 import { Textarea } from "@/components/ui/textarea";
-import { Question, Section } from "@/lib/context";
+import { Question, QuestionnaireItemTypes, Section } from "@/lib/context";
 import { useQuestionnaireContext } from "@/lib/hooks/useQuestionnaireContext";
 import { RadioButton, Text, Checkboxes } from "@/components/questions";
 import Image from "next/image";
@@ -12,7 +12,9 @@ export function TerminusRenderer({
   const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
   const label = sectionKey.charAt(0) + sectionKey.slice(1).toLowerCase();
   const section = questionnaire.find(
-    (item) => item.type === "SECTION" && item.sectionName === sectionKey,
+    (item) =>
+      item.type === QuestionnaireItemTypes.SECTION &&
+      item.sectionName === sectionKey,
   ) as Section | undefined;
 
   if (!section) return null;
@@ -21,7 +23,10 @@ export function TerminusRenderer({
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const updatedQuestionnaire = questionnaire.map((item) => {
-      if (item.type === "SECTION" && item.sectionName === sectionKey) {
+      if (
+        item.type === QuestionnaireItemTypes.SECTION &&
+        item.sectionName === sectionKey
+      ) {
         return {
           ...item,
           sectionDescription: event.target.value,
@@ -45,46 +50,55 @@ export function TerminusRenderer({
   );
 }
 
-export function QuestionRenderer(q: Question, index: number) {
+export function QuestionRenderer(q: Readonly<Question>) {
+  let questionComponent;
+  if (q.questionType === "TEXT") {
+    questionComponent = (
+      <Text
+        role="CREATOR"
+        numbering={q.number}
+        questionId={q.questionId as number}
+        questionTypeName={q.questionTypeName}
+        isRequired={q.isRequired}
+        question={q.question}
+        description={q.description ?? ""}
+        choice={q.choice ?? []}
+        answer={""}
+      />
+    );
+  } else if (q.questionType === "CHECKBOX") {
+    questionComponent = (
+      <Checkboxes
+        role="CREATOR"
+        numbering={q.number}
+        questionId={q.questionId as number}
+        questionTypeName={q.questionTypeName}
+        isRequired={q.isRequired}
+        question={q.question}
+        description={q.description ?? ""}
+        choice={q.choice ?? []}
+        answer={[]}
+      />
+    );
+  } else {
+    questionComponent = (
+      <RadioButton
+        role="CREATOR"
+        numbering={q.number}
+        questionId={q.questionId as number}
+        questionTypeName={q.questionTypeName}
+        isRequired={q.isRequired}
+        question={q.question}
+        description={q.description ?? ""}
+        choice={q.choice ?? []}
+        answer={[]}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col w-full" key={q.questionId}>
-      {q.questionType === "TEXT" ? (
-        <Text
-          role="CREATOR"
-          numbering={index + 1}
-          questionId={q.questionId as number}
-          questionTypeName={q.questionTypeName}
-          isRequired={q.isRequired}
-          question={q.question}
-          description={q.description ?? ""}
-          choice={q.choice ?? []}
-          answer={""}
-        />
-      ) : q.questionType === "CHECKBOX" ? (
-        <Checkboxes
-          role="CREATOR"
-          numbering={index + 1}
-          questionId={q.questionId as number}
-          questionTypeName={q.questionTypeName}
-          isRequired={q.isRequired}
-          question={q.question}
-          description={q.description ?? ""}
-          choice={q.choice ?? []}
-          answer={[]}
-        />
-      ) : (
-        <RadioButton
-          role="CREATOR"
-          numbering={index + 1}
-          questionId={q.questionId as number}
-          questionTypeName={q.questionTypeName}
-          isRequired={q.isRequired}
-          question={q.question}
-          description={q.description ?? ""}
-          choice={q.choice ?? []}
-          answer={[]}
-        />
-      )}
+      {questionComponent}
     </div>
   );
 }

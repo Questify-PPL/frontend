@@ -1,6 +1,11 @@
-import { QuestionnaireItem, Answer } from "@/lib/context";
+import {
+  QuestionnaireItem,
+  Answer,
+  QuestionnaireItemTypes,
+} from "@/lib/context";
 import { BareForm } from "./types";
 import { processTopUp } from "./action/topup";
+import { number } from "zod";
 
 export const BENEFIT = [
   {
@@ -57,13 +62,15 @@ export const URL = {
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
   {
-    type: "SECTION",
+    type: QuestionnaireItemTypes.SECTION,
     sectionId: 1,
+    number: 1,
     sectionName: "Section 1",
     sectionDescription: "This is the first section of the questionnaire",
     questions: [
       {
         questionId: 1,
+        number: 1,
         questionType: "CHECKBOX",
         questionTypeName: "Multiple Choice",
         isRequired: false,
@@ -73,6 +80,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
       },
       {
         questionId: 2,
+        number: 2,
         questionType: "TEXT",
         questionTypeName: "Short Text",
         isRequired: false,
@@ -81,6 +89,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
       },
       {
         questionId: 3,
+        number: 3,
         questionType: "RADIO",
         questionTypeName: "Multiple Choice",
         isRequired: false,
@@ -90,13 +99,15 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
     ],
   },
   {
-    type: "SECTION",
+    type: QuestionnaireItemTypes.SECTION,
     sectionId: 2,
+    number: 2,
     sectionName: "Section 2",
     sectionDescription: "This is the second section of the questionnaire",
     questions: [
       {
         questionId: 4,
+        number: 1,
         questionType: "CHECKBOX",
         questionTypeName: "Multiple Choice",
         isRequired: false,
@@ -106,6 +117,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
       },
       {
         questionId: 5,
+        number: 2,
         questionType: "TEXT",
         questionTypeName: "Short Text",
         isRequired: false,
@@ -115,9 +127,10 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
     ],
   },
   {
-    type: "DEFAULT",
+    type: QuestionnaireItemTypes.DEFAULT,
     question: {
       questionId: 6,
+      number: 3,
       questionType: "TEXT",
       questionTypeName: "Short Text",
       isRequired: false,
