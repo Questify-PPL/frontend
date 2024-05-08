@@ -311,7 +311,6 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
               )}
             <Card className="flex w-1/2 h-full rounded-md p-5">
               {decideWhichToRender()}
-              {decideWhichToRender()}
             </Card>
           </div>
           <FormLowerMenu onChange={handleMobileToggle} isMobile={isMobile} />
