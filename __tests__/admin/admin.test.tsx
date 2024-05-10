@@ -100,6 +100,12 @@ describe("Reports Page", () => {
     render(await ReportsPage());
     expect(screen.getByTestId("admin-homepage")).toBeInTheDocument();
   });
+
+  test("renders the reports page with issues", async () => {
+    (getReports as jest.Mock).mockRejectedValue(new Error("error"));
+    render(await ReportsPage());
+    expect(screen.getByTestId("admin-homepage")).toBeInTheDocument();
+  });
 });
 
 describe("Review Page", () => {
