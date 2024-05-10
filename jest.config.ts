@@ -14,6 +14,7 @@ const config: Config = {
     "**app/*.{js,jsx,ts,tsx}",
     "**app/**/*.{js,jsx,ts,tsx}",
     "!**app/layout.tsx",
+    "!**/loading.tsx/**",
     "!**/node_modules/**",
     "!**/.next/**",
   ],
