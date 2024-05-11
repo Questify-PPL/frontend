@@ -58,7 +58,7 @@ export function LoadingNav({
         <span className={`${buttonIndicatorClassSm} bg-transparent`}></span>
       )}
       <div
-        className={`flex w-full items-start flex-col md:flex-row md:py-3 md:gap-3 md:pr-4 md:pl-5 lg:pr-6 gap-0.5  md:items-center relative`}
+        className={`flex w-full flex-col items-center md:flex-row md:py-3 md:gap-3 md:pr-4 md:pl-5 lg:pr-6 gap-0.5 md:items-center relative`}
       >
         {icon}
         <div
@@ -67,7 +67,7 @@ export function LoadingNav({
           {label}
         </div>
         {!isActive && (
-          <Skeleton className="w-full self-stretch h-full md:h-8 bg-[#bfbcbf] absolute overflow-hidden md:left-1 lg:left-2 xl:left-1" />
+          <Skeleton className="w-full self-stretch h-full md:h-8 absolute overflow-hidden md:left-1 lg:left-2 xl:left-1" />
         )}
       </div>
       {isActive ? (
@@ -80,7 +80,7 @@ export function LoadingNav({
 
   return (
     <div
-      className={`flex p-4 md:p-0 fixed bottom-4 md:top-auto md:bottom-auto md:relative md:flex md:w-fit w-full !left-0`}
+      className={`flex p-4 md:p-0 fixed bottom-4 md:top-auto md:bottom-auto md:relative md:flex md:w-fit w-full !left-0 z-10`}
     >
       <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
         {NAVIGATION_CONST.map((nav) => (
