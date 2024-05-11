@@ -5,4 +5,5 @@ export type Props = {
 
 export type LoadingProps = {
   label: string;
+  children?: React.ReactNode;
 };

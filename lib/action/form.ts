@@ -2,8 +2,8 @@
 
 import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
-import { FetchListForm } from "../types";
 import { Answer, QuestionnaireItem } from "../context";
+import { FetchListForm } from "../types";
 
 export async function createQuestionnaire(
   title: string,
@@ -74,6 +74,7 @@ export async function getQuestionnairesOwned(type?: string) {
       "Content-Type": "application/json",
     },
     method: "GET",
+    cache: "no-cache",
   });
 
   if (response.status !== 200) {
