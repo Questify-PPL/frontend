@@ -1,3 +1,5 @@
+import { DashboardLoadingWrapper } from "@/components/creator-side/DashboardLoadingWrapper";
+
 export default function Loading() {
-  return <div>Loading 1</div>;
+  return <DashboardLoadingWrapper label="Home" />;
 }
