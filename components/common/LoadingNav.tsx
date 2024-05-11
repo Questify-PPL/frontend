@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { AnimatePresence, motion } from "framer-motion";
 import { Fragment } from "react";
 import { LuClipboardList, LuHistory, LuHome } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
@@ -59,66 +58,27 @@ export function LoadingNav({
     </Button>
   );
 
-  function decideState(state: string) {
-    switch (state) {
-      case "Home":
-        return "home";
-      case "Responses":
-        return "responses";
-      default:
-        return "action";
-    }
-  }
-
   return (
-    <AnimatePresence>
-      <div className={`flex p-4 md:p-0 `}>
-        <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
-          {NAVIGATION_CONST.map((nav) => (
-            <Fragment key={nav.label}>
-              <motion.div
-                className="w-full lg:block hidden"
-                initial={{
-                  opacity: 0,
-                  y: state === decideState(nav.label) ? 400 : 0,
-                }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 400 }}
-                transition={{ duration: 0.5, type: "tween" }}
-              >
-                {renderButton(nav.icon, nav.label, nav.isActive)}
-              </motion.div>
-              <motion.div
-                className="w-full md:block lg:hidden hidden"
-                initial={{
-                  opacity: 0,
-                  y: state === decideState(nav.label) ? 400 : 0,
-                }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 400 }}
-                transition={{ duration: 0.5, type: "tween" }}
-              >
-                {renderButton(
-                  nav.icon,
-                  nav.label == "Create Questionnaire"
-                    ? "Create QRE"
-                    : nav.label,
-                  nav.isActive
-                )}
-              </motion.div>
-              <motion.div
-                className="w-full md:hidden block"
-                initial={{ opacity: 0, y: 0, scale: 0.5 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 400 }}
-                transition={{ duration: 0.5, type: "tween" }}
-              >
-                {renderButton(nav.icon, nav.label, nav.isActive)}
-              </motion.div>
-            </Fragment>
-          ))}
-        </Card>
-      </div>
-    </AnimatePresence>
+    <div className={`flex p-4 md:p-0 `}>
+      <Card className="flex px-2 md:flex-col w-full md:h-full md:gap-0 gap-5 md:py-2 md:px-0 overflow-x-auto">
+        {NAVIGATION_CONST.map((nav) => (
+          <Fragment key={nav.label}>
+            <div className="w-full lg:block hidden">
+              {renderButton(nav.icon, nav.label, nav.isActive)}
+            </div>
+            <div className="w-full md:block lg:hidden hidden">
+              {renderButton(
+                nav.icon,
+                nav.label == "Create Questionnaire" ? "Create QRE" : nav.label,
+                nav.isActive
+              )}
+            </div>
+            <div className="w-full md:hidden block">
+              {renderButton(nav.icon, nav.label, nav.isActive)}
+            </div>
+          </Fragment>
+        ))}
+      </Card>
+    </div>
   );
 }
