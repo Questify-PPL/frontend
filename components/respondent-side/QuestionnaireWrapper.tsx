@@ -27,7 +27,7 @@ export function QuestionnaireWrapper({ forms }: Readonly<FormsAsProps>) {
         <RespondentNav state="action"></RespondentNav>
         <div className="flex flex-col w-full space-y-4 flex-1">
           <p className="text-[#32636A] text-[10px] font-medium">
-            Here are your active questionnaire(s)
+            Here are your personalized questionnaire(s)
           </p>
 
           <InfoTable isRespondent={true}>
