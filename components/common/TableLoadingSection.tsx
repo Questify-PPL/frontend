@@ -25,16 +25,22 @@ export function TableLoadingSection({
         <>
           <Skeleton className="w-full h-14" />
           <Separator className="bg-[#E5EEF0]"></Separator>
-          <div className="flex md:justify-start gap-[6px]">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton
-                key={`skeleton-1-${index + 1}`}
-                className="w-[8%] h-8 rounded-[30%]"
-              ></Skeleton>
-            ))}
-          </div>
         </>
       )}
+
+      {isResponses && isCreator && (
+        <div className="flex md:justify-start gap-[6px]">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton
+              key={`skeleton-1-${index + 1}`}
+              className="w-[8%] h-8 rounded-[30%]"
+            ></Skeleton>
+          ))}
+        </div>
+      )}
+
+      {isResponses && !isCreator && <Skeleton className="w-1/4 h-8" />}
+
       <TableHeaderLoading />
       {Array.from({ length: 3 }).map((_, index) => (
         <Skeleton
@@ -42,6 +48,18 @@ export function TableLoadingSection({
           className="w-full h-20"
         ></Skeleton>
       ))}
+
+      {isResponses && !isCreator && (
+        <>
+          <Skeleton className="w-1/4 h-8" />
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Skeleton
+              key={`skeleton-2-${index + 1}`}
+              className="w-full h-20"
+            ></Skeleton>
+          ))}
+        </>
+      )}
     </>
   );
 }
