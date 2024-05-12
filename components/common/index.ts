@@ -5,4 +5,5 @@ export * from "./DashboardLoadingWrapper";
 export * from "./TableLoadingSection";
 export * from "./TableHeaderLoading";
 export * from "./LoadingNav";
+export * from "./HomeQuestionnaireLoading";
 export { Loading };

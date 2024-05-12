@@ -1,7 +1,10 @@
 import { auth } from "@/auth";
-import { DashboardLoadingWrapper } from "@/components/common";
+import {
+  DashboardLoadingWrapper,
+  HomeQuestionnaireLoading,
+} from "@/components/common";
 import { CreatorHomeCardLoading } from "@/components/creator-side/CreatorHomeCardLoading";
-import { Skeleton } from "@/components/ui/skeleton";
+import { RespondentHomeCardLoading } from "@/components/respondent-side/RespondentHomeCardLoading";
 import { Session } from "next-auth";
 
 export default async function Loading() {
@@ -12,20 +15,15 @@ export default async function Loading() {
       {session.user.activeRole === "CREATOR" && (
         <>
           <CreatorHomeCardLoading />
-          <div className="flex flex-col gap-[10px] min-h-[16rem] mt-4 px-2 w-full">
-            <div className="text-[#32636A] text-[10px] font-semibold">
-              Here are your active questionnaire(s)
-            </div>
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton
-                key={`skeleton-${index + 1}`}
-                className="w-full h-20"
-              ></Skeleton>
-            ))}
-          </div>
+          <HomeQuestionnaireLoading label="Here are your active questionnaire(s)" />
         </>
       )}
-      {session.user.activeRole === "RESPONDENT" && <></>}
+      {session.user.activeRole === "RESPONDENT" && (
+        <>
+          <RespondentHomeCardLoading />
+          <HomeQuestionnaireLoading label="Here are your on-going answered questionnaire(s)" />
+        </>
+      )}
       {session.user.activeRole === "ADMIN" && <></>}
     </DashboardLoadingWrapper>
   );
