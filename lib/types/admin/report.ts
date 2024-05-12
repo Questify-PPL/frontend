@@ -1,8 +1,11 @@
 import { User } from "../auth";
 
 export enum ReportStatus {
+  // eslint-disable-next-line no-unused-vars
   PENDING = "PENDING",
+  // eslint-disable-next-line no-unused-vars
   APPROVED = "APPROVED",
+  // eslint-disable-next-line no-unused-vars
   REJECTED = "REJECTED",
 }
 

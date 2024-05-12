@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { InvoiceItem, TopUpProps } from "../types/topup.type";
 import { TopUpContext, TopUpContextValue } from "../context/TopUpContext";
+import { InvoiceItem, TopUpProps } from "../types/topup.type";
 
 type TopUpProviderProps = {
   children: React.ReactNode;
@@ -17,21 +15,21 @@ export function TopUpProvider({
     undefined,
   );
 
+  // eslint-disable-next-line no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const topUpContextValue: TopUpContextValue & TopUpProps = {
-    chosenShopItem: chosenShopItem as InvoiceItem | undefined,
-    setChosenShopItem,
-    isLoading,
-    isOpen,
-    setIsOpen,
-    invoiceItems,
-    session,
-  };
+  const topUpContextValue: TopUpContextValue & TopUpProps = useMemo(() => {
+    return {
+      chosenShopItem: chosenShopItem,
+      setChosenShopItem,
+      isLoading,
+      isOpen,
+      setIsOpen,
+      invoiceItems,
+      session,
+    };
+  }, [chosenShopItem, isLoading, isOpen, invoiceItems, session]);
 
   return (
     <TopUpContext.Provider value={topUpContextValue}>

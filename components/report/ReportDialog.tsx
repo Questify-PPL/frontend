@@ -28,6 +28,8 @@ export type ReportDialogProps = {
     isReported: boolean;
   };
   formId: string;
+
+  // eslint-disable-next-line no-unused-vars
   handleReport: (isReported: boolean) => void;
 };
 

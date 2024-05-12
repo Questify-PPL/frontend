@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, ChangeEvent, useEffect } from "react";
-import QuestionLayout from "./QuestionLayout";
+import { useQuestionnaireContext } from "@/lib/hooks/useQuestionnaireContext";
 import {
   handleQuedesChange,
-  updateQuestionnaire,
   updateAnswers,
+  updateQuestionnaire,
 } from "@/lib/utils";
-import { useQuestionnaireContext } from "@/lib/hooks/useQuestionnaireContext";
-import { Answer, QuestionnaireItem } from "@/lib/context/QuestionnaireContext";
+import { ChangeEvent, useEffect, useState } from "react";
+import QuestionLayout from "./QuestionLayout";
 
 interface CheckboxProps {
   role: "CREATOR" | "RESPONDENT";
@@ -23,10 +22,10 @@ interface CheckboxProps {
   status?: boolean;
 }
 
-export function Checkboxes(checkboxProps: CheckboxProps) {
+export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
   const { questionnaire, answers, setQuestionnaire, setAnswers } =
     useQuestionnaireContext();
-  const { role, numbering, questionId, questionTypeName } = checkboxProps;
+  const { role, numbering, questionId } = checkboxProps;
   const {
     isRequired,
     question,
@@ -37,11 +36,13 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
   } = checkboxProps;
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
-    description || "",
+    description ?? "",
   );
   const [requiredValue, setRequiredValue] = useState(isRequired || false);
 
   const [options, setOptions] = useState<string[]>(answer || []);
+
+  // eslint-disable-next-line no-unused-vars
   const [selectedOptionIndices, setSelectedOptionIndices] = useState<number[]>(
     [],
   );
@@ -108,31 +109,33 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
   const handleOption = () => {
     return (
       <div>
-        {choice &&
-          choice.map((option, index) => (
-            <div key={index} className="flex items-center self-stretch gap-2">
-              <input
-                type="checkbox"
-                className=""
-                checked={selectedOptionsValues.includes(option)} // Check if the option is in the answer list
-                onChange={() => handleOptionToggle(index, option)}
-                disabled={!status} // Disable checkbox if status is false
-              />
+        {choice?.map((option, index) => (
+          <div
+            key={`option-${option}-${index}`}
+            className="flex items-center self-stretch gap-2"
+          >
+            <input
+              type="checkbox"
+              className=""
+              checked={selectedOptionsValues.includes(option)} // Check if the option is in the answer list
+              onChange={() => handleOptionToggle(index, option)}
+              disabled={!status} // Disable checkbox if status is false
+            />
 
-              <input
-                style={{ borderBottom: "none" }}
-                type="text"
-                value={option}
-                placeholder={`Option ${index + 1}`}
-                onChange={(e) => handleOptionChange(index, e.target.value)}
-                className="text-sm outline-none border-b border-gray-300 focus:border-primary"
-                readOnly={role === "RESPONDENT"}
-              />
-              {role === "CREATOR" && (
-                <button onClick={() => deleteOption(index)}>&times;</button>
-              )}
-            </div>
-          ))}
+            <input
+              style={{ borderBottom: "none" }}
+              type="text"
+              value={option}
+              placeholder={`Option ${index + 1}`}
+              onChange={(e) => handleOptionChange(index, e.target.value)}
+              className="text-sm outline-none border-b border-gray-300 focus:border-primary"
+              readOnly={role === "RESPONDENT"}
+            />
+            {role === "CREATOR" && (
+              <button onClick={() => deleteOption(index)}>&times;</button>
+            )}
+          </div>
+        ))}
         {role === "CREATOR" && checkboxTemplate}
       </div>
     );
@@ -149,6 +152,8 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
     );
 
     setQuestionnaire(updatedQuestionnaire);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requiredValue, questionValue, descriptionValue, options]);
 
   useEffect(() => {
@@ -159,6 +164,8 @@ export function Checkboxes(checkboxProps: CheckboxProps) {
     );
 
     setAnswers(updatedAnswers);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptionsValues]);
 
   return (

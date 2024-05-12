@@ -31,7 +31,10 @@ export type User = {
 export type UserRole = "CREATOR" | "RESPONDENT" | "ADMIN";
 
 export enum UserRoleEnum {
+  // eslint-disable-next-line no-unused-vars
   Creator = "CREATOR",
+  // eslint-disable-next-line no-unused-vars
   Respondent = "RESPONDENT",
+  // eslint-disable-next-line no-unused-vars
   Admin = "ADMIN",
 }

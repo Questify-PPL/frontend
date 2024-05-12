@@ -21,10 +21,12 @@ interface TextProps {
   choice?: string[];
   answer: string;
   status?: boolean; // false means it can't be modified (submitted || questionnaire has ended)
+
+  // eslint-disable-next-line no-unused-vars
   onAnswerChange?: (questionId: number, answer: string) => void;
 }
 
-export function Text(textProps: TextProps) {
+export function Text(textProps: Readonly<TextProps>) {
   const {
     questionnaire,
     answers,
@@ -96,51 +98,48 @@ export function Text(textProps: TextProps) {
   const handleAnswer = (): ReactNode => {
     if (role === "CREATOR") {
       return null;
-    } else {
-      if (!status) {
-        return (
-          <label
-            className="flex break-all font-normal text-xs md:text-sm text-[#64748B]"
-            data-testid="answerLabel"
-          >
-            {answerValue}
-          </label>
-        );
-      } else {
-        return (
-          <div>
-            {questionTypeName === "Date" ? (
-              <input
-                type="date"
-                data-testid="dateInput"
-                onChange={handleAnswerChange}
-                onBlur={handleAnswerValidation}
-                value={answerValue}
-                className="text-xs md:text-sm resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden"
-              />
-            ) : (
-              <textarea
-                data-testid="textInput"
-                placeholder="Type your answer here"
-                onChange={handleAnswerChange}
-                onBlur={handleAnswerValidation}
-                value={answerValue}
-                className="text-xs md:text-sm w-full resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden"
-                maxLength={questionTypeName === "Short Text" ? 70 : undefined}
-                rows={1}
-              />
-            )}
-            {answerError !== null && (
-              <div>
-                <p className="text-red-500 font-normal text-xs">
-                  {answerError}
-                </p>
-              </div>
-            )}
-          </div>
-        );
-      }
     }
+    if (!status) {
+      return (
+        <label
+          className="flex break-all font-normal text-xs md:text-sm text-[#64748B]"
+          data-testid="answerLabel"
+        >
+          {answerValue}
+        </label>
+      );
+    }
+
+    return (
+      <div>
+        {questionTypeName === "Date" ? (
+          <input
+            type="date"
+            data-testid="dateInput"
+            onChange={handleAnswerChange}
+            onBlur={handleAnswerValidation}
+            value={answerValue}
+            className="text-xs md:text-sm resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden"
+          />
+        ) : (
+          <textarea
+            data-testid="textInput"
+            placeholder="Type your answer here"
+            onChange={handleAnswerChange}
+            onBlur={handleAnswerValidation}
+            value={answerValue}
+            className="text-xs md:text-sm w-full resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden"
+            maxLength={questionTypeName === "Short Text" ? 70 : undefined}
+            rows={1}
+          />
+        )}
+        {answerError !== null && (
+          <div>
+            <p className="text-red-500 font-normal text-xs">{answerError}</p>
+          </div>
+        )}
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -153,12 +152,16 @@ export function Text(textProps: TextProps) {
     );
 
     setQuestionnaire(updatedQuestionnaire);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requiredValue, questionValue, descriptionValue]);
 
   useEffect(() => {
     const updatedAnswers = updateAnswers(answers, questionId, answerValue);
 
     setAnswers(updatedAnswers);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerValue, questionId]);
 
   return (

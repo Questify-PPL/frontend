@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { LuScroll } from "react-icons/lu";
 import { Button } from "../ui/button";
 

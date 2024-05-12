@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react";
-import { ShopItem, ShopProps } from "../types";
 import { InvoiceItem, TopUpProps } from "../types/topup.type";
 
 export type TopUpContextValue = TopUpProps & {

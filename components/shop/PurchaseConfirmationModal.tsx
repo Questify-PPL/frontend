@@ -1,12 +1,7 @@
 import { useShopContext } from "@/lib/context";
 import { Button } from "../ui/button";
 
-type ModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-
-export function PurchaseConfirmationModal({}) {
+export function PurchaseConfirmationModal() {
   const { isOpen, setIsOpen, processPurchasement } = useShopContext();
 
   return (

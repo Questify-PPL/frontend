@@ -1,29 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import {
   FormUpperMenu,
   SavedAsDraftModal,
 } from "@/components/creator-side/create/form";
-import { RadioButton, Text, Checkboxes } from "@/components/questions";
+import { Checkboxes, RadioButton, Text } from "@/components/questions";
+import QuestionUI from "@/components/respondent-side/Question";
+import { Card } from "@/components/ui/card";
+import { getQuestionnaireRespondent, patchAnswer } from "@/lib/action/form";
 import {
-  Section,
   DefaultQuestion,
   Question,
-  Answer,
+  QuestionnaireItem,
   QuestionnaireItemTypes,
+  Section,
 } from "@/lib/context";
-import { LuCheck, LuCheckCheck, LuChevronRight } from "react-icons/lu";
-import { useRouter } from "next/navigation";
 import { useQuestionnaireContext } from "@/lib/hooks";
-import { QuestionnaireItem } from "@/lib/context";
-import { Card } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { LuCheck, LuCheckCheck, LuChevronRight } from "react-icons/lu";
 import Terminus from "../Terminus";
-import QuestionUI from "@/components/respondent-side/Question";
 import FinalizationCard from "./FinalizationCard";
-import { getQuestionnaireRespondent, patchAnswer } from "@/lib/action/form";
 
-export default function QuestionnaireJoinWrapper({ id }: { id: string }) {
+export default function QuestionnaireJoinWrapper({
+  id,
+}: Readonly<{ id: string }>) {
   const { questionnaire, answers, setAnswers, setQuestionnaire } =
     useQuestionnaireContext();
   const [QRETitle, setQRETitle] = useState("");

@@ -8,11 +8,13 @@ export function DraftMobile({
   form,
   isRespondent = false,
   isSendIcon = false,
+  // eslint-disable-next-line no-unused-vars
   onOpenRespondCard = (id, title) => {},
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
     isSendIcon?: boolean;
+    // eslint-disable-next-line no-unused-vars
     onOpenRespondCard?: (id: string, title: string) => void;
   }
 >) {
@@ -27,13 +29,14 @@ export function DraftMobile({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, router],
+    [form.id, form.title, onOpenRespondCard],
   );
 
   return (
     <div
       className="flex flex-row justify-between items-center md:hidden"
       onClick={isRespondent ? handleOnClick : toEdit}
+      role="none"
     >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
         <div className="flex flex-col items-start justify-start">

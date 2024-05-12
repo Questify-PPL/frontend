@@ -1,6 +1,5 @@
-import { LuBell } from "react-icons/lu";
-import { Button } from "../ui/button";
 import { LuAlertCircle } from "react-icons/lu";
+import { Button } from "../ui/button";
 
 type ModalProps = {
   isOpen: boolean;

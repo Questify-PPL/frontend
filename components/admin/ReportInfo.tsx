@@ -1,12 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Report } from "@/lib/types/admin/report";
+import { Report, ReportStatus } from "@/lib/types/admin/report";
 import clsx from "clsx";
 import Fuse from "fuse.js";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ReportStatus } from "@/lib/types/admin/report";
 import ReportTable from "./ReportTable";
 
 const filters = [
@@ -25,31 +24,34 @@ export function ReportInfo({ reports }: Readonly<{ reports: Report[] }>) {
       : data.filter((item) => item.status === selectedFilter);
   const searchQuery = useRef("");
 
+  const searchItem = useCallback(
+    (query: string) => {
+      searchQuery.current = query;
+      if (!query) {
+        setData(reports);
+        return;
+      }
+
+      const fuse = new Fuse(reports, {
+        threshold: 0.1,
+        keys: [
+          "fromUser.firstName",
+          "fromUser.lastName",
+          "fromUser.email",
+          "toUser.firstName",
+          "toUser.lastName",
+          "toUser.email",
+        ],
+      });
+      const result = fuse.search(query).map((item) => item.item);
+      setData(result.length !== 0 ? result : []);
+    },
+    [reports],
+  );
+
   useEffect(() => {
     searchItem(searchQuery.current);
-  }, [reports]);
-
-  function searchItem(query: string) {
-    searchQuery.current = query;
-    if (!query) {
-      setData(reports);
-      return;
-    }
-
-    const fuse = new Fuse(reports, {
-      threshold: 0.1,
-      keys: [
-        "fromUser.firstName",
-        "fromUser.lastName",
-        "fromUser.email",
-        "toUser.firstName",
-        "toUser.lastName",
-        "toUser.email",
-      ],
-    });
-    const result = fuse.search(query).map((item) => item.item);
-    setData(result.length !== 0 ? result : []);
-  }
+  }, [searchItem]);
 
   return (
     <div className="flex-1">
