@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { DashboardLoadingWrapper } from "@/components/common/DashboardLoadingWrapper";
+import { DashboardLoadingWrapper } from "@/components/common";
 import { CreatorHomeCardLoading } from "@/components/creator-side/CreatorHomeCardLoading";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Session } from "next-auth";
@@ -8,7 +8,7 @@ export default async function Loading() {
   const session = (await auth()) as Session;
 
   return (
-    <DashboardLoadingWrapper label="home">
+    <DashboardLoadingWrapper label="home" state="home">
       {session.user.activeRole === "CREATOR" && (
         <>
           <CreatorHomeCardLoading />

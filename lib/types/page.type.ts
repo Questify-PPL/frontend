@@ -5,5 +5,7 @@ export type Props = {
 
 export type LoadingProps = {
   label: string;
+  state: "home" | "action" | "responses";
   children?: React.ReactNode;
+  className?: string;
 };

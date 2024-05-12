@@ -27,7 +27,7 @@ export function LoadingNav({
           className={`w-5 h-min-5 h-5 ${state === "action" ? "text-primary" : "text-transparent"}`}
         />
       ),
-      label: "Create Questionnaire",
+      label: state !== "home" ? label : "Create Questionnaire",
       isActive: state === "action",
     },
     {
