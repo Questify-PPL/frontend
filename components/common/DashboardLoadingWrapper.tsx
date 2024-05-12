@@ -24,9 +24,7 @@ export function DashboardLoadingWrapper({
 
       <div className="flex flex-col md:flex-row w-full flex-1 h-full gap-4 p-5 relative ">
         <LoadingNav state={state} label={label} />
-        <div
-          className={`flex flex-col w-full flex-1 ${className ? className : ""}`}
-        >
+        <div className={`flex flex-col w-full flex-1 ${className ?? ""}`}>
           {children}
         </div>
       </div>
