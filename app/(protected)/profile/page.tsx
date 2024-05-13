@@ -6,8 +6,6 @@ import { titleCase } from "@/lib/utils";
 import { ProfileFormWrapper } from "@/components/profile/ProfileForm";
 
 export default async function ProfilePage() {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   const { user } = (await auth()) as Session;
   const roleSpecificData = {
     [UserRoleEnum.Respondent]: {
