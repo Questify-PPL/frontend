@@ -74,7 +74,6 @@ export async function getQuestionnairesOwned(type?: string) {
       "Content-Type": "application/json",
     },
     method: "GET",
-    cache: "no-cache",
   });
 
   if (response.status !== 200) {
