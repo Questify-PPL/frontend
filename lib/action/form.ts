@@ -2,8 +2,8 @@
 
 import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
-import { FetchListForm } from "../types";
 import { Answer, QuestionnaireItem } from "../context";
+import { FetchListForm } from "../types";
 
 export async function createQuestionnaire(
   title: string,
@@ -178,7 +178,9 @@ export async function getCompletedQuestionnaireForRespondent(formId: string) {
     throw new Error("Failed to get questionnaire");
   }
 
-  return await response.json();
+  const result = await response.json();
+
+  return result.data;
 }
 
 export async function getSummaries(formId: string) {
@@ -228,9 +230,15 @@ export async function getSummaries(formId: string) {
   };
 }
 
+export async function getInitialActiveTab(): Promise<
+  "summary" | "question" | "individual"
+> {
+  return Promise.resolve("summary");
+}
+
 export async function patchQuestionnaire(
   formId: string,
-  data: any[] | QuestionnaireItem[],
+  data: QuestionnaireItem[],
 ) {
   const session = await auth();
   const user = session?.user;
@@ -296,6 +304,25 @@ export async function deleteQuestionnaire(formId: string) {
 
   if (response.status !== 200) {
     throw new Error("Failed to delete questionnaire");
+  }
+}
+
+export async function deleteQuestion(formId: string, questionId: number) {
+  const session = await auth();
+  const user = session?.user;
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}/question/${questionId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+      },
+      method: "DELETE",
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to delete question");
   }
 }
 

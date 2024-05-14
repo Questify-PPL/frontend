@@ -1,5 +1,4 @@
 import { Session } from "next-auth";
-import { Section } from "../context";
 
 export type BareForm = {
   id: string;
@@ -19,6 +18,7 @@ export type BareForm = {
   canRespond?: boolean;
   winningChance?: number;
   winningStatus?: boolean;
+  winnerAmount?: number;
 };
 
 export type FetchListForm = {
@@ -89,9 +89,15 @@ export type QuestionWithAnswerSection = {
 export type SummarizeFormAsProps = {
   formStatistics: SummarizeForm;
   questionsWithAnswers: QuestionAnswer[] | QuestionWithAnswerSection[];
-  allIndividuals: string[];
+  allIndividuals: {
+    respondentId: string;
+    name: string;
+    email: string;
+    isReported: boolean;
+  }[];
   formId: string;
   session: Session;
+  initialActiveTab: "summary" | "question" | "individual";
 };
 
 export type AnswerAndChoice = {
@@ -103,16 +109,22 @@ export type QuestionGroupedWithAnswerAndChoice = QuestionGrouped &
   AnswerAndChoice;
 
 export type SectionGroupedWithAnswer = SectionParent & {
-  questions: QuestionGrouped & AnswerAndChoice[];
+  questions: QuestionGroupedWithAnswerAndChoice[];
 };
 
+export type Questions = (
+  | SectionGroupedWithAnswer
+  | QuestionGroupedWithAnswerAndChoice
+)[];
+
 export type QuestionDetailResponse = {
-  questions: SectionGroupedWithAnswer[] | QuestionGroupedWithAnswerAndChoice[];
+  questions: Questions;
 };
 
 export type QuestionGet = {
   sectionId: number | null;
   questionId: number;
+  number: number;
   questionType: string;
   questionTypeName: string;
   isRequired: boolean;
@@ -121,7 +133,8 @@ export type QuestionGet = {
 };
 
 export type SectionGet = {
-  sectionId: number;
+  sectionId: number | null;
+  number: number;
   name: string;
   description: string;
   questions: QuestionGet[];

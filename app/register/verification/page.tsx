@@ -2,7 +2,6 @@ import { Props } from "@/lib/types";
 
 export default async function Verify(props: Readonly<Props>) {
   const message = await getServerSideProps(props);
-  console.log("message", message);
 
   return (
     <div className="w-full flex justify-center items-center my-24">

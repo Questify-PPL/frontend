@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { LuHelpCircle, LuActivity } from "react-icons/lu";
+import { LuActivity, LuHelpCircle } from "react-icons/lu";
 
+// eslint-disable-next-line no-unused-vars
 interface MPTable {
   children: React.ReactNode;
 }
@@ -58,19 +59,17 @@ export function MPTable({ children }: Readonly<MPTable>) {
     <table className="flex flex-col" data-testid="mp-table">
       <thead>
         <tr className="flex flex-row flex-shrink-0 w-full rounded-lg border bg-card text-card-foreground shadow-sm p-3">
-          <>
-            {tableColumns.map((column, index) => (
-              <th
-                key={`column-${index + 1}`}
-                className={` ${
-                  index === 0 ? "pl-11" : ""
-                } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center w-[${columnWidth[index]}]`}
-              >
-                {column.icon}
-                {column.name}
-              </th>
-            ))}
-          </>
+          {tableColumns.map((column, index) => (
+            <th
+              key={`column-${index + 1}`}
+              className={` ${
+                index === 0 ? "pl-11" : ""
+              } text-[#32636A] flex-shrink-0 justify-start align-stretch flex font-bold text-[10px] leading-3 text-left md:text-sm text-wrap items-center w-[${columnWidth[index]}]`}
+            >
+              {column.icon}
+              {column.name}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>{children}</tbody>

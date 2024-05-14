@@ -11,6 +11,7 @@ import {
   getQuestionnairesFilled,
 } from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
+import { getInvoices } from "@/lib/action";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -24,7 +25,7 @@ jest.mock("@/lib/action/form", () => ({
 }));
 
 jest.mock("@/lib/action", () => ({
-  getInvoices: jest.fn().mockResolvedValue([]),
+  getInvoices: jest.fn(),
 }));
 
 jest.mock("next/navigation", () => {
@@ -76,6 +77,10 @@ jest.mock("@/auth", () => {
 });
 
 describe("Login", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", async () => {
     global.fetch = jest.fn(
       () =>
@@ -109,7 +114,7 @@ describe("Login", () => {
         gender: null,
         companyName: null,
         birthDate: null,
-        credit: null,
+        credit: 0,
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,
@@ -171,7 +176,7 @@ describe("Login", () => {
         gender: null,
         companyName: null,
         birthDate: null,
-        credit: null,
+        credit: 0,
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,
@@ -227,7 +232,7 @@ describe("Login", () => {
         gender: null,
         companyName: null,
         birthDate: null,
-        credit: null,
+        credit: 0,
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,
@@ -247,29 +252,45 @@ describe("Login", () => {
 });
 
 describe("Admin", () => {
-  test("renders home page with no problem", async () => {
-    const session = {
-      user: {
-        email: "questify@gmail.com",
-        id: "1",
-        roles: ["ADMIN"] as UserRole[],
-        ssoUsername: null,
-        firstName: null,
-        lastName: null,
-        phoneNumber: null,
-        gender: null,
-        companyName: null,
-        birthDate: null,
-        credit: null,
-        isVerified: true,
-        isBlocked: false,
-        hasCompletedProfile: false,
-        activeRole: "ADMIN",
-      },
-      expires: new Date().toISOString(),
-    } as Session;
+  const session = {
+    user: {
+      email: "questify@gmail.com",
+      id: "1",
+      roles: ["ADMIN"] as UserRole[],
+      ssoUsername: null,
+      firstName: null,
+      lastName: null,
+      phoneNumber: null,
+      gender: null,
+      companyName: null,
+      birthDate: null,
+      credit: 0,
+      isVerified: true,
+      isBlocked: false,
+      hasCompletedProfile: false,
+      activeRole: "ADMIN",
+    },
+    expires: new Date().toISOString(),
+  } as Session;
 
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
+  test("renders home page with no problem", async () => {
     (auth as jest.Mock).mockResolvedValue(session);
+    (getInvoices as jest.Mock).mockResolvedValue([]);
+
+    render(await Home());
+
+    const adminHomepage = screen.getByTestId("admin-homepage");
+    expect(adminHomepage).toBeInTheDocument();
+  });
+
+  test("renders with problem when fetching", async () => {
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    (getInvoices as jest.Mock).mockRejectedValue(new Error(""));
 
     render(await Home());
 

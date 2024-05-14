@@ -3,7 +3,7 @@ import AdminNav from "./AdminNav";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import PaymentTable from "../admin/PaymentTable";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Fuse from "fuse.js";
 import { Invoice } from "@/lib/types/admin";
 import clsx from "clsx";
@@ -37,24 +37,27 @@ export function PaymentInfo({ invoices }: Readonly<{ invoices: Invoice[] }>) {
       : data.filter((item) => item.exchange.toLowerCase() === selectedFilter);
   const searchQuery = useRef("");
 
+  const searchItem = useCallback(
+    (query: string) => {
+      searchQuery.current = query;
+      if (!query) {
+        setData(invoices);
+        return;
+      }
+
+      const fuse = new Fuse(invoices, {
+        threshold: 0.1,
+        keys: ["creatorName", "userName"],
+      });
+      const result = fuse.search(query).map((item) => item.item);
+      setData(result.length !== 0 ? result : []);
+    },
+    [invoices],
+  );
+
   useEffect(() => {
     searchItem(searchQuery.current);
-  }, [invoices]);
-
-  function searchItem(query: string) {
-    searchQuery.current = query;
-    if (!query) {
-      setData(invoices);
-      return;
-    }
-
-    const fuse = new Fuse(invoices, {
-      threshold: 0.1,
-      keys: ["creatorName", "userName"],
-    });
-    const result = fuse.search(query).map((item) => item.item);
-    setData(result.length !== 0 ? result : []);
-  }
+  }, [searchItem]);
 
   return (
     <div className="flex-1">

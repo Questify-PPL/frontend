@@ -16,6 +16,7 @@ interface QuestionProps {
   nextButton?: () => void;
   buttonText?: string;
   buttonIcon?: ReactNode;
+  isParticipate?: boolean;
 }
 
 const Question: React.FC<QuestionProps> = ({
@@ -30,9 +31,12 @@ const Question: React.FC<QuestionProps> = ({
   nextButton = () => {},
   buttonText = "",
   buttonIcon = null,
+  isParticipate = false,
 }) => {
   return (
-    <Card className={`flex flex-col w-[50%] h-[90%] ${className}`}>
+    <Card
+      className={`flex flex-col ${isParticipate ? "w-full" : "w-[50%]"} h-[90%] ${className}`}
+    >
       <div className="flex flex-col bg-secondary h-[15%] justify-center font-semibold text-xl p-6 gap-1 rounded-t-md">
         {questionQRETitle}
         {questionImage}

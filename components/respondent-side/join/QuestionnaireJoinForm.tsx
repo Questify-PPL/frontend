@@ -48,7 +48,6 @@ const QuestionaireJoinForm = () => {
     setValue,
     getValues,
     formState: { errors },
-    watch,
   } = useForm<QuestionnaireJoin>({
     resolver: zodResolver(QuestionnaireJoin),
     defaultValues: {
@@ -57,8 +56,6 @@ const QuestionaireJoinForm = () => {
       oreoEditions: [],
     },
   });
-
-  // const handleSave = () => {};
 
   const handleCheckboxChange = (edition: string) => {
     const currentSelection = getValues("oreoEditions");
@@ -72,9 +69,7 @@ const QuestionaireJoinForm = () => {
     }
   };
 
-  console.log(watch());
-  const processForm: SubmitHandler<QuestionnaireJoin> = (data) => {
-    console.log(data);
+  const processForm: SubmitHandler<QuestionnaireJoin> = () => {
     OpenCreateCard();
   };
 
@@ -85,9 +80,6 @@ const QuestionaireJoinForm = () => {
     if (!output) return;
 
     if (currentStep < steps.length - 1) {
-      if (currentStep === steps.length - 2) {
-        // await handleSubmit(processForm)();
-      }
       setCurrentStep((step) => step + 1);
     }
   };

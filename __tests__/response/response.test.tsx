@@ -84,7 +84,7 @@ describe("Responder Response", () => {
       gender: null,
       companyName: null,
       birthDate: null,
-      credit: null,
+      credit: 0,
       isVerified: true,
       isBlocked: false,
       hasCompletedProfile: false,
@@ -105,7 +105,7 @@ describe("Responder Response", () => {
       gender: null,
       companyName: null,
       birthDate: null,
-      credit: null,
+      credit: 0,
       isVerified: true,
       isBlocked: false,
       hasCompletedProfile: false,
@@ -113,6 +113,10 @@ describe("Responder Response", () => {
     },
     expires: new Date().toISOString(),
   };
+
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -292,8 +296,12 @@ describe("Responder Response", () => {
     expect(screen.queryByText("prized on 20/")).toBeInTheDocument();
   });
 
-  it('renders "Done" when the form is complete', async () => {
-    const form = { ...QUESTIONNAIRES_FILLED[0], isCompleted: true };
+  it('renders "Done" when form is fully completed', async () => {
+    const form = {
+      ...QUESTIONNAIRES_FILLED[0],
+      questionFilled: 15,
+      questionAmount: 15,
+    };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
 
@@ -303,12 +311,11 @@ describe("Responder Response", () => {
     expect(screen.queryByText("Done")).toBeInTheDocument();
   });
 
-  it("renders the number of questions filled when the form is incomplete", async () => {
+  it("renders the number of questions filled when the form is partially completed", async () => {
     const form = {
       ...QUESTIONNAIRES_FILLED[0],
       questionFilled: 5,
       questionAmount: 15,
-      isCompleted: false,
     };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
@@ -349,6 +356,21 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("status-ended")).toBeInTheDocument();
   });
 
+  it("should show max 2 precision for winning chance", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED,
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    expect(screen.queryAllByText(new RegExp(/\d+\,\d{3,}/)).length).toBe(0);
+    expect(
+      screen.queryAllByText(new RegExp(/\d+(\,\d{1,2})?$/)).length,
+    ).toBeGreaterThan(0);
+  });
+
   it('renders "?" as prize amount when the form is ongoing', async () => {
     const form = {
       ...QUESTIONNAIRES_FILLED[0],
@@ -372,6 +394,7 @@ describe("Responder Response", () => {
       endedAt: "2024-03-20T12:00:00",
       winningStatus: true,
       prize: 100,
+      winnerAmount: 1,
     };
     (auth as jest.Mock).mockResolvedValue(mockSession);
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
@@ -384,6 +407,27 @@ describe("Responder Response", () => {
     );
 
     expect(formData.length).toBeGreaterThan(0);
+  });
+
+  it("renders the prize amount divided by winnerAmount when the form has ended and winningStatus is true", async () => {
+    const form = {
+      ...QUESTIONNAIRES_FILLED[0],
+      createdAt: "2024-03-15T12:00:00",
+      endedAt: "2024-03-20T12:00:00",
+      winningStatus: true,
+      prize: 100,
+      winnerAmount: 5,
+    };
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    const result = screen.queryAllByText(
+      `${Math.floor(form.prize / Number(form.winnerAmount))}`,
+    );
+    expect(result.length).toBe(1);
   });
 
   it('renders "0" as prize amount when the form has ended and winningStatus is false', async () => {
@@ -727,6 +771,72 @@ describe("Responder Response", () => {
     expect(screen.queryByTestId("filter-all")).not.toBeInTheDocument();
     expect(screen.queryByTestId("filter-ongoing")).not.toBeInTheDocument();
     expect(screen.queryByTestId("filter-ended")).not.toBeInTheDocument();
+  });
+
+  it("should not show prize for on going forms in mobile view", async () => {
+    mockedMatchMedia.mockImplementationOnce((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED.map((form) => ({
+        ...form,
+        endedAt: "2027-03-20T12:00:00",
+      })),
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    QUESTIONNAIRES_FILLED.forEach((form) => {
+      expect(screen.queryByTestId(`mp-mobile-${form.id}`)).toBeInTheDocument();
+    });
+
+    const formData = screen.queryAllByTestId((id) =>
+      id.startsWith("prize-amount-"),
+    );
+
+    expect(formData.length).toBe(0);
+  });
+
+  it("should show prize for ended forms in mobile view", async () => {
+    mockedMatchMedia.mockImplementationOnce((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
+      QUESTIONNAIRES_FILLED.map((form) => ({
+        ...form,
+        endedAt: "2024-03-20T12:00:00",
+      })),
+    );
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    QUESTIONNAIRES_FILLED.forEach((form) => {
+      expect(screen.queryByTestId(`mp-mobile-${form.id}`)).toBeInTheDocument();
+    });
+
+    const formData = screen.queryAllByTestId((id) =>
+      id.startsWith("prize-amount-"),
+    );
+
+    expect(formData.length).toBeGreaterThan(0);
   });
 
   it("should not error when failed to fetch", async () => {

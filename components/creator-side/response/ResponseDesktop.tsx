@@ -68,9 +68,14 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
       </div>
 
       <div className="flex flex-col py-2 md:hidden lg:flex w-[14.375%] font-bold">
-        {(form.completedParticipation /
-          (form.completedParticipation + form.ongoingParticipation)) *
-          100}
+        {isNaN(
+          form.completedParticipation /
+            (form.completedParticipation + form.ongoingParticipation),
+        )
+          ? 0
+          : (form.completedParticipation /
+              (form.completedParticipation + form.ongoingParticipation)) *
+            100}
         %
       </div>
 

@@ -17,7 +17,8 @@ export function RoleDropdown({
   session,
 }: Readonly<{ session: Session | null }>) {
   const activeRole = session?.user.activeRole;
-  const [isPeding, startTransition] = useTransition();
+  // eslint-disable-next-line no-unused-vars
+  const [_isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const handleRoleChange = (value: string) => {

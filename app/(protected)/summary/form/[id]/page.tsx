@@ -1,8 +1,10 @@
 import { auth } from "@/auth";
 import { SummaryWrapper } from "@/components/creator-side/summary/SummaryWrapper";
 import TertiaryNavbar from "@/components/dashboard/TertiaryNavbar";
+import { SummaryResponseWrapper } from "@/components/respondent-side/summary/SummaryResponseWrapper";
 import {
   getCompletedQuestionnaireForRespondent,
+  getInitialActiveTab,
   getSummaries,
 } from "@/lib/action/form";
 import { UserRoleEnum } from "@/lib/types/auth";
@@ -19,6 +21,7 @@ export default async function Summary({ params }: Readonly<Props>) {
   const session = (await auth()) as Session;
 
   const form = await getQuestionnaireSummmary();
+  const initialActiveTab = await getInitialActiveTab();
 
   async function getQuestionnaireSummmary() {
     try {
@@ -43,11 +46,13 @@ export default async function Summary({ params }: Readonly<Props>) {
               ? form.title
               : form?.formStatistics?.title
           }
+          session={session}
+          formId={id}
         />
       </header>
       <div className="flex h-full w-full absolute">
         {session.user.activeRole === UserRoleEnum.Respondent ? (
-          <></>
+          <SummaryResponseWrapper questions={form.questions} />
         ) : (
           <SummaryWrapper
             formStatistics={form.formStatistics}
@@ -55,6 +60,7 @@ export default async function Summary({ params }: Readonly<Props>) {
             allIndividuals={form.allIndividuals}
             formId={id}
             session={session}
+            initialActiveTab={initialActiveTab}
           />
         )}
       </div>

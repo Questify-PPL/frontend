@@ -1,15 +1,17 @@
+/* eslint-disable no-unused-vars */
 "use client";
 
 import { createContext } from "react";
 
 export interface Question {
-  questionId: number;
+  questionId: number | null;
   questionType: string;
   questionTypeName: string;
   isRequired: boolean;
   question: string;
   description?: string;
   choice?: string[];
+  number: number;
 }
 
 export interface Answer {
@@ -17,16 +19,22 @@ export interface Answer {
   answer?: string | string[];
 }
 
+export enum QuestionnaireItemTypes {
+  SECTION = "SECTION",
+  DEFAULT = "DEFAULT",
+}
+
 export interface Section {
-  type: "SECTION";
-  sectionId: number;
+  type: QuestionnaireItemTypes.SECTION;
+  sectionId: number | null;
   sectionName: string;
   sectionDescription: string;
+  number: number;
   questions: Question[];
 }
 
 export interface DefaultQuestion {
-  type: "DEFAULT";
+  type: QuestionnaireItemTypes.DEFAULT;
   question: Question;
 }
 
@@ -36,9 +44,11 @@ export interface QuestionnaireContextType {
   questionnaire: QuestionnaireItem[];
   answers: Answer[];
   errorStatus: boolean;
+  activeQuestion?: number | undefined;
   setQuestionnaire: React.Dispatch<React.SetStateAction<QuestionnaireItem[]>>;
   setAnswers: React.Dispatch<React.SetStateAction<Answer[]>>;
   setErrorStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  setActiveQuestion: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 export const QuestionnaireContext = createContext<

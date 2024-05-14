@@ -67,6 +67,10 @@ jest.mock("@/auth", () => {
 });
 
 describe("Questionnaire List View Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   test("renders questionnaire list view page with no problem", async () => {
     const session = {
       user: {
@@ -80,7 +84,7 @@ describe("Questionnaire List View Page", () => {
         gender: null,
         companyName: null,
         birthDate: null,
-        credit: null,
+        credit: 0,
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,
@@ -139,7 +143,7 @@ describe("Questionnaire List View Page", () => {
         gender: null,
         companyName: null,
         birthDate: null,
-        credit: null,
+        credit: 0,
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,

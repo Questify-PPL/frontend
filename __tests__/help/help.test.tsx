@@ -29,7 +29,7 @@ const mockSession = {
     gender: null,
     companyName: null,
     birthDate: null,
-    credit: null,
+    credit: 0,
     isVerified: true,
     isBlocked: false,
     hasCompletedProfile: false,
@@ -153,7 +153,7 @@ describe("Contact Modal", () => {
         gender: null,
         companyName: null,
         birthDate: null,
-        credit: null,
+        credit: 0,
         isVerified: true,
         isBlocked: false,
         hasCompletedProfile: false,
@@ -338,9 +338,27 @@ describe("Contact Modal", () => {
     expect(inputSubject.value).toBe("Test Subject");
     expect(inputMessage.value).toBe("Test Message");
   });
+
+  it("should disable background interaction when ContactModal is opened", async () => {
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+
+    render(await Help());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    const contactButton = screen.getByTestId("button-contact");
+    fireEvent.click(contactButton);
+
+    const contactModal = screen.getByTestId("contact-modal");
+    expect(contactModal).not.toHaveClass("hidden");
+    expect(contactModal).toHaveClass("pointer-events-auto");
+  });
 });
 
 describe("FAQ Section", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should render FAQ section", async () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
 
@@ -366,5 +384,56 @@ describe("FAQ Section", () => {
     firstTrigger.click();
 
     expect(await screen.findByTestId("faq-content-1")).toBeVisible();
+  });
+
+  describe("HelpWrapper", () => {
+    it("should allow vertical scrolling when ContactModal is closed", async () => {
+      (auth as jest.Mock).mockResolvedValue(mockSession);
+
+      render(await Help());
+      await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+      expect(document.body).not.toHaveClass("overflow-hidden");
+
+      const contactModal = screen.getByTestId("contact-modal");
+      expect(contactModal).toHaveClass("hidden");
+    });
+
+    it("should disable vertical scrolling when ContactModal is opened", async () => {
+      (auth as jest.Mock).mockResolvedValue(mockSession);
+
+      render(await Help());
+      await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+      const contactButton = screen.getByTestId("button-contact");
+      fireEvent.click(contactButton);
+
+      const contactModal = screen.getByTestId("contact-modal");
+      expect(contactModal).not.toHaveClass("hidden");
+
+      expect(document.body).toHaveClass("overflow-hidden");
+    });
+
+    it("should fit ContactModal to the whole screen when multiple FAQs are clicked", async () => {
+      (auth as jest.Mock).mockResolvedValue(mockSession);
+
+      render(await Help());
+      await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+      for (let i = 1; i < 5; i++) {
+        fireEvent.click(screen.getByTestId(`faq-trigger-${i}`));
+      }
+
+      for (let i = 1; i < 5; i++) {
+        expect(await screen.findByTestId(`faq-content-${i}`)).toBeVisible();
+      }
+
+      const contactButton = screen.getByTestId("button-contact");
+      fireEvent.click(contactButton);
+
+      const contactModal = screen.getByTestId("contact-modal");
+      expect(contactModal).not.toHaveClass("hidden");
+      expect(contactModal).toHaveClass("fixed inset-0");
+    });
   });
 });

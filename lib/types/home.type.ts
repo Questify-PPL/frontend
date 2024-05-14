@@ -11,7 +11,7 @@ export type FormAsProps = {
 };
 
 export type SessionAsProps = {
-  session: Session | null;
+  session: Session;
 };
 
 export type WithdrawInfos = {

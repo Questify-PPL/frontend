@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FormRightMenuState as frms } from "@/lib/services/form";
 
 interface FormRightMenuProps {
   className?: string;
@@ -11,8 +12,6 @@ interface FormRightMenuProps {
   designChildren?: React.ReactNode;
   onClickLogic?: () => void;
   logicChildren?: React.ReactNode;
-  onClickPreview?: () => void;
-  previewChildren?: React.ReactNode;
   onClickPublish?: () => void;
   publishChildren?: React.ReactNode;
 }
@@ -41,39 +40,33 @@ const renderButton = (
 
 export function FormRightMenu({
   className = "",
-  state = "question",
+  state = frms.QUESTION,
   onClickQuestion = () => {},
   questionChildren = null,
   onClickDesign = () => {},
   designChildren = null,
   onClickLogic = () => {},
   logicChildren = null,
-  onClickPreview = () => {},
-  previewChildren = null,
   onClickPublish = () => {},
   publishChildren = null,
 }: Readonly<FormRightMenuProps>) {
   return (
     <div className={`flex p-0  ${className}`}>
       <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
-        {renderButton("Question", onClickQuestion, state === "question")}
-        {state === "question" ? (
+        {renderButton("Question", onClickQuestion, state === frms.QUESTION)}
+        {state === frms.QUESTION ? (
           <div className={childrenClass}>{questionChildren}</div>
         ) : null}
-        {renderButton("Design", onClickDesign, state === "design")}
-        {state === "design" ? (
-          <div className={childrenClass}>{designChildren}</div>
-        ) : null}
-        {renderButton("Logic", onClickLogic, state === "logic")}
-        {state === "logic" ? (
+        {renderButton("Logic", onClickLogic, state === frms.LOGIC)}
+        {state === frms.LOGIC ? (
           <div className={childrenClass}>{logicChildren}</div>
         ) : null}
-        {renderButton("Preview", onClickPreview, state === "preview")}
-        {state === "preview" ? (
-          <div className={childrenClass}>{previewChildren}</div>
+        {renderButton("Design", onClickDesign, state === frms.DESIGN)}
+        {state === frms.DESIGN ? (
+          <div className={childrenClass}>{designChildren}</div>
         ) : null}
-        {renderButton("Publish", onClickPublish, state === "publish")}
-        {state === "publish" ? (
+        {renderButton("Publish", onClickPublish, state === frms.PUBLISH)}
+        {state === frms.PUBLISH ? (
           <div className={childrenClass}>{publishChildren}</div>
         ) : null}
       </Card>

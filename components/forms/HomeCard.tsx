@@ -37,13 +37,13 @@ const HomeNav: React.FC<HomeNavProps> = ({
   const router = useRouter();
 
   const toFormShop = () => {
-    router.push("/home");
+    router.push("/shop");
   };
   const toFormPromo = () => {
     router.push("/home");
   };
-  const toCreditExchange = () => {
-    router.push("/home");
+  const toCreditTopUp = () => {
+    router.push("/topup");
   };
   const toCreditWithdraw = () => {
     router.push("/withdraw");
@@ -130,12 +130,12 @@ const HomeNav: React.FC<HomeNavProps> = ({
                 Form Promo
               </span>
             </Button>
-            <Button className={button} onClick={toCreditExchange}>
+            <Button className={button} onClick={toCreditTopUp}>
               <span className="flex min-w-6 min-h-6 justify-center bg-[#E2B720] items-center rounded-md">
                 <LuPlusCircle className="flex w-3 h-3 text-background"></LuPlusCircle>
               </span>
               <span className="flex flex-[1_0_0] font-medium text-[10px] leading-[11px] text-left md:text-sm w-full text-wrap text-black">
-                Credit Exchange
+                Credit Top Up
               </span>
             </Button>
             <Button className={button} onClick={toCreditWithdraw}>
@@ -155,7 +155,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
             <LuCoins className="w-4 h-4 flex-shrink-0 text-[#E2B720]" />
             <div className="flex-1 flex flex-col gap-0 justify-start items-start">
               <div className="text-[#1D245] font-bold text-[16px] leading-normal">
-                22000
+                {creditsBalance}
               </div>
               <div className="text-[#1D245] font-semibold text-[14px] leading-normal">
                 credits

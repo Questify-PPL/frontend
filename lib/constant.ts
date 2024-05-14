@@ -1,4 +1,8 @@
-import { QuestionnaireItem, Answer } from "@/lib/context";
+import {
+  Answer,
+  QuestionnaireItem,
+  QuestionnaireItemTypes,
+} from "@/lib/context";
 import { BareForm } from "./types";
 
 export const BENEFIT = [
@@ -45,17 +49,26 @@ export const URL = {
   withdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/all`,
   validateWithdrawalInvoices: `${process.env.NEXT_PUBLIC_API_URL}/withdrawal/validate`,
   shop: `${process.env.NEXT_PUBLIC_API_URL}/shop`,
+  topUpCreator: `${process.env.NEXT_PUBLIC_API_URL}/topup/creator`,
+  processTopUp: `${process.env.NEXT_PUBLIC_API_URL}/topup/create?type=creator`,
+  report: {
+    all: `${process.env.NEXT_PUBLIC_API_URL}/report`,
+    create: `${process.env.NEXT_PUBLIC_API_URL}/report`,
+    update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
+  },
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
   {
-    type: "SECTION",
+    type: QuestionnaireItemTypes.SECTION,
     sectionId: 1,
+    number: 1,
     sectionName: "Section 1",
     sectionDescription: "This is the first section of the questionnaire",
     questions: [
       {
         questionId: 1,
+        number: 1,
         questionType: "CHECKBOX",
         questionTypeName: "Multiple Choice",
         isRequired: false,
@@ -65,6 +78,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
       },
       {
         questionId: 2,
+        number: 2,
         questionType: "TEXT",
         questionTypeName: "Short Text",
         isRequired: false,
@@ -73,6 +87,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
       },
       {
         questionId: 3,
+        number: 3,
         questionType: "RADIO",
         questionTypeName: "Multiple Choice",
         isRequired: false,
@@ -82,13 +97,15 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
     ],
   },
   {
-    type: "SECTION",
+    type: QuestionnaireItemTypes.SECTION,
     sectionId: 2,
+    number: 2,
     sectionName: "Section 2",
     sectionDescription: "This is the second section of the questionnaire",
     questions: [
       {
         questionId: 4,
+        number: 1,
         questionType: "CHECKBOX",
         questionTypeName: "Multiple Choice",
         isRequired: false,
@@ -98,6 +115,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
       },
       {
         questionId: 5,
+        number: 2,
         questionType: "TEXT",
         questionTypeName: "Short Text",
         isRequired: false,
@@ -107,9 +125,10 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
     ],
   },
   {
-    type: "DEFAULT",
+    type: QuestionnaireItemTypes.DEFAULT,
     question: {
       questionId: 6,
+      number: 3,
       questionType: "TEXT",
       questionTypeName: "Short Text",
       isRequired: false,
@@ -145,13 +164,14 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     createdAt: "2024-03-18T12:00:00",
     updatedAt: "2024-03-18T12:00:00",
     endedAt: "2024-03-31T12:00:00",
-    ongoingParticipation: 10,
-    completedParticipation: 0,
+    ongoingParticipation: 7,
+    completedParticipation: 3,
     questionFilled: 10,
-    isCompleted: false,
+    isCompleted: true,
     questionAmount: 20,
     winningChance: 100,
     winningStatus: true,
+    winnerAmount: 3,
   },
   {
     id: "form456",
@@ -168,8 +188,9 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionFilled: 25,
     isCompleted: true,
     questionAmount: 25,
-    winningChance: 0.15,
+    winningChance: 17.2342835,
     winningStatus: true, // LUCKY
+    winnerAmount: 2,
   },
   {
     id: "form789",
@@ -186,8 +207,9 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionFilled: 30,
     isCompleted: true,
     questionAmount: 30,
-    winningChance: 0.1,
+    winningChance: 10.5,
     winningStatus: false,
+    winnerAmount: 1,
   },
   {
     id: "form234",
@@ -195,7 +217,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     title: "Sample Form 4",
     prize: 100,
     prizeType: "EVEN",
-    maxWinner: 1,
+    maxWinner: 5,
     createdAt: "2024-03-17T12:00:00",
     updatedAt: "2024-03-17T12:00:00",
     endedAt: "2024-03-19T12:00:00",
@@ -206,6 +228,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionAmount: 30,
     winningChance: 100,
     winningStatus: true,
+    winnerAmount: 5,
   },
   {
     id: "form567",
@@ -222,8 +245,9 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     questionFilled: 30,
     isCompleted: true,
     questionAmount: 30,
-    winningChance: 0.01,
+    winningChance: 17.3538,
     winningStatus: false,
+    winnerAmount: 1,
   },
 ];
 
@@ -270,4 +294,22 @@ export const SHOP_IMAGE = [
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/wfpzalfbqoqjdffgr0nf",
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/e8mioxl5zsxkfvsv4htt",
   "https://res.cloudinary.com/dfeiw5txq/image/upload/f_auto,q_auto/v1/questify/rbefqvlej3svjp932bdd",
+];
+
+export const CreatorInfo = [
+  "First Name",
+  "Last Name",
+  "Gender",
+  "Email",
+  "Phone Number",
+  "Company",
+];
+
+export const RespondentInfo = [
+  "First Name",
+  "Last Name",
+  "Gender",
+  "Email",
+  "Phone Number",
+  "Company",
 ];

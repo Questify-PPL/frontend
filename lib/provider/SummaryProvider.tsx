@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { useCallback, useMemo, useState } from "react";
 import { SummaryContext } from "../context/SummaryContext";
-import { QuestionDetailResponse, SummarizeFormAsProps } from "../types";
+import { exportForm, removeUnnecessaryQuestions } from "../helper";
+import { Questions, SummarizeFormAsProps } from "../types";
 
 type SummaryProviderProps = {
   children: React.ReactNode;
@@ -13,18 +15,45 @@ export function SummaryProvider({
   allIndividuals,
   formId,
   session,
+  initialActiveTab,
 }: Readonly<SummaryProviderProps>) {
   const [activeTab, setActiveTab] = useState<
     "summary" | "question" | "individual"
-  >("summary");
+  >(initialActiveTab);
+  const { toast } = useToast();
 
-  const [graphType, setGraphType] = useState<"bar" | "pie">("pie");
+  const [graphType, setGraphType] = useState<"bar" | "pie" | "doughnut">("pie");
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isFinishedFetching, setIsFinishedFetching] = useState(false);
   const [individualFormQuestions, setIndividualFormQuestions] = useState<
-    QuestionDetailResponse | undefined
+    Questions | undefined
   >(undefined);
+
+  const exportData = useCallback(async () => {
+    if (!session?.user?.accessToken || !formStatistics) return;
+
+    setIsFinishedFetching(true);
+
+    await exportForm(
+      formId,
+      session.user.accessToken,
+      formStatistics.title,
+      () => {
+        toast({
+          title: "Failed to export data",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      },
+    );
+
+    setIsFinishedFetching(false);
+  }, [formStatistics, formId, session?.user?.accessToken, toast]);
+
+  const individualFormQuestionsToBeShown = useMemo(() => {
+    return removeUnnecessaryQuestions(individualFormQuestions);
+  }, [individualFormQuestions]);
 
   const returns = useMemo(() => {
     return {
@@ -45,6 +74,10 @@ export function SummaryProvider({
       setIsFinishedFetching,
       formId,
       session,
+      individualFormQuestions: individualFormQuestionsToBeShown,
+      setIndividualFormQuestions,
+      initialActiveTab,
+      exportData,
     };
   }, [
     formStatistics,
@@ -56,6 +89,9 @@ export function SummaryProvider({
     isFinishedFetching,
     formId,
     session,
+    individualFormQuestionsToBeShown,
+    initialActiveTab,
+    exportData,
   ]);
 
   return (

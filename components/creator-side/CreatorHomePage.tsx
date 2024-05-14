@@ -6,9 +6,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ActiveQuestionnaireList } from "./ActiveQuestionnaireList";
-import { FormsAsProps } from "@/lib/types";
+import { FormsAsProps, SessionAsProps } from "@/lib/types";
 
-export function CreatorHomePage({ forms }: Readonly<FormsAsProps>) {
+export function CreatorHomePage({
+  forms,
+  session,
+}: Readonly<FormsAsProps & SessionAsProps>) {
   const router = useRouter();
 
   return (
@@ -31,7 +34,7 @@ export function CreatorHomePage({ forms }: Readonly<FormsAsProps>) {
               />
             </div>
             <div className="flex flex-row gap-1">
-              You&apos;ve created 22 Questionnaire (QRE)!
+              You&apos;ve created {forms.length} Questionnaire (QRE)!
             </div>
           </div>
           <Button
@@ -44,9 +47,17 @@ export function CreatorHomePage({ forms }: Readonly<FormsAsProps>) {
         </div>
         <CreatorNav className="" state="home"></CreatorNav>
         <div className="flex flex-col w-full flex-1">
-          <HomeCard className="w-full"></HomeCard>
+          <HomeCard
+            className="w-full"
+            creditsBalance={session.user.credit}
+            formsRemainder={session.user.Creator?.emptyForms}
+          />
 
-          <ActiveQuestionnaireList forms={forms} />
+          <ActiveQuestionnaireList
+            forms={forms.filter((form) => {
+              return form.isCompleted === false;
+            })}
+          />
         </div>
       </div>
     </div>

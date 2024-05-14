@@ -19,7 +19,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
   function onClick() {
     !form.isCompleted
       ? router.push(`questionnaire/join/${form.id}`)
-      : router.push(`response/`); // This should be directed to report summary
+      : router.push(`summary/form/${form.id}`); // This should be directed to report summary
   }
 
   return (
@@ -102,7 +102,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
           </div>
         </div>
       </td>
-      <td className="flex flex-col py-2 w-[11.25%] font-bold justify-center">
+      <td className="flex flex-col py-2 w-[11.25%] text-sm justify-center">
         <div className="flex flex-wrap">
           {form.endedAt ? (
             new Date(form.endedAt)
@@ -153,27 +153,22 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
       </td>
       <td className="flex flex-col mb-1 mt-2 w-[13.75%] pr-4 justify-center">
         <div className="flex flex-row w-full bg-[#F9EBF6] rounded-xl px-3 py-2">
-          {form.winningChance ? (
-            <>
-              <div className="flex flex-wrap mb-1 flex-1">
-                <div className="flex flex-wrap text-xs font-bold text-[#804877] mr-1">
-                  <LuDices className="mr-1 text-[#C036A9]"></LuDices>
-                  {form.winningChance}%
-                </div>
-                <div className="text-xs font-medium text-[#804877] break-all">
-                  winning chance
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-row text-xs font-bold text-[#804877]">
-              TBA
+          <div className="flex flex-wrap mb-1 flex-1">
+            <div className="flex flex-wrap text-xs font-bold text-[#804877] mr-1">
+              <LuDices className="mr-1 text-[#C036A9]"></LuDices>
+              {parseFloat(Number(form.winningChance).toFixed(2))
+                .toString()
+                .replace(".", ",")}
+              <div>%</div>
             </div>
-          )}
+            <div className="text-xs font-medium text-[#804877] break-all">
+              winning chance
+            </div>
+          </div>
         </div>
       </td>
       <td className="flex flex-col py-2 w-[14%] font-bold justify-center">
-        {form.isCompleted ? (
+        {form.questionFilled === form.questionAmount ? (
           <span>Done</span>
         ) : (
           <span>
@@ -193,7 +188,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
           {!isEnded(form.endedAt)
             ? "?"
             : form.winningStatus
-              ? form.prize
+              ? Math.floor(form.prize / Number(form.winnerAmount))
                   .toLocaleString()
                   .split(",")
                   .map((part, index, arr) => (

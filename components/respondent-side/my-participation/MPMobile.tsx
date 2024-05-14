@@ -16,14 +16,15 @@ export function MPMobile({
   function onClick() {
     !form.isCompleted
       ? router.push(`questionnaire/join/${form.id}`)
-      : router.push(`response/`); // This should be directed to report summary
+      : router.push(`summary/form/${form.id}`); // This should be directed to report summary
   }
 
   return (
     <div
-      className={`flex flex-row justify-between items-center justify-center ${className} gap-[60px]`}
+      className={`flex flex-row justify-between items-center ${className} gap-[60px]`}
       onClick={onClick}
       data-testid={`mp-mobile-${form.id}`}
+      role="none"
     >
       <div className="flex flex-col justify-center">
         <div className="flex flex-row px-[5px] gap-[10px]">
@@ -127,35 +128,48 @@ export function MPMobile({
           </div>
         </div>
         <div className="flex flex-wrap bg-[#F9EBF6] rounded-xl px-3 py-1 mt-2 ml-[46px]">
-          {form.winningChance ? (
-            <>
-              <div className="flex flex-wrap mb-1 flex-1">
-                <div className="flex flex-wrap text-xs font-bold text-[#804877] mr-1">
-                  <LuDices className="mr-1 text-[#C036A9]"></LuDices>
-                  {form.winningChance}%
-                </div>
-                <div className="text-xs font-medium text-[#804877] break-all">
-                  winning chance
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-row text-xs font-bold text-[#804877]">
-              TBA
+          <div className="flex flex-wrap mb-1 flex-1">
+            <div className="flex flex-wrap text-xs font-bold text-[#804877] mr-1">
+              <LuDices className="mr-1 text-[#C036A9]"></LuDices>
+              {parseFloat(Number(form.winningChance).toFixed(2))
+                .toString()
+                .replace(".", ",")}
+              <div>%</div>
             </div>
-          )}
+            <div className="text-xs font-medium text-[#804877] break-all">
+              winning chance
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex flex-col py-2 w-[14%] font-bold justify-center items-end">
-        {form.isCompleted ? (
-          <span>Done</span>
-        ) : (
-          <span>
-            {form.questionFilled}/{form.questionAmount}
-          </span>
-        )}
-        <span className="text-xs font-medium text-[#95B0B4]">Answered</span>
-      </div>
+      {!isEnded(form.endedAt) ? (
+        <div className="flex flex-col py-2 w-[14%] font-bold justify-center items-end">
+          {form.questionFilled === form.questionAmount ? (
+            <span>Done</span>
+          ) : (
+            <span>
+              {form.questionFilled}/{form.questionAmount}
+            </span>
+          )}
+          <span className="text-xs font-medium text-[#95B0B4]">Answered</span>
+        </div>
+      ) : (
+        <div className="flex flex-wrap text-xs font-bold text-[#685B2D] mr-1 justify-end">
+          +{"\u00A0"}
+          <LuCoins className="mr-1 text-[#E2B720]" />
+          {form.winningStatus
+            ? Math.floor(form.prize / Number(form.winnerAmount))
+                .toLocaleString()
+                .split(",")
+                .map((part, index, arr) => (
+                  <div key={index} data-testid={`prize-amount-${index}`}>
+                    {part}
+                    {index !== arr.length - 1 && "."}
+                  </div>
+                ))
+            : 0}
+        </div>
+      )}
     </div>
   );
 }

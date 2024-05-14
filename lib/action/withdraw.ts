@@ -21,8 +21,6 @@ export async function createWithdrawal(data: any[]) {
     body: JSON.stringify(request),
   });
 
-  console.log(response.status);
-
   if (response.status !== 201) {
     throw new Error("Failed to create withdrawal");
   }

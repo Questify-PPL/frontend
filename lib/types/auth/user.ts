@@ -9,7 +9,7 @@ export type User = {
   gender: string | null;
   companyName: string | null;
   birthDate: string | null;
-  credit: number | null;
+  credit: number;
   isVerified: boolean;
   isBlocked: boolean;
   hasCompletedProfile: boolean;
@@ -21,6 +21,7 @@ export type User = {
   Creator?: {
     userId: string;
     emailNotificationActive: boolean;
+    emptyForms: number;
   };
   Respondent?: {
     pity: number;
@@ -30,7 +31,10 @@ export type User = {
 export type UserRole = "CREATOR" | "RESPONDENT" | "ADMIN";
 
 export enum UserRoleEnum {
+  // eslint-disable-next-line no-unused-vars
   Creator = "CREATOR",
+  // eslint-disable-next-line no-unused-vars
   Respondent = "RESPONDENT",
+  // eslint-disable-next-line no-unused-vars
   Admin = "ADMIN",
 }

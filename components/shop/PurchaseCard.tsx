@@ -9,10 +9,17 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { VoucherPick } from "./VoucherPick";
+import { Loader2 } from "lucide-react";
 
 export function PurchaseCard() {
-  const { chosenShopItem, chosenVoucher, vouchers, session, setIsOpen } =
-    useShopContext();
+  const {
+    chosenShopItem,
+    chosenVoucher,
+    vouchers,
+    session,
+    setIsOpen,
+    isLoading,
+  } = useShopContext();
 
   return (
     <>
@@ -97,12 +104,20 @@ export function PurchaseCard() {
 
                 <Button
                   type="button"
+                  disabled={isLoading}
                   className="bg-primary text-white w-full mt-3"
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                  Purchase
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </>
+                  ) : (
+                    "Purchase"
+                  )}
                 </Button>
               </CollapsibleContent>
             </Collapsible>

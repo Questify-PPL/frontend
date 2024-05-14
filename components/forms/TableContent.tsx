@@ -18,10 +18,12 @@ import {
 export function TableContent({
   form,
   isRespondent = false,
+  // eslint-disable-next-line no-unused-vars
   onOpenRespondCard = (id, title) => {},
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
+    // eslint-disable-next-line no-unused-vars
     onOpenRespondCard?: (id: string, title: string) => void;
   }
 >) {
@@ -53,7 +55,7 @@ export function TableContent({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, router],
+    [form.id, form.title, onOpenRespondCard],
   );
 
   return (

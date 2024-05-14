@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, ChangeEvent, useRef, useEffect } from "react";
-import QuestionLayout from "./QuestionLayout";
+import { useQuestionnaireContext } from "@/lib/hooks";
 import {
   handleQuedesChange,
   updateAnswers,
   updateQuestionnaire,
 } from "@/lib/utils";
-import { RadioGroup } from "../ui/radio-group";
-import { RadioGroupItem } from "../ui/radio-group";
-import { useQuestionnaireContext } from "@/lib/hooks";
-import { Answer, QuestionnaireItem } from "@/lib/context";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import QuestionLayout from "./QuestionLayout";
 
 interface RadioButtonProps {
   role: "CREATOR" | "RESPONDENT";
@@ -25,7 +23,7 @@ interface RadioButtonProps {
   status?: boolean;
 }
 
-export function RadioButton(radioButtonProps: RadioButtonProps) {
+export function RadioButton(radioButtonProps: Readonly<RadioButtonProps>) {
   const { questionnaire, answers, setQuestionnaire, setAnswers } =
     useQuestionnaireContext();
   const { role, numbering, questionId, questionTypeName } = radioButtonProps;
@@ -40,7 +38,7 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
 
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
-    description || "",
+    description ?? "",
   );
   const [requiredValue, setRequiredValue] = useState(isRequired || false);
 
@@ -48,8 +46,7 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>(-1);
   const [selectedOptionsValues, setSelectedOptionsValues] =
     useState<string>("");
-  const YES_VALUE = 1;
-  const NO_VALUE = 0;
+
   const lastOptionRef = useRef<HTMLInputElement>(null);
 
   const handleQuestionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,9 +66,6 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
   const handleOptionSelect = (index: number, optionValue: string) => {
     setSelectedOptionIndex(index);
     setSelectedOptionsValues(optionValue);
-    console.log("====================================");
-    console.log(optionValue);
-    console.log("====================================");
   };
 
   const handleSwitchChange = () => {
@@ -97,7 +91,6 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
 
   const handleInputClick = (index: number) => {
     if (index === options.length - 1) {
-      const newValue = lastOptionRef.current?.value || "";
       addNewOption();
     }
   };
@@ -127,7 +120,10 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
       return (
         <RadioGroup className="flex flex-col gap-2 mt-2">
           {choice?.map((option, index) => (
-            <div key={index} className="flex items-center self-stretch gap-2">
+            <div
+              key={`radio-${option}-${index}`}
+              className="flex items-center self-stretch gap-2"
+            >
               <RadioGroupItem
                 value={option}
                 id={`option-${index}`}
@@ -142,7 +138,7 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
                 value={option}
                 placeholder={`Option ${index + 1}`}
                 onChange={(e) => handleOptionChange(index, e.target.value)}
-                className="text-sm outline-none border-b border-gray-300 focus:border-primary border-b-0"
+                className="text-sm outline-none border-b border-gray-300 focus:border-primary"
                 readOnly={role === "RESPONDENT"}
               />
               {role === "CREATOR" && (
@@ -194,6 +190,8 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
     );
 
     setQuestionnaire(updatedQuestionnaire);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requiredValue, questionValue, descriptionValue, options]);
 
   useEffect(() => {
@@ -204,6 +202,8 @@ export function RadioButton(radioButtonProps: RadioButtonProps) {
     );
 
     setAnswers(updatedAnswers);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptionsValues]);
 
   return (

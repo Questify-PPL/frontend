@@ -1,10 +1,11 @@
 import Login from "@/app/login/page";
 import { LoginForm } from "@/components/auth/LoginForm";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { useFormStatus } from "react-dom";
 import { SSOForm } from "@/components/auth/SSOForm";
 import ErrorPage from "@/app/login/error";
+import { useRouter } from "next/navigation";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -13,6 +14,8 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 }));
 
 const mockedDispact = jest.fn();
+
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 jest.mock("react-dom", () => {
   const originalModule = jest.requireActual("react-dom");
@@ -40,6 +43,10 @@ jest.mock("next/navigation", () => {
 });
 
 describe("Login", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", async () => {
     global.fetch = jest.fn(
       () =>
@@ -89,6 +96,10 @@ describe("Login", () => {
 });
 
 describe("LoginForm", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("renders without crashing", () => {
     render(LoginForm());
 
@@ -134,6 +145,10 @@ describe("LoginForm", () => {
 });
 
 describe("SSOForm", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should renders without crashing", () => {
     render(SSOForm({ accessToken: "token" }));
 
@@ -149,6 +164,10 @@ describe("SSOForm", () => {
 });
 
 describe("Error Page", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(jest.fn());
+  });
+
   it("should renders without crashing", () => {
     const error = new Error("error");
     render(ErrorPage({ error }));
@@ -157,5 +176,24 @@ describe("Error Page", () => {
       name: "Something went wrong!",
     });
     expect(message).toBeInTheDocument();
+  });
+
+  it("calls router.replace on button click", () => {
+    const error = new Error("error");
+    const mockReplace = jest.fn();
+    mockedUseRouter.mockImplementation(() => ({
+      replace: mockReplace,
+      back: jest.fn(),
+      forward: jest.fn(),
+      refresh: jest.fn(),
+      push: jest.fn(),
+      prefetch: jest.fn(),
+    }));
+
+    render(<ErrorPage error={error} />);
+    const button = screen.getByTestId("reset");
+    fireEvent.click(button);
+
+    expect(mockReplace).toHaveBeenCalledWith("/");
   });
 });
