@@ -22,7 +22,7 @@ export default async function Loading() {
       </Skeleton>
 
       {session.user.activeRole === UserRoleEnum.Respondent ? (
-        <></>
+        <Skeleton className="h-full w-full"></Skeleton>
       ) : (
         <SummaryLoadingWrapper className="gap-4">
           <Skeleton className="w-full h-20 hidden md:block"></Skeleton>
