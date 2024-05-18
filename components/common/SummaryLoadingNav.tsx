@@ -47,7 +47,7 @@ export function SummaryLoadingNav({
   const renderButton = (
     icon: React.ReactNode,
     label: string,
-    isActive: boolean
+    isActive: boolean,
   ) => (
     <Button className={buttonClass}>
       {isActive ? (
@@ -90,7 +90,7 @@ export function SummaryLoadingNav({
               {renderButton(
                 nav.icon,
                 nav.label == "Create Questionnaire" ? "Create QRE" : nav.label,
-                nav.isActive
+                nav.isActive,
               )}
             </div>
             <div className="w-full md:hidden block">
