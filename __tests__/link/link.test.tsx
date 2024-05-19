@@ -39,7 +39,7 @@ describe("Link Page", () => {
     const link = "non-existing-link";
 
     (getLinkMapping as jest.Mock).mockRejectedValueOnce(
-      new Error("Failed to get link mapping")
+      new Error("Failed to get link mapping"),
     );
 
     render(await Link({ params: { link } }));
