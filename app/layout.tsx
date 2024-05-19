@@ -6,9 +6,44 @@ import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
-  title: "Questify",
+  title: {
+    default: "Questify - Create & Share Prize-Based Questionnaires",
+    template: "%s | Questify",
+  },
   description:
-    "Questify is a platform for creating and sharing prize-based questionnaire.",
+    "Create fun, prize-based questionnaires on Questify. Engage participants, collect data, and reward winners. Share with friends or the world.",
+  twitter: {
+    card: "summary_large_image",
+    site: "@Questify",
+    title: "Questify - Create & Share Prize-Based Questionnaires",
+    description:
+      "Create fun, prize-based questionnaires on Questify. Engage participants, collect data, and reward winners. Share with friends or the world.",
+    images: "https://questify.my.id",
+  },
+  openGraph: {
+    title: "Questify - Engage & Earn with Prize-Based Questionnaires",
+    description:
+      "Create fun, prize-based questionnaires on Questify. Engage participants, collect data, and reward winners. Share with friends or the world.",
+    images: "https://questify.my.id",
+    url: "https://questify.my.id",
+    type: "website",
+  },
+  applicationName: "Questify",
+  authors: {
+    name: "Questify",
+    url: "https://questify.my.id",
+  },
+  keywords: [
+    "questionnaire",
+    "survey",
+    "prize",
+    "earn",
+    "reward",
+    "engage",
+    "data collection",
+    "create",
+    "share",
+  ],
 };
 
 const hauoraFont = localFont({
