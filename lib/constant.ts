@@ -56,6 +56,8 @@ export const URL = {
     create: `${process.env.NEXT_PUBLIC_API_URL}/report`,
     update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
   },
+  getLinkMapping: (link: string) =>
+    `${process.env.NEXT_PUBLIC_API_URL}/link/mapping/${link}`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [

@@ -15,6 +15,7 @@ import {
 import { getInvoices, updateTopupInvoiceStatus } from "./admin";
 
 export * from "./shop";
+export * from "./link";
 
 export {
   authenticate,
