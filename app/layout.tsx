@@ -6,6 +6,9 @@ import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ?? "https://questify.my.id"
+  ),
   title: {
     default: "Questify - Create & Share Prize-Based Questionnaires",
     template: "%s | Questify",
@@ -18,20 +21,18 @@ export const metadata: Metadata = {
     title: "Questify - Create & Share Prize-Based Questionnaires",
     description:
       "Create fun, prize-based questionnaires on Questify. Engage participants, collect data, and reward winners. Share with friends or the world.",
-    images: "https://questify.my.id",
+    images: "twitter-image.png",
   },
   openGraph: {
     title: "Questify - Engage & Earn with Prize-Based Questionnaires",
     description:
       "Create fun, prize-based questionnaires on Questify. Engage participants, collect data, and reward winners. Share with friends or the world.",
-    images: "https://questify.my.id",
-    url: "https://questify.my.id",
+    images: "opengraph-image.png",
     type: "website",
   },
   applicationName: "Questify",
   authors: {
     name: "Questify",
-    url: "https://questify.my.id",
   },
   keywords: [
     "questionnaire",
@@ -90,7 +91,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          hauoraFont.variable,
+          hauoraFont.variable
         )}
       >
         {children}
