@@ -38,7 +38,7 @@ const renderButton = (
 
 export function FormLeftMenu({
   className = "",
-  state = fmls.OPENING,
+  state = fmls.CONTENTS,
   onClickOpening = () => {},
   openingChildren = null,
   onClickContents = () => {},
@@ -47,7 +47,7 @@ export function FormLeftMenu({
   endingChildren = null,
 }: Readonly<FormLeftMenuProps>) {
   return (
-    <div className={`flex p-0  ${className}`}>
+    <div className={`flex p-0  ${className}`} id="form-left-menu">
       <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
         {renderButton("Opening", onClickOpening, state === fmls.OPENING)}
         {state === fmls.OPENING ? (

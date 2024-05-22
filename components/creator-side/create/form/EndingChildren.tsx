@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export function OpeningChildren() {
+export function EndingChildren() {
   return (
     <div className="flex flex-col w-full h-full items-center justify-center">
       <Image

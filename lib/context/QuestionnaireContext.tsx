@@ -44,7 +44,7 @@ export interface QuestionnaireContextType {
   questionnaire: QuestionnaireItem[];
   answers: Answer[];
   errorStatus: boolean;
-  activeQuestion?: number | undefined;
+  activeQuestion: number | undefined;
   setQuestionnaire: React.Dispatch<React.SetStateAction<QuestionnaireItem[]>>;
   setAnswers: React.Dispatch<React.SetStateAction<Answer[]>>;
   setErrorStatus: React.Dispatch<React.SetStateAction<boolean>>;

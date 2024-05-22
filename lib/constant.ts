@@ -324,3 +324,49 @@ export const RespondentInfo = [
   "Phone Number",
   "Company",
 ];
+
+export const steps = [
+  {
+    target: "body",
+    content:
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
+    disableBeacon: true,
+    nextButton: { enabled: true, position: "end" },
+  },
+  {
+    target: "#form-left-menu",
+    content:
+      "This is the left menu. You can navigate between the opening, contents, and ending sections of your questionnaire.",
+    disableBeacon: true,
+  },
+  {
+    target: "#form-opening",
+    content:
+      "This is the opening section. You can add a welcome message or instructions for your questionnaire here.",
+    disableBeacon: true,
+  },
+  {
+    target: "#delete-question",
+    content:
+      "You can delete the current question by clicking on the trash icon.",
+    disableBeacon: true,
+  },
+  {
+    target: "#duplicate-question",
+    content:
+      "You can duplicate the current question by clicking on the copy icon.",
+    disableBeacon: true,
+  },
+  {
+    target: "#move-up-question",
+    content:
+      "You can move the current question up by clicking on the up arrow icon.",
+    disableBeacon: true,
+  },
+  {
+    target: "#move-down-question",
+    content:
+      "You can move the current question down by clicking on the down arrow icon.",
+    disableBeacon: true,
+  },
+];

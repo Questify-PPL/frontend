@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { useCallback } from "react";
 import {
   DefaultQuestion,
   Question,
@@ -8,7 +7,6 @@ import {
   Section,
 } from "../context";
 import { QuestionGet, QuestionnaireGetItem } from "../types";
-import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
 
 export function transformData(
   data: QuestionnaireGetItem[],
