@@ -5,6 +5,7 @@ import { UserRole } from "@/lib/types/auth/user";
 import { logoutUrl as ssoLogoutUrl } from "@/lib/services";
 import axios from "axios";
 import { createReport } from "@/lib/action/user";
+import { revalidatePath } from "next/cache";
 
 jest.mock("@/auth", () => {
   return {
@@ -18,6 +19,10 @@ jest.mock("@/auth", () => {
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
 
 describe("Authenticate action", () => {
   it("should call signIn middleware", async () => {

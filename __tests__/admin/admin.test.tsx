@@ -1,14 +1,15 @@
 import ReportsPage from "@/app/(protected)/(admin)/reports/page";
-import ReviewsPage from "@/app/(protected)/(admin)/reviews/page";
+import UsersPage from "@/app/(protected)/(admin)/users/page";
 import { PaymentInfo } from "@/components/admin-side/AdminHomePage";
 import { Invoice } from "@/lib/types/admin";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { getReports } from "@/lib/action/admin";
+import { getReports, getUsers } from "@/lib/action/admin";
 
 jest.mock("@/lib/action/admin", () => {
   return {
     getReports: jest.fn(),
+    getUsers: jest.fn(),
   };
 });
 
@@ -109,9 +110,15 @@ describe("Reports Page", () => {
 });
 
 describe("Review Page", () => {
-  test("renders the Reviews page without any issues", () => {
-    render(<ReviewsPage />);
+  test("renders the Users page without any issues", async () => {
+    (getUsers as jest.Mock).mockResolvedValue([]);
+    render(await UsersPage());
+    expect(screen.getByTestId("admin-users")).toBeInTheDocument();
+  });
 
-    expect(screen.getByText("Review")).toBeInTheDocument();
+  test("renders the Users page with issues", async () => {
+    (getUsers as jest.Mock).mockRejectedValue(new Error("error"));
+    render(await UsersPage());
+    expect(screen.getByTestId("admin-users")).toBeInTheDocument();
   });
 });

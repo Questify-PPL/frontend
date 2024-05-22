@@ -114,8 +114,12 @@ export function IndividualContent() {
           </Select>
           <ReportDialog
             formId={formId}
-            individual={individual}
+            user={{
+              reportedId: individual.respondentId,
+              isReported: individual.isReported,
+            }}
             handleReport={handleIndividualReportChange}
+            reportedInfo={individual.name}
           />
         </div>
       )}

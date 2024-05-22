@@ -268,6 +268,7 @@ describe("Summary Page", () => {
       endedAt: "2024-03-18T12:00:00Z",
       ongoingParticipation: 10,
       completedParticipation: 5,
+      formIsReported: false,
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(

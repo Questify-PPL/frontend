@@ -26,6 +26,9 @@ export type User = {
   Respondent?: {
     pity: number;
   };
+  _count?: {
+    ReportTo?: number;
+  };
 };
 
 export type UserRole = "CREATOR" | "RESPONDENT" | "ADMIN";

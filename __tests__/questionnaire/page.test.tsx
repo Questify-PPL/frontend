@@ -105,6 +105,7 @@ describe("Questionnaire List View Page", () => {
         endedAt: "2024-03-18T12:00:00Z",
         ongoingParticipation: 10,
         completedParticipation: 5,
+        formIsReported: false,
       },
       {
         id: "2",
@@ -117,6 +118,7 @@ describe("Questionnaire List View Page", () => {
         endedAt: "2024-03-17T12:00:00Z",
         ongoingParticipation: 15,
         completedParticipation: 8,
+        formIsReported: false,
       },
     ];
 

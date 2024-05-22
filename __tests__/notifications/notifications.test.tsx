@@ -37,13 +37,12 @@ describe("Notification component", () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
 
     (getQuestionnairesFilled as jest.Mock).mockResolvedValue(
-      QUESTIONNAIRES_FILLED
+      QUESTIONNAIRES_FILLED,
     );
 
     render(await Notification());
 
     await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
-
 
     expect(getQuestionnairesFilled).toHaveBeenCalled();
   });
@@ -73,7 +72,7 @@ describe("Notification component", () => {
     (auth as jest.Mock).mockResolvedValue(mockSession);
 
     (getQuestionnairesFilled as jest.Mock).mockRejectedValue(
-      new Error("Failed to get questionnaires filled")
+      new Error("Failed to get questionnaires filled"),
     );
 
     render(await Notification());

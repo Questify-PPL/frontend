@@ -28,9 +28,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ form }) => {
               ? "You have won on Questionnaire "
               : "You still lose on Questionnaire"}
           </span>
-          <span className="text-sm ml font-bold sm:text-xs">
-            {form.title}
-          </span>
+          <span className="text-sm ml font-bold sm:text-xs">{form.title}</span>
         </div>
         <div className="flex flex-row"></div>
         <span className="sm:text-xs text-xs text-[#808080]">Ended at</span>

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
 import { Answer, QuestionnaireItem } from "../context";
 import { FetchListForm } from "../types";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function createQuestionnaire(
   title: string,
@@ -90,6 +91,7 @@ export async function getQuestionnairesOwned(type?: string) {
 }
 
 export async function getQuestionnairesFilled() {
+  noStore();
   const session = await auth();
   const user = session?.user;
 

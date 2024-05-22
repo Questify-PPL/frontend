@@ -58,6 +58,10 @@ export const URL = {
   },
   getLinkMapping: (link: string) =>
     `${process.env.NEXT_PUBLIC_API_URL}/link/mapping/${link}`,
+  user: {
+    all: `${process.env.NEXT_PUBLIC_API_URL}/user`,
+    update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
+  },
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
@@ -174,6 +178,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningChance: 100,
     winningStatus: true,
     winnerAmount: 3,
+    formIsReported: false,
   },
   {
     id: "form456",
@@ -193,6 +198,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningChance: 17.2342835,
     winningStatus: true, // LUCKY
     winnerAmount: 2,
+    formIsReported: false,
   },
   {
     id: "form789",
@@ -212,6 +218,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningChance: 10.5,
     winningStatus: false,
     winnerAmount: 1,
+    formIsReported: false,
   },
   {
     id: "form234",
@@ -231,6 +238,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningChance: 100,
     winningStatus: true,
     winnerAmount: 5,
+    formIsReported: false,
   },
   {
     id: "form567",
@@ -250,6 +258,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningChance: 17.3538,
     winningStatus: false,
     winnerAmount: 1,
+    formIsReported: false,
   },
 ];
 
