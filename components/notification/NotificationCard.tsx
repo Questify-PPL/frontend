@@ -1,44 +1,44 @@
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
 import React from "react";
+import { BareForm } from "@/lib/types";
+import { Card } from "../ui/card";
+import { isEnded } from "@/lib/utils";
 
-interface NotificationProps {
-  title: string;
-  message: string;
+interface NotificationCardProps {
+  form: BareForm;
 }
 
-const NotificationMessage: React.FC<NotificationProps> = ({
-  title,
-  message,
-}) => {
-  return (
-    <div className="p-2">
-      <div className="flex justify-between">
-        <span className="text-m font-bold text-nowrap">{title}</span>
-      </div>
-      <div>
-        <span className="text-xs ">{message}</span>
-      </div>
-    </div>
-  );
-};
+const NotificationCard: React.FC<NotificationCardProps> = ({ form }) => {
+  const hasEnded = isEnded(form.endedAt);
 
-const NotificationCard: React.FC<{ title: string; message: string }> = ({
-  title,
-  message,
-}) => {
+  if (!hasEnded) {
+    return null;
+  }
+
   return (
-    <motion.div
-      className={`relative md:w-fit sm:w-fit h-fit gap-2`}
-      data-testid="notification-card"
-      initial={{ opacity: 0, y: -100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card>
-        <NotificationMessage title={title} message={message} />
-      </Card>
-    </motion.div>
+    <Card className="relative mx-auto sm:w-auto h-fit gap-2">
+      <div className="p-2">
+        <div className="flex justify-between">
+          <span className="text-m font-bold text-nowrap">
+            {form.winningStatus ? "Congratulations!" : "Sorry"}
+          </span>
+        </div>
+        <div className="flex flex-col text-pretty">
+          <span className="text-sm sm:text-xs">
+            {form.winningStatus
+              ? "You have won on Questionnaire "
+              : "You still lose on Questionnaire"}
+          </span>
+          <span className="text-sm ml font-bold sm:text-xs">
+            {form.title}
+          </span>
+        </div>
+        <div className="flex flex-row"></div>
+        <span className="sm:text-xs text-xs text-[#808080]">Ended at</span>
+        <span className="sm:text-xs text-xs text-[#808080] ml-1">
+          {form.endedAt.substring(0, 10)}
+        </span>
+      </div>
+    </Card>
   );
 };
 
