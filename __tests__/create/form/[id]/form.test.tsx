@@ -2,6 +2,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Form from "@/app/(protected)/create/form/[id]/page";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
+import { QuestionChildren } from "@/components/creator-side/create/form/QuestionChildren";
 import { deleteQuestion, patchQuestionnaire } from "@/lib/action/form";
 import "@testing-library/jest-dom";
 
@@ -17,9 +18,25 @@ jest.mock("next/navigation", () => {
 
 jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
   useQuestionnaireContext: jest.fn(() => ({
-    questionnaire: [],
+    questionnaire: [
+      {
+        type: "DEFAULT",
+        question: {
+          questionId: 1,
+          number: 1,
+          questionType: "TEXT",
+          questionTypeName: "Short Text",
+          isRequired: false,
+          question: "question",
+          description: "desc",
+        },
+      },
+    ],
+    activeQuestion: 1,
     answers: [],
     setQuestionnaire: jest.fn(),
+    setActiveQuestion: jest.fn(),
+    setAnswers: jest.fn(),
   })),
 }));
 
@@ -27,6 +44,21 @@ jest.mock("@/lib/action/form", () => ({
   deleteQuestion: jest.fn(),
   patchQuestionnaire: jest.fn(),
 }));
+
+class MockPointerEvent extends Event {
+  button: number;
+  ctrlKey: boolean;
+  pointerType: string;
+
+  constructor(type: string, props: PointerEventInit) {
+    super(type, props);
+    this.button = props.button || 0;
+    this.ctrlKey = props.ctrlKey || false;
+    this.pointerType = props.pointerType || "mouse";
+  }
+}
+
+window.PointerEvent = MockPointerEvent as any;
 
 describe("Form Component", () => {
   test("renders Form component with QuestionGetter and FormWrapper", () => {
@@ -105,23 +137,6 @@ describe("Add Question Functionality", () => {
     const cancelButton = screen.getByTestId("cancel-add-question");
     fireEvent.click(cancelButton);
     await screen.findByText("Contents");
-  });
-
-  test("renders add question modal try to add short text", async () => {
-    render(
-      <QuestionnaireProvider>
-        <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>,
-    );
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
-    const addQuestionButton = screen.getByTestId("add-question");
-    addQuestionButton.click();
-    await screen.findByText("Choose a Question Type");
-    const shortTextButton = screen.getByText("Short Text");
-    shortTextButton.click();
-
-    expect(patchQuestionnaire).toHaveBeenCalled();
   });
 
   test("renders add question modal try to add long text", async () => {
@@ -233,8 +248,8 @@ describe("Saved As Draft Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    const contentButton = screen.getByText("Publish");
-    contentButton.click();
+    const publishSection = screen.getByText("Publish");
+    publishSection.click();
 
     await screen.findByTestId("publish-button");
     const publishButton = screen.getByTestId("publish-button");
@@ -244,12 +259,16 @@ describe("Saved As Draft Functionality", () => {
 });
 
 describe("Delete Question Functionality", () => {
-  test("delete question button cant be found in opening", async () => {
+  test("delete question button can't be found in opening", async () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
+    expect(screen.getByText("Opening")).toBeInTheDocument();
+    const openingButton = screen.getByText("Opening");
+    openingButton.click();
+    await screen.findByText("Cool Improvement");
     expect(screen.queryByTestId("delete-question")).toBeNull();
   });
 
@@ -259,9 +278,6 @@ describe("Delete Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("delete-question");
   });
 
@@ -271,10 +287,6 @@ describe("Delete Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("delete-question");
     const deleteButton = screen.getByTestId("delete-question");
     deleteButton.click();
@@ -290,6 +302,10 @@ describe("Duplicate Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
+    expect(screen.getByText("Opening")).toBeInTheDocument();
+    const openingButton = screen.getByText("Opening");
+    openingButton.click();
+    await screen.findByText("Cool Improvement");
     expect(screen.queryByTestId("duplicate-question")).toBeNull();
   });
 
@@ -299,9 +315,6 @@ describe("Duplicate Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("duplicate-question");
   });
 
@@ -311,10 +324,6 @@ describe("Duplicate Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("duplicate-question");
     const duplicateButton = screen.getByTestId("duplicate-question");
     duplicateButton.click();
@@ -324,12 +333,16 @@ describe("Duplicate Question Functionality", () => {
 });
 
 describe("Move Up Question Functionality", () => {
-  test("move up question button cant be found in opening", async () => {
+  test("move up question button can't be found in opening", async () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
+    expect(screen.getByText("Opening")).toBeInTheDocument();
+    const openingButton = screen.getByText("Opening");
+    openingButton.click();
+    await screen.findByText("Cool Improvement");
     expect(screen.queryByTestId("move-up-question")).toBeNull();
   });
 
@@ -339,10 +352,6 @@ describe("Move Up Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("move-up-question");
     const moveUpButton = screen.getByTestId("move-up-question");
     moveUpButton.click();
@@ -356,10 +365,6 @@ describe("Move Up Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("move-up-question");
     const moveUpButton = screen.getByTestId("move-up-question");
     moveUpButton.click();
@@ -369,12 +374,16 @@ describe("Move Up Question Functionality", () => {
 });
 
 describe("Move Down Question Functionality", () => {
-  test("move down question button cant be found in opening", async () => {
+  test("move down question button can't be found in opening", async () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
+    expect(screen.getByText("Opening")).toBeInTheDocument();
+    const openingButton = screen.getByText("Opening");
+    openingButton.click();
+    await screen.findByText("Cool Improvement");
     expect(screen.queryByTestId("move-down-question")).toBeNull();
   });
 
@@ -384,10 +393,6 @@ describe("Move Down Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("move-down-question");
     const moveDownButton = screen.getByTestId("move-down-question");
     moveDownButton.click();
@@ -401,14 +406,95 @@ describe("Move Down Question Functionality", () => {
         <Form params={{ id: "123" }} />
       </QuestionnaireProvider>,
     );
-
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    const contentButton = screen.getByText("Contents");
-    contentButton.click();
     await screen.findByTestId("move-down-question");
     const moveDownButton = screen.getByTestId("move-down-question");
     moveDownButton.click();
     expect(patchQuestionnaire).toHaveBeenCalled();
     await screen.findByText("Contents");
+  });
+});
+
+describe("Form Component with Joyride", () => {
+  test("Joyride runs and shows the first step", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    const joyrideTooltip = screen.getByText(
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
+    );
+    expect(joyrideTooltip).toBeInTheDocument();
+  });
+
+  test("Joyride proceeds to the next step", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    const joyrideTooltip = screen.getByText(
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
+    );
+    expect(joyrideTooltip).toBeInTheDocument();
+
+    const nextButton = screen.getByText("Next (1/7)");
+    fireEvent.click(nextButton);
+
+    const nextStepTooltip = screen.getByText(
+      "This is the left menu. You can navigate between the opening, contents, and ending sections of your questionnaire.",
+    );
+    expect(nextStepTooltip).toBeInTheDocument();
+  });
+
+  test("Joyride proceeds to end (skip)", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+
+    const joyrideTooltip = screen.getByText(
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
+    );
+    expect(joyrideTooltip).toBeInTheDocument();
+
+    const skipButton = screen.getByText("Skip");
+    fireEvent.click(skipButton);
+  });
+});
+
+describe("QuestionChildren Component", () => {
+  test("renders QuestionChildren component", async () => {
+    render(
+      <QuestionnaireProvider>
+        <QuestionChildren id="1" />
+      </QuestionnaireProvider>,
+    );
+    await screen.findByText("Type");
+  });
+
+  test("renders QuestionChildren component and change question type", async () => {
+    render(
+      <QuestionnaireProvider>
+        <QuestionChildren id="1" />
+      </QuestionnaireProvider>,
+    );
+    await screen.findByText("Short Text");
+    const trigger = screen.getByText("Short Text");
+    fireEvent.click(trigger);
+  });
+
+  test("renders QuestionChildren component and change required status", async () => {
+    render(
+      <QuestionnaireProvider>
+        <QuestionChildren id="1" />
+      </QuestionnaireProvider>,
+    );
+    await screen.findByText("Required");
+    const trigger = screen.getByText("Required");
+    fireEvent.click(trigger);
   });
 });

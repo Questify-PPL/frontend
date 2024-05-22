@@ -6,8 +6,10 @@ import Image from "next/image";
 
 export function TerminusRenderer({
   sectionKey,
+  id,
 }: Readonly<{
   sectionKey: string;
+  id?: string;
 }>) {
   const { questionnaire, setQuestionnaire } = useQuestionnaireContext();
   const label = sectionKey.charAt(0) + sectionKey.slice(1).toLowerCase();
@@ -39,8 +41,11 @@ export function TerminusRenderer({
   };
 
   return (
-    <div className="flex flex-col w-full h-full items-center justify-center gap-3">
-      <span className="text-xs text-primary font-medium">{label}</span>
+    <div
+      className="flex flex-col w-full h-full items-center justify-center gap-3"
+      id={id}
+    >
+      <span className="text-xs text-primary font-medium">{label} Section</span>
       <Textarea
         className="text-sm w-full font-normal text-[#64748B] placeholder:text-primary/30 focus-visible:outline-none focus-visible:ring-0"
         placeholder={section.sectionDescription || "Enter description here"}
