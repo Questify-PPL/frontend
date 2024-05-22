@@ -17,26 +17,30 @@ import {
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "../ui/use-toast";
+import { MessageCircleWarningIcon } from "lucide-react";
 
-const max_characters = 200;
+const minCharacters = 20;
+const maxCharacters = 200;
 
 export type ReportDialogProps = {
-  individual: {
-    respondentId: string;
-    name: string;
-    email: string;
+  user: {
+    reportedId: string;
     isReported: boolean;
   };
+  reportedInfo: string;
   formId: string;
 
   // eslint-disable-next-line no-unused-vars
   handleReport: (isReported: boolean) => void;
+  asIcon?: boolean;
 };
 
 export function ReportDialog({
-  individual,
+  user,
+  reportedInfo,
   formId,
   handleReport,
+  asIcon = false,
 }: Readonly<ReportDialogProps>) {
   const [characterCount, setCharacterCount] = useState(0);
   const [reason, setReason] = useState("");
@@ -48,7 +52,7 @@ export function ReportDialog({
   const handleSubmitReport = () => {
     startTransition(async () => {
       const response = await createReport({
-        reportToId: individual.respondentId,
+        reportToId: user.reportedId,
         formId: formId,
         message: reason,
       });
@@ -71,33 +75,53 @@ export function ReportDialog({
     });
   };
 
-  const disabled = individual.isReported;
+  const disabled = user.isReported;
+  const buttonText = (
+    <Button
+      variant="outline"
+      className={clsx({
+        "bg-rose-700 text-white": !disabled,
+        "bg-gray-300 text-gray-500": disabled,
+      })}
+      disabled={disabled}
+    >
+      {disabled ? "Reported" : "Report"}
+    </Button>
+  );
+
+  const buttonIcon = (
+    <Button className="bg-white hover:bg-white" disabled={disabled}>
+      <MessageCircleWarningIcon
+        width={24}
+        height={24}
+        className={clsx({
+          "fill-red-500": !disabled,
+          "fill-gray-500": disabled,
+        })}
+      />
+    </Button>
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className={clsx({
-            "bg-rose-700 text-white": !disabled,
-            "bg-gray-300 text-gray-500": disabled,
-          })}
-          disabled={disabled}
-        >
-          {disabled ? "Reported" : "Report"}
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{asIcon ? buttonIcon : buttonText}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form
           onSubmit={(e) => {
             e.preventDefault();
+
+            if (reason.length < minCharacters) {
+              toast({ title: "Reason is too short" });
+              return;
+            }
+
             handleSubmitReport();
           }}
         >
           <DialogHeader>
             <DialogTitle>Report</DialogTitle>
             <DialogDescription>
-              Report <span className="font-bold">{individual.name}</span> to the
+              Report <span className="font-bold">{reportedInfo}</span> to the
               Admin
             </DialogDescription>
           </DialogHeader>
@@ -116,14 +140,14 @@ export function ReportDialog({
                 }}
                 value={reason}
                 required={true}
-                maxLength={200}
-                minLength={20}
+                maxLength={maxCharacters}
+                minLength={minCharacters}
               />
             </div>
             <div className="flex justify-between">
               <span>Minimum 20 characters</span>
               <span>
-                {characterCount}/{max_characters}
+                {characterCount}/{maxCharacters}
               </span>
             </div>
           </div>

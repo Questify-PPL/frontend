@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ReportDialog } from "@/components/report/ReportDialog";
 
 export function MPContent({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
@@ -202,15 +203,42 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
       </td>
       <td className="flex flex-col py-2 w-[3.125%] items-center justify-center font-bold h-full">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="right-0 absolute">
+          <DropdownMenuContent
+            className="right-0 absolute"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Report</DropdownMenuItem>
+            <DropdownMenuItem onClick={onClick}>
+              {form.isCompleted ? "Summary" : "Continue"}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </td>
+      <td
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <ReportDialog
+          user={{
+            reportedId: form.creatorId!,
+            isReported: form.formIsReported,
+          }}
+          formId={form.id}
+          reportedInfo={form.title}
+          handleReport={() => {}}
+          asIcon={true}
+        />
       </td>
     </tr>
   );

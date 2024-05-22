@@ -86,7 +86,7 @@ export default function ReportTable({
               Email
             </TableHead>
             <TableHead className="h-auto px-[5px] py-[10px] w-[100px]">
-              Total Approved Reports
+              Total Approved Reported
             </TableHead>
             <TableHead className="h-auto px-[5px] py-[10px] w-[100px]">
               Status

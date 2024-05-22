@@ -16,13 +16,14 @@ describe("NotificationCard", () => {
     updatedAt: "",
     ongoingParticipation: 0,
     completedParticipation: 0,
+    formIsReported: false,
   };
 
   test("renders NotificationCard component", () => {
     render(<NotificationCard form={form} />);
     expect(screen.getByText("Congratulations!")).toBeInTheDocument();
     expect(
-      screen.getByText("You have won on Questionnaire")
+      screen.getByText("You have won on Questionnaire"),
     ).toBeInTheDocument();
     expect(screen.getByText("Ended at")).toBeInTheDocument();
     expect(screen.getByText("2023-05-19")).toBeInTheDocument();
@@ -32,7 +33,7 @@ describe("NotificationCard", () => {
     render(<NotificationCard form={form} />);
     expect(screen.getByText("Congratulations!")).toBeInTheDocument();
     expect(
-      screen.getByText("You have won on Questionnaire")
+      screen.getByText("You have won on Questionnaire"),
     ).toBeInTheDocument();
   });
 
@@ -41,7 +42,7 @@ describe("NotificationCard", () => {
     render(<NotificationCard form={losingForm} />);
     expect(screen.getByText("Sorry")).toBeInTheDocument();
     expect(
-      screen.getByText("You still lose on Questionnaire")
+      screen.getByText("You still lose on Questionnaire"),
     ).toBeInTheDocument();
   });
 

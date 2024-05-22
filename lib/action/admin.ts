@@ -5,9 +5,10 @@ import axios from "axios";
 import { URL } from "../constant";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
-import { ApiResponse } from "../types";
+import { ApiResponse, User } from "../types";
 import { mergeInvoicesByDate } from "./utils/mergeInvoice";
 import { Report, ReportStatus } from "../types/admin/report";
+import { UserAccessStatus } from "../types/admin/user";
 
 export async function getTopupInvoices() {
   noStore();
@@ -160,4 +161,49 @@ export async function updateReport(report: Report, status: ReportStatus) {
     return { message: "Failed to update report" };
   }
   revalidatePath("/reports");
+}
+
+export async function getUsers() {
+  noStore();
+  const session = (await auth()) as Session;
+  const admin = session?.user;
+
+  const response = await axios.get<User[]>(URL.user.all, {
+    headers: {
+      Authorization: `Bearer ${admin?.accessToken}`,
+    },
+  });
+
+  if (response.status !== 200) throw Error("Failed to fetch users");
+
+  return response.data;
+}
+
+export async function updateUserBlockedStatus(
+  userId: string,
+  value: UserAccessStatus,
+) {
+  try {
+    const sesison = (await auth()) as Session;
+    const admin = sesison?.user;
+
+    const response = await axios.patch<Partial<User>>(
+      URL.user.update(userId),
+      {
+        isBlocked: value === UserAccessStatus.BLOCKED,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${admin?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (response.status !== 200) throw Error("Failed to update user status");
+  } catch (error) {
+    return { message: "Failed to update user status" };
+  }
+
+  revalidatePath("/users");
 }

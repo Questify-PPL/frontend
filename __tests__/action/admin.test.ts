@@ -5,9 +5,12 @@ import {
   updateReport,
   updateTopupInvoiceStatus,
   updateWithdrawInvoiceStatus,
+  getUsers,
+  updateUserBlockedStatus,
 } from "@/lib/action/admin";
 import { mergeInvoicesByDate } from "@/lib/action/utils/mergeInvoice";
 import { ReportStatus } from "@/lib/types/admin/report";
+import { UserAccessStatus } from "@/lib/types/admin/user";
 import { UserRole } from "@/lib/types/auth";
 import axios from "axios";
 
@@ -498,5 +501,179 @@ describe("Reports", () => {
     await expect(updateReport(report, ReportStatus.APPROVED)).resolves.toEqual({
       message: "Failed to update report",
     });
+  });
+});
+
+describe("Users", () => {
+  beforeEach(() => {
+    mockedAxios.patch.mockClear();
+  });
+
+  it("should return all users", async () => {
+    const mockedUser = [
+      {
+        id: "62a92421-6b36-4d29-a73f-2317396fc713",
+        email: "admin0@questify.com",
+        roles: ["ADMIN"],
+        ssoUsername: null,
+        firstName: "Admin 0",
+        lastName: "Questify",
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: 0,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: true,
+        Admin: {
+          userId: "62a92421-6b36-4d29-a73f-2317396fc713",
+        },
+        Creator: {
+          userId: "62a92421-6b36-4d29-a73f-2317396fc713",
+          emailNotificationActive: true,
+          emptyForms: 0,
+        },
+        Respondent: {
+          userId: "62a92421-6b36-4d29-a73f-2317396fc713",
+          pity: 0,
+        },
+        _count: {
+          ReportTo: 0,
+        },
+      },
+      {
+        id: "2fb5edce-b5b1-41ad-8aa6-1777a1c400e5",
+        email: "creator@questify.com",
+        roles: ["CREATOR"],
+        ssoUsername: null,
+        firstName: "Lyzander",
+        lastName: "Marciano Andrylie",
+        phoneNumber: "08123456789",
+        gender: "MALE",
+        companyName: "Questify",
+        birthDate: "2024-05-19T00:00:00.000Z",
+        credit: 10000000,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: true,
+        Admin: null,
+        Creator: {
+          userId: "2fb5edce-b5b1-41ad-8aa6-1777a1c400e5",
+          emailNotificationActive: true,
+          emptyForms: 0,
+        },
+        Respondent: null,
+        _count: {
+          ReportTo: 1,
+        },
+      },
+    ];
+
+    mockedAxios.get.mockResolvedValue({
+      status: 200,
+      data: mockedUser,
+    });
+
+    const returnedUsers = await getUsers();
+    expect(returnedUsers).toEqual(mockedUser);
+  });
+
+  it("should throw error when getting all users failed", async () => {
+    const mockedUser = [
+      {
+        id: "62a92421-6b36-4d29-a73f-2317396fc713",
+        email: "admin0@questify.com",
+        roles: ["ADMIN"],
+        ssoUsername: null,
+        firstName: "Admin 0",
+        lastName: "Questify",
+        phoneNumber: null,
+        gender: null,
+        companyName: null,
+        birthDate: null,
+        credit: 0,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: true,
+        Admin: {
+          userId: "62a92421-6b36-4d29-a73f-2317396fc713",
+        },
+        Creator: {
+          userId: "62a92421-6b36-4d29-a73f-2317396fc713",
+          emailNotificationActive: true,
+          emptyForms: 0,
+        },
+        Respondent: {
+          userId: "62a92421-6b36-4d29-a73f-2317396fc713",
+          pity: 0,
+        },
+        _count: {
+          ReportTo: 0,
+        },
+      },
+      {
+        id: "2fb5edce-b5b1-41ad-8aa6-1777a1c400e5",
+        email: "creator@questify.com",
+        roles: ["CREATOR"],
+        ssoUsername: null,
+        firstName: "Lyzander",
+        lastName: "Marciano Andrylie",
+        phoneNumber: "08123456789",
+        gender: "MALE",
+        companyName: "Questify",
+        birthDate: "2024-05-19T00:00:00.000Z",
+        credit: 10000000,
+        isVerified: true,
+        isBlocked: false,
+        hasCompletedProfile: true,
+        Admin: null,
+        Creator: {
+          userId: "2fb5edce-b5b1-41ad-8aa6-1777a1c400e5",
+          emailNotificationActive: true,
+          emptyForms: 0,
+        },
+        Respondent: null,
+        _count: {
+          ReportTo: 1,
+        },
+      },
+    ];
+
+    mockedAxios.get.mockResolvedValue({
+      status: 500,
+      data: mockedUser,
+    });
+
+    try {
+      await getUsers();
+    } catch (error) {
+      expect(error).toEqual(new Error("Failed to fetch users"));
+    }
+  });
+
+  it("should update user blocked status", async () => {
+    mockedAxios.patch.mockResolvedValue({
+      status: 200,
+    });
+    await updateUserBlockedStatus(
+      "2fb5edce-b5b1-41ad-8aa6-1777a1c400e5",
+      UserAccessStatus.BLOCKED,
+    );
+    expect(mockedAxios.patch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should throw error when updating user blocked status failed", async () => {
+    mockedAxios.patch.mockResolvedValue({
+      status: 500,
+    });
+    try {
+      await updateUserBlockedStatus(
+        "2fb5edce-b5b1-41ad-8aa6-1777a1c400e5",
+        UserAccessStatus.BLOCKED,
+      );
+    } catch (error) {
+      expect(error).toEqual(new Error("Failed to update user status"));
+    }
   });
 });

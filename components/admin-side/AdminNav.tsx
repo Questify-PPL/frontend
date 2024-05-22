@@ -4,13 +4,13 @@ import { Card } from "@/components/ui/card";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LuClipboardList, LuDollarSign, LuHistory } from "react-icons/lu";
+import { LuClipboardList, LuDollarSign, LuUser } from "react-icons/lu";
 import { Fragment } from "react";
 
 const links = [
   { name: "Payments", href: "/home", icon: LuDollarSign },
   { name: "Reports", href: "/reports", icon: LuClipboardList },
-  { name: "Reviews", href: "/reviews", icon: LuHistory },
+  { name: "Users", href: "/users", icon: LuUser },
 ];
 
 const buttonClass = `flex flex-col justify-start py-0 pb-2 px-2 gap-2 h-fit w-full bg-background hover:bg-[#F3F8F9] text-[#324B4F] hover:text-[#324B4F]
