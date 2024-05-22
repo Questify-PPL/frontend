@@ -1,29 +1,32 @@
-"use client";
 import NotificationCard from "@/components/notification/NotificationCard";
-import { motion } from "framer-motion";
+import { getQuestionnairesFilled } from "@/lib/action";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
+import { UserRoleEnum } from "@/lib/types/auth";
+import { BareForm } from "@/lib/types";
 
-export default function Notification() {
+export default async function Notification() {
+  const session = (await auth()) as Session;
+
+  const forms: BareForm[] = await getForms();
+
+  async function getForms() {
+    try {
+      if (session.user.activeRole === UserRoleEnum.Respondent) {
+        return await getQuestionnairesFilled();
+      }
+    } catch (error) {}
+    return [];
+  }
+
   return (
-    <div className="flex flex-col">
-      <div>
-        <motion.span
-          className="font-bold md:text-2xl sm:text-base flex justify-center items-center mb-5 mt-5"
-          initial={{ opacity: 0, y: -100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          data-testid="notification-text"
-        >
-          Notifications
-        </motion.span>
-      </div>
-      <div className="flex justify-center items-center">
-        <NotificationCard
-          title={"Congratulations"}
-          message={
-            "You have won questionnaire A. We have added the price to your credit."
-          }
-        ></NotificationCard>
-      </div>
-    </div>
+    <section className="flex flex-col items-center h-full w-full absolute gap-2">
+      <span className="font-bold text-xl mt-5 mb-5 flex justify-center">
+        Notifications
+      </span>
+      {forms.map((form) => (
+        <NotificationCard key={form.id} form={form} />
+      ))}
+    </section>
   );
 }
