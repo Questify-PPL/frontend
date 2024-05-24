@@ -8,6 +8,12 @@ import { UserRoleEnum } from "@/lib/types/auth";
 import { Session } from "next-auth";
 import { BareForm } from "@/lib/types";
 import { ResponseWrapper } from "@/components/creator-side/response/ResponseWrapper";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Responses",
+  description: "Questify - Responses Page",
+};
 
 export default async function Response() {
   const session = (await auth()) as Session;

@@ -8,6 +8,7 @@ import {
   getSummaries,
 } from "@/lib/action/form";
 import { UserRoleEnum } from "@/lib/types/auth";
+import { Metadata } from "next";
 import { Session } from "next-auth";
 
 interface Props {
@@ -15,6 +16,11 @@ interface Props {
     id: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Summary",
+  description: "Questify - Summary Page",
+};
 
 export default async function Summary({ params }: Readonly<Props>) {
   const { id } = params;

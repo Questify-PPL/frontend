@@ -1,6 +1,12 @@
 import { QuestionnaireWrapper } from "@/components/respondent-side/QuestionnaireWrapper";
 import { getAllAvailableForm } from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Questionnaire",
+  description: "Questify - Questionnaire Page",
+};
 
 export default async function Questionnaire() {
   const forms = await getForms();

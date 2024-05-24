@@ -2,6 +2,12 @@ import AdminNav from "@/components/admin-side/AdminNav";
 import { User } from "@/lib/types";
 import { getUsers } from "@/lib/action/admin";
 import { UserInfo } from "@/components/admin/UserInfo";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Users",
+  description: "Questify - Admin Users Page",
+};
 
 export default async function UsersPage() {
   let users: User[] = [];
