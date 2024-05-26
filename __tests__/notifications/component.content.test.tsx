@@ -49,5 +49,15 @@ describe("NotificationCard", () => {
   test("displays correct end date", () => {
     render(<NotificationCard form={form} />);
     expect(screen.getByText("2023-05-19")).toBeInTheDocument();
+    expect(screen.queryByText("TBA")).not.toBeInTheDocument();
+  });
+
+  test("displays TBA when end date is null", () => {
+    render(
+      <NotificationCard
+        form={{ ...form, endedAt: null as unknown as string }}
+      />,
+    );
+    expect(screen.getByText("TBA")).toBeInTheDocument();
   });
 });

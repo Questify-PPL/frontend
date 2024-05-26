@@ -62,6 +62,7 @@ export const URL = {
     all: `${process.env.NEXT_PUBLIC_API_URL}/user`,
     update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
   },
+  markAllAsRead: `${process.env.NEXT_PUBLIC_API_URL}/notification/read`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [
@@ -180,6 +181,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningStatus: true,
     winnerAmount: 3,
     formIsReported: false,
+    notificationRead: true,
   },
   {
     id: "form456",
@@ -201,6 +203,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningStatus: true, // LUCKY
     winnerAmount: 2,
     formIsReported: false,
+    notificationRead: true,
   },
   {
     id: "form789",
@@ -222,6 +225,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningStatus: false,
     winnerAmount: 1,
     formIsReported: false,
+    notificationRead: true,
   },
   {
     id: "form234",
@@ -243,6 +247,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningStatus: true,
     winnerAmount: 5,
     formIsReported: false,
+    notificationRead: false,
   },
   {
     id: "form567",
@@ -264,6 +269,7 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
     winningStatus: false,
     winnerAmount: 1,
     formIsReported: false,
+    notificationRead: true,
   },
 ];
 
@@ -296,9 +302,8 @@ export const listFAQ = [
   {
     trigger: "Why only UI Students?",
     content:
-      "Because Questify's original team is from UI! We realized that it's very hard to collect credible respondents. So, we came up with an idea to make prize-based questionnaire with a credible respondent!"
+      "Because Questify's original team is from UI! We realized that it's very hard to collect credible respondents. So, we came up with an idea to make prize-based questionnaire with a credible respondent!",
   },
-  
 ];
 
 export const SHOP_IMAGE = [
