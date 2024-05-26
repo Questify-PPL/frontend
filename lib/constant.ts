@@ -163,13 +163,14 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
   {
     id: "form123",
     creatorId: "creator123",
-    title: "Sample Form 1",
+    title:
+      "Employee Satisfaction and Engagement Survey 2024: A Meta Analysis of Facebook Inc.",
     prize: 10000,
     prizeType: "EVEN",
     maxWinner: 3,
     createdAt: "2024-03-18T12:00:00",
     updatedAt: "2024-03-18T12:00:00",
-    endedAt: "2024-03-31T12:00:00",
+    endedAt: "2024-07-31T12:00:00",
     ongoingParticipation: 7,
     completedParticipation: 3,
     questionFilled: 10,
@@ -183,7 +184,8 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
   {
     id: "form456",
     creatorId: "creator456",
-    title: "Sample Form 2",
+    title:
+      "Consumer Behavior and Preferences Study: Insights for Product Development at Amazon",
     prize: 15000,
     prizeType: "LUCKY",
     maxWinner: 2,
@@ -203,7 +205,8 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
   {
     id: "form789",
     creatorId: "creator789",
-    title: "Sample Form 3",
+    title:
+      "Academic Performance and Student Well-being Assessment: A Case Study of Stanford University",
     prize: 200000,
     prizeType: "LUCKY",
     maxWinner: 1,
@@ -223,7 +226,8 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
   {
     id: "form234",
     creatorId: "creator234",
-    title: "Sample Form 4",
+    title:
+      "Workplace Culture and Diversity Evaluation: Examining Google’s Inclusive Practices",
     prize: 100,
     prizeType: "EVEN",
     maxWinner: 5,
@@ -243,7 +247,8 @@ export const QUESTIONNAIRES_FILLED: BareForm[] = [
   {
     id: "form567",
     creatorId: "creator567",
-    title: "Sample Form 5",
+    title:
+      "Impact of Digital Learning Tools on Student Success: A Research Study at Coursera",
     prize: 1000000,
     prizeType: "LUCKY",
     maxWinner: 1,

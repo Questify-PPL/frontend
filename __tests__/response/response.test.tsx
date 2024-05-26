@@ -10,6 +10,9 @@ import {
   getQuestionnairesOwned,
 } from "@/lib/action/form";
 import { isEnded } from "@/lib/utils";
+import { ResponseDesktop } from "@/components/creator-side/response/ResponseDesktop";
+import * as utils from "@/lib/utils";
+import { ResponseMobile } from "@/components/creator-side/response/ResponseMobile";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -20,6 +23,11 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 jest.mock("@/lib/action/form", () => ({
   getQuestionnairesFilled: jest.fn(),
   getQuestionnairesOwned: jest.fn(),
+}));
+
+jest.mock("@/lib/utils", () => ({
+  ...jest.requireActual("@/lib/utils"),
+  useShareClick: jest.fn(),
 }));
 
 jest.mock("next/navigation", () => {
@@ -896,5 +904,44 @@ describe("Responder Response", () => {
       "There's an issue with fetching the data",
     );
     expect(errorMessage.length).toBe(2);
+  });
+
+  it("should be able to share form in web view", async () => {
+    const form = {
+      ...QUESTIONNAIRES_FILLED[0],
+      createdAt: "2024-03-15T12:00:00",
+      endedAt: "2024-03-20T12:00:00",
+      prizeType: "EVEN",
+      winningStatus: true,
+    };
+    (auth as jest.Mock).mockResolvedValue(mockSession);
+    (getQuestionnairesFilled as jest.Mock).mockResolvedValue([form]);
+
+    render(await Response());
+    await waitFor(() => expect(auth).toHaveBeenCalledTimes(1));
+
+    const dropdownMenuTrigger = screen.getByTestId("dmt-respondent");
+    expect(dropdownMenuTrigger).toBeInTheDocument();
+  });
+});
+
+describe("ResponseDesktop", () => {
+  it("should be able to share form", async () => {
+    render(<ResponseDesktop form={QUESTIONNAIRES_FILLED[0]} />);
+
+    const dropdownMenuTrigger = screen.getByTestId("dmt-creator");
+    expect(dropdownMenuTrigger).toBeInTheDocument();
+  });
+});
+
+describe("ResponseMobile", () => {
+  it("should be able to share form", async () => {
+    render(<ResponseMobile form={QUESTIONNAIRES_FILLED[0]} />);
+
+    const sendIcon = screen.getByTestId("share-icon");
+    expect(sendIcon).toBeInTheDocument();
+    fireEvent.click(sendIcon);
+
+    expect(utils.useShareClick as jest.Mock).toHaveBeenCalled();
   });
 });

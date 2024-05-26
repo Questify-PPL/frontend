@@ -40,7 +40,7 @@ export default function QuestionnaireJoinWrapper({
   const handleAnswerChange = (questionId: number, newAnswer: string) => {
     setAnswers((prevAnswers) => {
       const answerIndex = prevAnswers.findIndex(
-        (answer) => answer.questionId === questionId
+        (answer) => answer.questionId === questionId,
       );
 
       if (answerIndex >= 0) {
@@ -113,12 +113,12 @@ export default function QuestionnaireJoinWrapper({
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === QuestionnaireItemTypes.SECTION) {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -145,7 +145,7 @@ export default function QuestionnaireJoinWrapper({
       choice,
     } = q;
     let existingAnswerIndex = answers.findIndex(
-      (answer) => answer.questionId === questionId
+      (answer) => answer.questionId === questionId,
     );
 
     const answer = answers[existingAnswerIndex]?.answer ?? "";
@@ -231,7 +231,7 @@ export default function QuestionnaireJoinWrapper({
           handleAnswerChange(question.questionId, question.answer);
           const existingQuestion = findQuestionById(
             questionnaire,
-            question.questionId
+            question.questionId,
           );
           if (existingQuestion) {
             const choice = existingQuestion.choice ?? question.choice;
@@ -385,12 +385,12 @@ export default function QuestionnaireJoinWrapper({
                               ? section.questions.map((question, index) => {
                                   const renderedQuestion = findQuestionById(
                                     questionnaire,
-                                    question.questionId as number
+                                    question.questionId as number,
                                   ) as Question;
 
                                   return renderQuestion(
                                     renderedQuestion,
-                                    index
+                                    index,
                                   );
                                 })
                               : ""}

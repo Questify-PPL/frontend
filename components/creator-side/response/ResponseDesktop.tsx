@@ -7,12 +7,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto } from "@/lib/utils";
+import { decidePhoto, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
 
 export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
+  const handleShareClick = useShareClick(form);
 
   function toSummary() {
     router.push(`/summary/form/${form.id}`);
@@ -91,13 +92,22 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
 
       <div className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger data-testid="dmt-creator">
             <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="right-0 absolute">
             <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Summary</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShareClick;
+              }}
+            >
+              Share
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
