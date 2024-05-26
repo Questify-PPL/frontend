@@ -52,6 +52,11 @@ export interface QuestionnaireContextType {
   setErrorStatus: React.Dispatch<React.SetStateAction<boolean>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<number | undefined>>;
   setMetadata: React.Dispatch<React.SetStateAction<Metadata>>;
+
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  publishHandler: () => Promise<void>;
+  isFinished: boolean;
 }
 
 export const QuestionnaireContext = createContext<

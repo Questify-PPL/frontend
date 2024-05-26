@@ -14,7 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
-import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
+import {
+  deleteQuestion,
+  publishQuestionnaire,
+  unpublishQuestionnaire,
+} from "@/lib/action/form";
 import {
   Question,
   QuestionnaireItem,
@@ -51,6 +55,7 @@ import { EndingChildren } from "./EndingChildren";
 import { QuestionChildren } from "./QuestionChildren";
 import { steps } from "@/lib/constant";
 import Link from "next/link";
+import ConfirmationPublishModal from "./ConfirmationPublishModal";
 const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
 const useModalState = () => {
@@ -67,6 +72,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
     setActiveQuestion,
     metadata,
     setMetadata,
+    setIsOpen,
   } = useQuestionnaireContext();
   const [title, setTitle] = useState<string>("");
 
@@ -84,6 +90,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const fetchQuestionnaire = useCallback(async () => {
     try {
       const response = await getQuestionnaire(id);
+      console.log(response.data);
 
       const { title, questions, ...rest } = response.data;
 
@@ -111,12 +118,11 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   };
 
   const handlePublish = async () => {
-    try {
-      await publishQuestionnaire(id);
-      togglePublishNow();
-    } catch (error) {
-      console.error("Failed to publish questionnaire", error);
-    }
+    setIsOpen(true);
+  };
+
+  const handleUnpublish = async () => {
+    setIsOpen(true);
   };
 
   const handleDelete = async () => {
@@ -127,7 +133,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           (item.type === QuestionnaireItemTypes.DEFAULT &&
             item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            !item.questions?.some((q) => q.questionId === activeQuestion)),
+            !item.questions?.some((q) => q.questionId === activeQuestion))
       );
 
       // Update the numbering of the remaining questions
@@ -153,7 +159,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const handleAddQuestion = async (questionType: qtn) => {
     const newQuestion = templateHandler(
       questionType,
-      questionnaire.length - 1,
+      questionnaire.length - 1
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, newQuestion);
@@ -171,7 +177,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question,
+        findQuestionById(activeQuestion, questionnaire).question as Question
       );
     } else {
       return EmptyRenderer();
@@ -354,7 +360,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
               <Button
                 variant="outline"
                 className="text-primary w-full hover:text-primary gap-2"
-                onClick={handlePublish}
+                onClick={metadata.isPublished ? handleUnpublish : handlePublish}
                 data-testid="publish-button"
               >
                 <LuGlobe className="w-5 h-5" />
@@ -366,6 +372,8 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           }
         />
       </div>
+
+      <ConfirmationPublishModal />
     </div>
   );
 };
