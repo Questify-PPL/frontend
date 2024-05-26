@@ -9,6 +9,17 @@ export type ResponsesContextValue = {
   forms: BareForm[];
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
+
+  chosenFormId: string | null;
+  setChosenFormId: React.Dispatch<React.SetStateAction<string | null>>;
+
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
+  onUnpublish: () => Promise<void>;
+
+  isFinished: boolean;
+  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const ResponsesContext = createContext({} as ResponsesContextValue);
