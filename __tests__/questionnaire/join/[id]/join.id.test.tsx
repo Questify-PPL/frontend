@@ -1,9 +1,10 @@
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import JoinForm, {
+  generateMetadata,
+} from "@/app/(protected)/questionnaire/join/[id]/page";
+import { getQuestionnaireRespondent } from "@/lib/action/form";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 import "@testing-library/jest-dom";
-import JoinForm from "@/app/(protected)/questionnaire/join/[id]/page";
-import QuestionnaireJoinWrapper from "@/components/respondent-side/join/QuestionnaireJoinWrapper";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -19,7 +20,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn() };
+  return { useRouter: jest.fn(), notFound: jest.fn() };
 });
 
 jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
@@ -30,12 +31,46 @@ jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
   })),
 }));
 
+jest.mock("@/lib/action/form", () => ({
+  getQuestionnaireRespondent: jest.fn(),
+}));
+
+describe("QuestionnaireJoinWrapper Component", () => {
+  test("renders join page", async () => {
+    (getQuestionnaireRespondent as jest.Mock).mockResolvedValue({
+      data: {
+        title: "Test Title",
+      },
+    });
+
+    await generateMetadata({ params: { id: "123" } });
+
+    render(await JoinForm({ params: { id: "123" } }));
+  });
+
+  test("metadata has but title is undefined", async () => {
+    (getQuestionnaireRespondent as jest.Mock).mockResolvedValue({
+      data: {
+        title: undefined,
+      },
+    });
+
+    await generateMetadata({ params: { id: "123" } });
+  });
+
+  test("generate metadata error", async () => {
+    (getQuestionnaireRespondent as jest.Mock).mockRejectedValue(new Error());
+
+    await generateMetadata({ params: { id: "123" } });
+  });
+});
+
 describe("JoinForm Component", () => {
   test("renders JoinForm component with QuestionGetter and JoinFormWrapper", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     expect(screen.getByTestId("form-wrapper")).toBeInTheDocument();
   });
@@ -50,10 +85,10 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft",
+      "save-as-draft"
     ) as HTMLInputElement;
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
@@ -63,15 +98,15 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft",
+      "save-as-draft"
     ) as HTMLInputElement;
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
     const closeButton = screen.getByTestId(
-      "cancel-saved-as-draft",
+      "cancel-saved-as-draft"
     ) as HTMLInputElement;
     fireEvent.click(closeButton);
   });
@@ -82,7 +117,7 @@ describe("Flow Skeleton Functionality", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     // expect(screen.getByText("Start")).toBeInTheDocument();
     // fireEvent.click(screen.getByText("Start"));

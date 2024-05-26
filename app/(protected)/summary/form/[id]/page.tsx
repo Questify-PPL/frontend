@@ -10,7 +10,6 @@ import {
 import { UserRoleEnum } from "@/lib/types/auth";
 import { Metadata } from "next";
 import { Session } from "next-auth";
-import { notFound } from "next/navigation";
 
 interface Props {
   params: {
@@ -22,24 +21,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
   const session = (await auth()) as Session;
 
-  try {
-    const form = await getQuestionnaireSummmary(session, id);
+  const form = await getQuestionnaireSummmary(session, id);
 
-    let title;
+  let title;
 
-    if (session.user.activeRole === UserRoleEnum.Respondent) {
-      title = form.title ?? "";
-    } else {
-      title = form?.formStatistics?.title ?? "";
-    }
-
-    return {
-      title: title,
-      description: "Questify - Summary Page",
-    };
-  } catch (error) {
-    notFound();
+  if (session.user.activeRole === UserRoleEnum.Respondent) {
+    title = form.title ?? "";
+  } else {
+    title = form?.formStatistics?.title ?? "";
   }
+
+  return {
+    title: title,
+    description: "Questify - Summary Page",
+  };
 }
 
 export default async function Summary({ params }: Readonly<Props>) {
