@@ -15,7 +15,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ form }) => {
   }
 
   return (
-    <Card className="relative mx-auto sm:w-auto h-fit gap-2">
+    <Card className="relative mx-auto sm:w-auto md:w-1/3 h-fit gap-2">
       <div className="p-2">
         <div className="flex justify-between">
           <span className="text-m font-bold text-nowrap">
@@ -33,7 +33,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ form }) => {
         <div className="flex flex-row"></div>
         <span className="sm:text-xs text-xs text-[#808080]">Ended at</span>
         <span className="sm:text-xs text-xs text-[#808080] ml-1">
-          {form.endedAt.substring(0, 10)}
+          {form.endedAt ? form.endedAt.substring(0, 10) : "TBA"}
         </span>
       </div>
     </Card>

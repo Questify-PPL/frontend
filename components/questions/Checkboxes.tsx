@@ -1,11 +1,7 @@
 "use client";
 
 import { useQuestionnaireContext } from "@/lib/hooks/useQuestionnaireContext";
-import {
-  handleQuedesChange,
-  updateAnswers,
-  updateQuestionnaire,
-} from "@/lib/utils";
+import { updateAnswers, updateQuestionnaire } from "@/lib/utils";
 import { ChangeEvent, useEffect, useState } from "react";
 import QuestionLayout from "./QuestionLayout";
 
