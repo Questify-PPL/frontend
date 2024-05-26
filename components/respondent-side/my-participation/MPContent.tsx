@@ -1,7 +1,7 @@
 "use client";
 
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto, isEnded } from "@/lib/utils";
+import { decidePhoto, isEnded, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuDices, LuMoreHorizontal } from "react-icons/lu";
 import {
@@ -16,6 +16,7 @@ import { ReportDialog } from "@/components/report/ReportDialog";
 
 export function MPContent({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
+  const handleShareClick = useShareClick(form);
 
   function onClick() {
     !form.isCompleted
@@ -26,8 +27,8 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
   return (
     <tr
       className="flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer items-center"
-      onClick={onClick}
       data-testid={`mp-content-${form.id}`}
+      onClick={onClick}
     >
       <td className="w-[21.75%] flex flex-row gap-3">
         <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white">
@@ -98,7 +99,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
                     </div>
                   ))}
           </div>
-          <div className="text-left text-wrap w-full font-bold break-all">
+          <div className="text-left text-wrap w-full font-bold break-all pr-4">
             {form.title}
           </div>
         </div>
@@ -204,6 +205,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
       <td className="flex flex-col py-2 w-[3.125%] items-center justify-center font-bold h-full">
         <DropdownMenu>
           <DropdownMenuTrigger
+            data-testid="dmt-respondent"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -212,6 +214,7 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="right-0 absolute"
+            data-testid="cc"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -221,6 +224,20 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
             <DropdownMenuItem onClick={onClick}>
               {form.isCompleted ? "Summary" : "Continue"}
             </DropdownMenuItem>
+            <DropdownMenuItem>Report</DropdownMenuItem>
+            {!isEnded(form.endedAt) && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    await handleShareClick();
+                  }}
+                >
+                  Share
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </td>

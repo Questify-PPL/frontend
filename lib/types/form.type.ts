@@ -20,6 +20,7 @@ export type BareForm = {
   winningStatus?: boolean;
   winnerAmount?: number;
   formIsReported: boolean;
+  link?: string;
 };
 
 export type FetchListForm = {

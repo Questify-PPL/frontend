@@ -1,7 +1,7 @@
 "use client";
 
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto } from "@/lib/utils";
+import { decidePhoto, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
 import { deleteQuestionnaire } from "@/lib/action/form";
@@ -28,6 +28,7 @@ export function TableContent({
   }
 >) {
   const router = useRouter();
+  const handleShareClick = useShareClick(form);
 
   function toEdit() {
     router.push(`/create/form/${form.id}`);
@@ -50,7 +51,7 @@ export function TableContent({
     [form.id, router],
   );
 
-  const handleOnClick = useCallback(
+  const handleRespondClick = useCallback(
     (event: { stopPropagation: () => void }) => {
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
@@ -61,7 +62,7 @@ export function TableContent({
   return (
     <div
       className="md:flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer hidden"
-      onClick={isRespondent ? handleOnClick : toEdit}
+      onClick={isRespondent ? handleRespondClick : toEdit}
       role="none"
     >
       <div className="w-1/4 flex flex-row gap-3">
@@ -99,7 +100,9 @@ export function TableContent({
             </div>
           </div>
 
-          <div className="flex flex-col py-2 w-[23.958%] font-bold">30</div>
+          <div className="flex flex-col py-2 w-[23.958%] font-bold">
+            {form.questionAmount}
+          </div>
 
           <div className="flex flex-col py-2 w-[23.958%] font-bold">
             {form.endedAt
@@ -113,13 +116,22 @@ export function TableContent({
 
           <div className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger data-testid="dmt-respondent">
                 <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="right-0 absolute">
                 <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Respond</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShareClick;
+                  }}
+                >
+                  Share
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -144,7 +156,7 @@ export function TableContent({
           </div>
 
           <div className="flex flex-col py-2 w-[11.97916667%] font-bold">
-            30
+            {form.questionAmount}
           </div>
 
           <div className="flex flex-col py-2 w-[11.97916667%] font-bold">

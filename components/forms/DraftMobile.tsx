@@ -1,5 +1,5 @@
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto } from "@/lib/utils";
+import { decidePhoto, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { LuCoins, LuDices, LuSend } from "react-icons/lu";
@@ -19,12 +19,13 @@ export function DraftMobile({
   }
 >) {
   const router = useRouter();
+  const handleShareClick = useShareClick(form);
 
   function toEdit() {
     router.push(`/create/form/${form.id}`); // Adjust it to the correct path, if needed
   }
 
-  const handleOnClick = useCallback(
+  const handleRespondClick = useCallback(
     (event: { stopPropagation: () => void }) => {
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
@@ -35,7 +36,7 @@ export function DraftMobile({
   return (
     <div
       className="flex flex-row justify-between items-center md:hidden"
-      onClick={isRespondent ? handleOnClick : toEdit}
+      onClick={isRespondent ? handleRespondClick : toEdit}
       role="none"
     >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
@@ -82,7 +83,14 @@ export function DraftMobile({
       {isRespondent && (
         <>
           {isSendIcon && (
-            <div className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white">
+            <div
+              className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShareClick;
+              }}
+              data-testid="share-icon"
+            >
               <LuSend className="w-[16px] h-[16px] text-[#32636A]" />
             </div>
           )}
