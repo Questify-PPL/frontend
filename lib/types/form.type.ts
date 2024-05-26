@@ -141,4 +141,21 @@ export type SectionGet = {
   questions: QuestionGet[];
 };
 
+export type Metadata = {
+  createdAt: string;
+  creatorId: string;
+  endedAt: string | null;
+  id: string;
+  isDraft: boolean;
+  isPublished: boolean;
+  isWinnerProcessed: boolean;
+  link: string;
+  maxParticipant: number | null;
+  maxWinner: number | null;
+  prize: number;
+  prizeType: "EVEN" | "LUCKY";
+  questionAmount: number;
+  updatedAt: string;
+};
+
 export type QuestionnaireGetItem = SectionGet | QuestionGet;

@@ -41,6 +41,7 @@ import {
   LuCopy,
   LuGlobe,
   LuPlusSquare,
+  LuSearch,
   LuTrash,
 } from "react-icons/lu";
 import PublishNowModal from "./PublishNowModal";
@@ -49,6 +50,7 @@ import dynamic from "next/dynamic";
 import { EndingChildren } from "./EndingChildren";
 import { QuestionChildren } from "./QuestionChildren";
 import { steps } from "@/lib/constant";
+import Link from "next/link";
 const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
 const useModalState = () => {
@@ -58,8 +60,14 @@ const useModalState = () => {
 };
 
 const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
-  const { questionnaire, setQuestionnaire, activeQuestion, setActiveQuestion } =
-    useQuestionnaireContext();
+  const {
+    questionnaire,
+    setQuestionnaire,
+    activeQuestion,
+    setActiveQuestion,
+    metadata,
+    setMetadata,
+  } = useQuestionnaireContext();
   const [title, setTitle] = useState<string>("");
 
   // Modal States
@@ -76,13 +84,17 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const fetchQuestionnaire = useCallback(async () => {
     try {
       const response = await getQuestionnaire(id);
-      const transformed = transformData(response.data.questions);
+
+      const { title, questions, ...rest } = response.data;
+
+      const transformed = transformData(questions);
       setQuestionnaire(transformed);
-      setTitle(response.data.title);
+      setTitle(title);
+      setMetadata(rest);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
     }
-  }, [id, setQuestionnaire]);
+  }, [id, setMetadata, setQuestionnaire]);
 
   // Left and Right Menu State
   const [leftMenuState, setLeftMenuState] = useState(flms.CONTENTS);
@@ -115,7 +127,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           (item.type === QuestionnaireItemTypes.DEFAULT &&
             item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            !item.questions?.some((q) => q.questionId === activeQuestion)),
+            !item.questions?.some((q) => q.questionId === activeQuestion))
       );
 
       // Update the numbering of the remaining questions
@@ -141,7 +153,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const handleAddQuestion = async (questionType: qtn) => {
     const newQuestion = templateHandler(
       questionType,
-      questionnaire.length - 1,
+      questionnaire.length - 1
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, newQuestion);
@@ -159,7 +171,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question,
+        findQuestionById(activeQuestion, questionnaire).question as Question
       );
     } else {
       return EmptyRenderer();
@@ -330,15 +342,27 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           designChildren={<div>Design Children</div>}
           logicChildren={<div>Logic Children</div>}
           publishChildren={
-            <Button
-              variant="outline"
-              className="text-primary w-full hover:text-primary gap-2"
-              onClick={handlePublish}
-              data-testid="publish-button"
-            >
-              <LuGlobe className="w-5 h-5" />
-              <span>Publish Now</span>
-            </Button>
+            <>
+              <Link
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-[#F3F8F9] h-10 px-4 py-2 text-primary w-full hover:text-primary gap-2"
+                href={`${metadata.id}/preview`}
+                data-testid="preview-button"
+              >
+                <LuSearch className="w-5 h-5" />
+                Preview Form
+              </Link>
+              <Button
+                variant="outline"
+                className="text-primary w-full hover:text-primary gap-2"
+                onClick={handlePublish}
+                data-testid="publish-button"
+              >
+                <LuGlobe className="w-5 h-5" />
+                <span>
+                  {metadata.isPublished ? "Unpublish Now" : "Publish Now"}
+                </span>
+              </Button>
+            </>
           }
         />
       </div>
