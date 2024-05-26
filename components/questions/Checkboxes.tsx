@@ -30,31 +30,26 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
     isRequired,
     question,
     description,
-    choice,
-    answer,
+    choice = [],
+    answer = [],
     status = true,
   } = checkboxProps;
+
   const [questionValue, setQuestionValue] = useState<string>(question || "");
   const [descriptionValue, setDescriptionValue] = useState<string>(
     description ?? "",
   );
-  const [requiredValue, setRequiredValue] = useState(isRequired || false);
-
-  const [options, setOptions] = useState<string[]>(answer || []);
-
-  // eslint-disable-next-line no-unused-vars
-  const [selectedOptionIndices, setSelectedOptionIndices] = useState<number[]>(
-    [],
-  );
+  const [requiredValue, setRequiredValue] = useState(isRequired);
+  const [options, setOptions] = useState<string[]>(choice || []);
   const [selectedOptionsValues, setSelectedOptionsValues] =
     useState<string[]>(answer);
 
   const handleQuestionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    handleQuedesChange(event, setQuestionValue);
+    setQuestionValue(event.target.value);
   };
 
   const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    handleQuedesChange(event, setDescriptionValue);
+    setDescriptionValue(event.target.value);
   };
 
   const handleOptionChange = (index: number, value: string) => {
@@ -63,7 +58,7 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
     setOptions(newOptions);
   };
 
-  const handleOptionToggle = (index: number, optionValue: string) => {
+  const handleOptionToggle = (optionValue: string) => {
     if (selectedOptionsValues.includes(optionValue)) {
       setSelectedOptionsValues(
         selectedOptionsValues.filter((option) => option !== optionValue),
@@ -87,41 +82,26 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
     const newOptions = [...options];
     newOptions.splice(index, 1);
     setOptions(newOptions);
-    setSelectedOptionIndices((prevIndices) =>
-      prevIndices.filter((i) => i !== index),
+    setSelectedOptionsValues((prevSelected) =>
+      prevSelected.filter((_, i) => i !== index),
     );
   };
-
-  const checkboxTemplate = (
-    <div key="template" className="flex items-center self-stretch gap-2">
-      <input type="checkbox" className="" checked={false} onChange={() => {}} />
-      <input
-        style={{ borderBottom: "none" }}
-        type="text"
-        placeholder="Add Option"
-        className="text-sm outline-none border-b border-gray-300 focus:border-primary"
-        onClick={addNewOption}
-        readOnly={role === "RESPONDENT"}
-      />
-    </div>
-  );
 
   const handleOption = () => {
     return (
       <div>
-        {choice?.map((option, index) => (
+        {options.map((option, index) => (
           <div
-            key={`option-${option}-${index}`}
+            key={`option-${index}`}
             className="flex items-center self-stretch gap-2"
           >
             <input
               type="checkbox"
               className=""
-              checked={selectedOptionsValues.includes(option)} // Check if the option is in the answer list
-              onChange={() => handleOptionToggle(index, option)}
-              disabled={!status} // Disable checkbox if status is false
+              checked={selectedOptionsValues.includes(option)}
+              onChange={() => handleOptionToggle(option)}
+              disabled={!status}
             />
-
             <input
               style={{ borderBottom: "none" }}
               type="text"
@@ -136,7 +116,24 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
             )}
           </div>
         ))}
-        {role === "CREATOR" && checkboxTemplate}
+        {role === "CREATOR" && (
+          <div className="flex items-center self-stretch gap-2">
+            <input
+              type="checkbox"
+              className=""
+              checked={false}
+              onChange={() => {}}
+            />
+            <input
+              style={{ borderBottom: "none" }}
+              type="text"
+              placeholder="Add Option"
+              className="text-sm outline-none border-b border-gray-300 focus:border-primary"
+              onClick={addNewOption}
+              readOnly
+            />
+          </div>
+        )}
       </div>
     );
   };
@@ -152,8 +149,6 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
     );
 
     setQuestionnaire(updatedQuestionnaire);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requiredValue, questionValue, descriptionValue, options]);
 
   useEffect(() => {
@@ -164,8 +159,6 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
     );
 
     setAnswers(updatedAnswers);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptionsValues]);
 
   return (
@@ -180,7 +173,7 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
         handleQuestionChange={handleQuestionChange}
         handleDescriptionChange={handleDescriptionChange}
         handleSwitchChange={handleSwitchChange}
-      ></QuestionLayout>
+      />
     </div>
   );
 }
