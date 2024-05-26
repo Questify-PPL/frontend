@@ -88,7 +88,7 @@ describe("Form Component", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByTestId("form-wrapper")).toBeInTheDocument();
   });
@@ -103,7 +103,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByText("Contents")).toBeInTheDocument();
     const contentButton = screen.getByText("Contents");
@@ -115,7 +115,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -131,7 +131,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -150,7 +150,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -166,7 +166,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -183,7 +183,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -200,7 +200,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -217,7 +217,7 @@ describe("Add Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -240,7 +240,7 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -253,7 +253,7 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const contentButton = screen.getByText("Contents");
     contentButton.click();
@@ -269,7 +269,7 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     const publishSection = screen.getByText("Publish");
     publishSection.click();
@@ -286,7 +286,7 @@ describe("Delete Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByText("Opening")).toBeInTheDocument();
     const openingButton = screen.getByText("Opening");
@@ -299,7 +299,7 @@ describe("Delete Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("delete-question");
   });
@@ -308,7 +308,7 @@ describe("Delete Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("delete-question");
     const deleteButton = screen.getByTestId("delete-question");
@@ -323,7 +323,7 @@ describe("Duplicate Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByText("Opening")).toBeInTheDocument();
     const openingButton = screen.getByText("Opening");
@@ -336,7 +336,7 @@ describe("Duplicate Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("duplicate-question");
   });
@@ -345,7 +345,7 @@ describe("Duplicate Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("duplicate-question");
     const duplicateButton = screen.getByTestId("duplicate-question");
@@ -360,7 +360,7 @@ describe("Move Up Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByText("Opening")).toBeInTheDocument();
     const openingButton = screen.getByText("Opening");
@@ -373,7 +373,7 @@ describe("Move Up Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("move-up-question");
     const moveUpButton = screen.getByTestId("move-up-question");
@@ -386,7 +386,7 @@ describe("Move Up Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("move-up-question");
     const moveUpButton = screen.getByTestId("move-up-question");
@@ -401,7 +401,7 @@ describe("Move Down Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     expect(screen.getByText("Opening")).toBeInTheDocument();
     const openingButton = screen.getByText("Opening");
@@ -414,7 +414,7 @@ describe("Move Down Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("move-down-question");
     const moveDownButton = screen.getByTestId("move-down-question");
@@ -427,7 +427,7 @@ describe("Move Down Question Functionality", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByTestId("move-down-question");
     const moveDownButton = screen.getByTestId("move-down-question");
@@ -442,11 +442,11 @@ describe("Form Component with Joyride", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
 
     const joyrideTooltip = screen.getByText(
-      "This is your workspace. You can create, edit, and publish your questionnaire here."
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
     );
     expect(joyrideTooltip).toBeInTheDocument();
   });
@@ -455,11 +455,11 @@ describe("Form Component with Joyride", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
 
     const joyrideTooltip = screen.getByText(
-      "This is your workspace. You can create, edit, and publish your questionnaire here."
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
     );
     expect(joyrideTooltip).toBeInTheDocument();
 
@@ -467,7 +467,7 @@ describe("Form Component with Joyride", () => {
     fireEvent.click(nextButton);
 
     const nextStepTooltip = screen.getByText(
-      "This is the left menu. You can navigate between the opening, contents, and ending sections of your questionnaire."
+      "This is the left menu. You can navigate between the opening, contents, and ending sections of your questionnaire.",
     );
     expect(nextStepTooltip).toBeInTheDocument();
   });
@@ -476,11 +476,11 @@ describe("Form Component with Joyride", () => {
     render(
       <QuestionnaireProvider>
         <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
 
     const joyrideTooltip = screen.getByText(
-      "This is your workspace. You can create, edit, and publish your questionnaire here."
+      "This is your workspace. You can create, edit, and publish your questionnaire here.",
     );
     expect(joyrideTooltip).toBeInTheDocument();
 
@@ -494,7 +494,7 @@ describe("QuestionChildren Component", () => {
     render(
       <QuestionnaireProvider>
         <QuestionChildren id="1" />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByText("Type");
   });
@@ -503,7 +503,7 @@ describe("QuestionChildren Component", () => {
     render(
       <QuestionnaireProvider>
         <QuestionChildren id="1" />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByText("Short Text");
     const trigger = screen.getByText("Short Text");
@@ -514,7 +514,7 @@ describe("QuestionChildren Component", () => {
     render(
       <QuestionnaireProvider>
         <QuestionChildren id="1" />
-      </QuestionnaireProvider>
+      </QuestionnaireProvider>,
     );
     await screen.findByText("Required");
     const trigger = screen.getByText("Required");
