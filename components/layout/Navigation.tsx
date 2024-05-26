@@ -25,7 +25,7 @@ const renderButton = (
   icon: React.ReactNode,
   label: string,
   onClick: () => void,
-  isActive: boolean
+  isActive: boolean,
 ) => (
   <Button className={buttonClass} onClick={onClick}>
     {isActive ? (
@@ -135,7 +135,7 @@ const Navigation: React.FC<NavigationProps> = ({
                     ? "Create QRE"
                     : nav.label,
                   nav.onClick,
-                  nav.isActive
+                  nav.isActive,
                 )}
               </motion.div>
               <motion.div
