@@ -2,6 +2,7 @@
 "use client";
 
 import { createContext } from "react";
+import { Metadata } from "../types";
 
 export interface Question {
   questionId: number | null;
@@ -45,10 +46,17 @@ export interface QuestionnaireContextType {
   answers: Answer[];
   errorStatus: boolean;
   activeQuestion: number | undefined;
+  metadata: Metadata;
   setQuestionnaire: React.Dispatch<React.SetStateAction<QuestionnaireItem[]>>;
   setAnswers: React.Dispatch<React.SetStateAction<Answer[]>>;
   setErrorStatus: React.Dispatch<React.SetStateAction<boolean>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setMetadata: React.Dispatch<React.SetStateAction<Metadata>>;
+
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  publishHandler: () => Promise<void>;
+  isFinished: boolean;
 }
 
 export const QuestionnaireContext = createContext<

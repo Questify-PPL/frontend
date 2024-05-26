@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useResponsesContext } from "@/lib/context";
 import { FormAsProps } from "@/lib/types";
 import { decidePhoto, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -13,10 +14,17 @@ import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
 
 export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
+  const { setIsOpen, setChosenFormId } = useResponsesContext();
   const handleShareClick = useShareClick(form);
 
   function toSummary() {
     router.push(`/summary/form/${form.id}`);
+  }
+
+  function onUnpublish(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    event.stopPropagation();
+    setChosenFormId(form.id);
+    setIsOpen(true);
   }
 
   return (
@@ -98,12 +106,16 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
           <DropdownMenuContent className="right-0 absolute">
             <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={toSummary}>Summary</DropdownMenuItem>
+            <DropdownMenuItem onClick={onUnpublish}>
+              Unpublish Form
+            </DropdownMenuItem>
             <DropdownMenuItem>Summary</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.stopPropagation();
-                handleShareClick;
+                await handleShareClick();
               }}
             >
               Share

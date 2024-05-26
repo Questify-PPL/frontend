@@ -3,14 +3,15 @@ import { Button } from "../ui/button";
 import { LuCoins } from "react-icons/lu";
 import { Head } from "./Head";
 import Link from "next/link";
+import { Highlight } from "../ui/highlight";
 
 export function Hero() {
   return (
     <section className="flex flex-col items-center justify-center w-full px-2 py-6 lg:py-12 scroll-mt-48">
       <Head content="Empower academic communities engagement" />
-      <p className="text-base md:text-xl lg:text-2xl text-primary text-center font-medium mt-2 pt-2 px-8">
+      <Highlight className="text-primary md:text-xl lg:text-2xl text-center font-bold mt-5 pt-1 px-8">
         through redefined prize-based questionnaire
-      </p>
+      </Highlight>
       <Link href="#benefit">
         <Button className="font-bold text-white mt-4 lg:mt-8 text-sm py-4 md:text-base md:py-6 lg:text-xl lg:py-8 lg:px-8">
           Get Started

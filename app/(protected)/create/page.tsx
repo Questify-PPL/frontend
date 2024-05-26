@@ -3,7 +3,7 @@ import { getQuestionnairesOwned } from "@/lib/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Form",
+  title: "Your Drafts",
   description: "Questify - Create a new form",
 };
 

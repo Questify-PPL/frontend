@@ -8,6 +8,12 @@ import { Props } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 import { getUserSSOJWT } from "@/lib/services";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Register",
+  description: "Questify - Register Page",
+};
 
 export default async function Register(props: Readonly<Props>) {
   const registerUrl = props.searchParams.callbackUrl

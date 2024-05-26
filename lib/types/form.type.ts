@@ -144,4 +144,40 @@ export type SectionGet = {
   questions: QuestionGet[];
 };
 
+export type Metadata = {
+  createdAt: string;
+  creatorId: string;
+  endedAt: string | null;
+  id: string;
+  isDraft: boolean;
+  isPublished: boolean;
+  isWinnerProcessed: boolean;
+  link: string;
+  maxParticipant: number | null;
+  maxWinner: number | null;
+  prize: number;
+  prizeType: "EVEN" | "LUCKY";
+  questionAmount: number;
+  updatedAt: string;
+};
+
+export type QuestionnaireCreator = {
+  id: string;
+  creatorId: string;
+  title: string;
+  prize: number;
+  isDraft: boolean;
+  isPublished: boolean;
+  maxParticipant: number | null;
+  maxWinner: number | null;
+  prizeType: "EVEN" | "LUCKY";
+  questionAmount: number;
+  link: string;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+  isWinnerProcessed: boolean;
+  questions: QuestionnaireGetItem[];
+};
+
 export type QuestionnaireGetItem = SectionGet | QuestionGet;

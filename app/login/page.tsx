@@ -6,6 +6,12 @@ import { SSOButton } from "@/components/auth";
 import { Props } from "@/lib/types";
 import { SSOForm } from "@/components/auth/SSOForm";
 import { getUserSSOJWT } from "@/lib/services";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Questify - Login Page",
+};
 
 export default async function Login(props: Props) {
   const loginUrl = props.searchParams.callbackUrl

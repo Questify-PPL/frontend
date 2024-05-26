@@ -290,6 +290,33 @@ export async function publishQuestionnaire(formId: string) {
   }
 }
 
+export async function unpublishQuestionnaire(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const unpublish = {
+    isPublished: false,
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify(unpublish),
+    },
+  );
+
+  const result = await response.json();
+
+  if (response.status >= 400) {
+    throw new Error(result.message);
+  }
+}
+
 export async function deleteQuestionnaire(formId: string) {
   const session = await auth();
   const user = session?.user;

@@ -1,4 +1,6 @@
-import Summary from "@/app/(protected)/summary/form/[id]/page";
+import Summary, {
+  generateMetadata,
+} from "@/app/(protected)/summary/form/[id]/page";
 import { auth } from "@/auth";
 import {
   getCompletedQuestionnaireForRespondent,
@@ -31,7 +33,7 @@ jest.mock("@/lib/action/form", () => ({
 }));
 
 jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn(), usePathname: jest.fn() };
+  return { useRouter: jest.fn(), usePathname: jest.fn(), notFound: jest.fn() };
 });
 
 jest.mock("@/auth", () => {
@@ -233,6 +235,161 @@ describe("Summary Page", () => {
         },
       }),
     );
+  });
+
+  test("renders metadata as creator", async () => {
+    (getSummaries as jest.Mock).mockResolvedValue({
+      formStatistics: formStatistics,
+      questionsWithAnswers: [],
+      allIndividuals: [],
+    });
+
+    (auth as jest.Mock).mockResolvedValue(session);
+    (getInitialActiveTab as jest.Mock).mockReturnValue("summary");
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
+  });
+
+  test("renders metadata as respondent", async () => {
+    const newSession = {
+      user: {
+        ...session.user,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    const mockedForms: BareForm = {
+      id: "1",
+      title: "Mocked Form 1",
+      prize: 100,
+      prizeType: "EVEN",
+      maxWinner: 1,
+      createdAt: "2024-03-17T12:00:00Z",
+      updatedAt: "2024-03-17T12:00:00Z",
+      endedAt: "2024-03-18T12:00:00Z",
+      ongoingParticipation: 10,
+      completedParticipation: 5,
+      formIsReported: false,
+    };
+
+    (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
+      mockedForms,
+    );
+
+    (auth as jest.Mock).mockResolvedValue(newSession);
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
+  });
+
+  test("renders metadata as creator with error", async () => {
+    (getSummaries as jest.Mock).mockRejectedValue(new Error("Failed to fetch"));
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
+  });
+
+  test("renders metadata as respondent with error", async () => {
+    const newSession = {
+      user: {
+        ...session.user,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
+      new Error("Failed to fetch"),
+    );
+
+    (auth as jest.Mock).mockResolvedValue(newSession);
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
+  });
+
+  test("metadata has but title is undefined as creator", async () => {
+    (getSummaries as jest.Mock).mockResolvedValue({
+      formStatistics: {
+        ...formStatistics,
+        title: undefined,
+      },
+      questionsWithAnswers: [],
+      allIndividuals: [],
+    });
+
+    (auth as jest.Mock).mockResolvedValue(session);
+    (getInitialActiveTab as jest.Mock).mockReturnValue("summary");
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
+  });
+
+  test("metadata has but title is undefined as respondent", async () => {
+    const newSession = {
+      user: {
+        ...session.user,
+        activeRole: "RESPONDENT",
+      },
+      expires: new Date().toISOString(),
+    } as Session;
+
+    const mockedForms = {
+      id: "1",
+      title: undefined,
+      prize: 100,
+      prizeType: "EVEN",
+      maxWinner: 1,
+      createdAt: "2024-03-17T12:00:00Z",
+      updatedAt: "2024-03-17T12:00:00Z",
+      endedAt: "2024-03-18T12:00:00Z",
+      ongoingParticipation: 10,
+      completedParticipation: 5,
+      formIsReported: false,
+    };
+
+    (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
+      mockedForms,
+    );
+
+    (auth as jest.Mock).mockResolvedValue(newSession);
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
+  });
+
+  test("it should throw error when metadata fetch failed", async () => {
+    (getSummaries as jest.Mock).mockRejectedValue(new Error("Failed to fetch"));
+
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    await generateMetadata({
+      params: {
+        id: "1",
+      },
+    });
   });
 
   test("renders with no problems as respondent", async () => {

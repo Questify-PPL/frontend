@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
-import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
+import { deleteQuestion } from "@/lib/action/form";
 import { steps } from "@/lib/constant";
 import {
   Question,
@@ -28,14 +28,15 @@ import {
   FormLeftMenuState as flms,
   FormRightMenuState as frms,
   handleDuplicate,
-  handleMoveDown,
   handleMoveUp,
+  handleMoveDown,
   QuestionGroup as qg,
   QuestionTypeNames as qtn,
   templateHandler,
   transformData,
 } from "@/lib/services/form";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -44,8 +45,10 @@ import {
   LuCopy,
   LuGlobe,
   LuPlusSquare,
+  LuSearch,
   LuTrash,
 } from "react-icons/lu";
+import ConfirmationPublishModal from "./ConfirmationPublishModal";
 import { EndingChildren } from "./EndingChildren";
 import PublishNowModal from "./PublishNowModal";
 import { QuestionChildren } from "./QuestionChildren";
@@ -59,8 +62,15 @@ const useModalState = () => {
 };
 
 const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
-  const { questionnaire, setQuestionnaire, activeQuestion, setActiveQuestion } =
-    useQuestionnaireContext();
+  const {
+    questionnaire,
+    setQuestionnaire,
+    activeQuestion,
+    setActiveQuestion,
+    metadata,
+    setMetadata,
+    setIsOpen,
+  } = useQuestionnaireContext();
   const [title, setTitle] = useState<string>("");
 
   // Modal States
@@ -79,9 +89,13 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const fetchQuestionnaire = useCallback(async () => {
     try {
       const response = await getQuestionnaire(id);
-      const transformed = transformData(response.data.questions);
+
+      const { title, questions, ...rest } = response.data;
+
+      const transformed = transformData(questions);
       setQuestionnaire(transformed);
-      setTitle(response.data.title);
+      setTitle(title);
+      setMetadata(rest);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
       toast({
@@ -89,7 +103,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
         description: "Please try again.",
       });
     }
-  }, [id, setQuestionnaire]);
+  }, [id, setMetadata, setQuestionnaire]);
 
   // Left and Right Menu State
   const [leftMenuState, setLeftMenuState] = useState(flms.CONTENTS);
@@ -110,16 +124,11 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   };
 
   const handlePublish = async () => {
-    try {
-      await publishQuestionnaire(id);
-      togglePublishNow();
-    } catch (error) {
-      console.error("Failed to publish questionnaire", error);
-      toast({
-        title: "Failed to publish questionnaire",
-        description: "Please try again.",
-      });
-    }
+    setIsOpen(true);
+  };
+
+  const handleUnpublish = async () => {
+    setIsOpen(true);
   };
 
   const handleDelete = async () => {
@@ -358,18 +367,32 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           designChildren={<div>Design Children</div>}
           logicChildren={<div>Logic Children</div>}
           publishChildren={
-            <Button
-              variant="outline"
-              className="text-primary w-full hover:text-primary gap-2"
-              onClick={handlePublish}
-              data-testid="publish-button"
-            >
-              <LuGlobe className="w-5 h-5" />
-              <span>Publish Now</span>
-            </Button>
+            <>
+              <Link
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-[#F3F8F9] h-10 px-4 py-2 text-primary w-full hover:text-primary gap-2"
+                href={`${metadata.id}/preview`}
+                data-testid="preview-button"
+              >
+                <LuSearch className="w-5 h-5" />
+                Preview Form
+              </Link>
+              <Button
+                variant="outline"
+                className="text-primary w-full hover:text-primary gap-2"
+                onClick={metadata.isPublished ? handleUnpublish : handlePublish}
+                data-testid="publish-button"
+              >
+                <LuGlobe className="w-5 h-5" />
+                <span>
+                  {metadata.isPublished ? "Unpublish Now" : "Publish Now"}
+                </span>
+              </Button>
+            </>
           }
         />
       </div>
+
+      <ConfirmationPublishModal />
     </div>
   );
 };
