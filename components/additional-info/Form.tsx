@@ -14,7 +14,7 @@ import { AdditionalInfo, FieldName } from "@/lib/schema/additional-info.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateProfile } from "@/lib/action";
 import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const steps = [
   {
@@ -36,6 +36,7 @@ const Form = () => {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -80,7 +81,13 @@ const Form = () => {
       toast(notificationMessage);
 
       if (!response) {
-        router.replace("/home");
+        const callbackUrl = searchParams.get("callbackUrl");
+        const homeUrl = "/home";
+
+        const redirectUrl = callbackUrl?.startsWith("/")
+          ? callbackUrl
+          : homeUrl;
+        router.replace(redirectUrl);
       }
     });
   };

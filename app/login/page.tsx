@@ -8,7 +8,14 @@ import { SSOForm } from "@/components/auth/SSOForm";
 import { getUserSSOJWT } from "@/lib/services";
 
 export default async function Login(props: Props) {
-  const { accessToken } = await getUserSSOJWT(props, "/login");
+  const loginUrl = props.searchParams.callbackUrl
+    ? `/login?callbackUrl=${props.searchParams.callbackUrl}`
+    : "/login";
+  const registerUrl = props.searchParams.callbackUrl
+    ? `/register?callbackUrl=${props.searchParams.callbackUrl}`
+    : "/register";
+
+  const { accessToken } = await getUserSSOJWT(props, loginUrl);
 
   return accessToken ? (
     <main
@@ -48,7 +55,7 @@ export default async function Login(props: Props) {
             <SSOButton
               text="Log In using SSO"
               className="flex flex-row gap-2 border-primary border-[1px] border-solid w-full px-[14px] md:max-w-[330px] mx-auto"
-              url="/login"
+              url={loginUrl}
             />
           </div>
           <LoginForm />
@@ -56,7 +63,7 @@ export default async function Login(props: Props) {
             Don&#39;t have any account?
             <Link
               className="font-bold text-[#C036A9] ml-[6px]"
-              href={"/register"}
+              href={registerUrl}
             >
               Sign Up
             </Link>

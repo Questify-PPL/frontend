@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 import AdditionalInfo from "@/app/(protected)/additional-info/page";
 
 jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn() };
+  return { useRouter: jest.fn(), useSearchParams: jest.fn() };
 });
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
