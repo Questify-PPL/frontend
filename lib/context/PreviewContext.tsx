@@ -15,7 +15,7 @@ export function usePreviewContext() {
 
   if (!context) {
     throw new Error(
-      "usePreviewContext must be used within a ResponsesProvider"
+      "usePreviewContext must be used within a ResponsesProvider",
     );
   }
 
