@@ -1,7 +1,7 @@
 import QuestionnaireJoinWrapper from "@/components/respondent-side/join/QuestionnaireJoinWrapper";
 import { getQuestionnaireRespondent } from "@/lib/action/form";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 interface Props {
