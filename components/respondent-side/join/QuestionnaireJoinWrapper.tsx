@@ -40,7 +40,7 @@ export default function QuestionnaireJoinWrapper({
   const handleAnswerChange = (questionId: number, newAnswer: string) => {
     setAnswers((prevAnswers) => {
       const answerIndex = prevAnswers.findIndex(
-        (answer) => answer.questionId === questionId,
+        (answer) => answer.questionId === questionId
       );
 
       if (answerIndex >= 0) {
@@ -66,7 +66,7 @@ export default function QuestionnaireJoinWrapper({
     };
 
     fetchData().catch(console.error);
-  });
+  }, []);
   // How to make this persist?
   // Choices are not persistent, sometimes it's empty
 
@@ -105,7 +105,6 @@ export default function QuestionnaireJoinWrapper({
     try {
       await patchAnswer(id, answers, true);
       openFinalizationCard();
-      // await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
     }
@@ -114,16 +113,14 @@ export default function QuestionnaireJoinWrapper({
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number,
+    questionId: number
   ): Question | undefined {
-    console.log("Questionnaire from Find: ", questionnaire);
     for (const item of questionnaire) {
       if (item.type === QuestionnaireItemTypes.SECTION) {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
+          (question) => question.questionId === questionId
         );
         if (foundQuestion) {
-          console.log("Found Question: ", foundQuestion);
           return foundQuestion;
         }
       } else if (
@@ -148,11 +145,9 @@ export default function QuestionnaireJoinWrapper({
       choice,
     } = q;
     let existingAnswerIndex = answers.findIndex(
-      (answer) => answer.questionId === questionId,
+      (answer) => answer.questionId === questionId
     );
 
-    console.log("Rendering Question Type: ", questionType);
-    console.log("Rendering Choice: ", choice);
     const answer = answers[existingAnswerIndex]?.answer ?? "";
 
     return (
@@ -173,23 +168,18 @@ export default function QuestionnaireJoinWrapper({
             }
           />
         ) : questionType === "CHECKBOX" ? (
-          (console.log("Rendering Checkbox"),
-          console.log("Answer: ", answer),
-          console.log("Choice: ", choice),
-          (
-            <Checkboxes
-              role="RESPONDENT"
-              numbering={index + 1}
-              questionId={questionId as number}
-              questionTypeName={questionTypeName}
-              isRequired={isRequired}
-              question={question}
-              description={description ?? ""}
-              choice={choice ?? []}
-              // answer={answer as string[]}
-              answer={answer as string[]}
-            />
-          ))
+          <Checkboxes
+            role="RESPONDENT"
+            numbering={index + 1}
+            questionId={questionId as number}
+            questionTypeName={questionTypeName}
+            isRequired={isRequired}
+            question={question}
+            description={description ?? ""}
+            choice={choice ?? []}
+            // answer={answer as string[]}
+            answer={answer as string[]}
+          />
         ) : (
           <RadioButton
             role="RESPONDENT"
@@ -230,9 +220,7 @@ export default function QuestionnaireJoinWrapper({
 
   type QuestionnaireGetItem = SectionGet | QuestionGet;
 
-  async function transformData(
-    data: QuestionnaireGetItem[],
-  ): Promise<QuestionnaireItem[]> {
+  function transformData(data: QuestionnaireGetItem[]): QuestionnaireItem[] {
     return data.map((item) => {
       if (
         (item as SectionGet).sectionId !== null &&
@@ -243,7 +231,7 @@ export default function QuestionnaireJoinWrapper({
           handleAnswerChange(question.questionId, question.answer);
           const existingQuestion = findQuestionById(
             questionnaire,
-            question.questionId,
+            question.questionId
           );
           if (existingQuestion) {
             const choice = existingQuestion.choice ?? question.choice;
@@ -303,11 +291,6 @@ export default function QuestionnaireJoinWrapper({
       setPrizeType(response.data.prizeType);
       setPrize(response.data.prize);
       setMaxWinner(response.data.maxWinner);
-
-      console.log(
-        "Transformed: ",
-        transformed.map((item) => item),
-      );
 
       setQuestionnaire(transformed);
     } catch (error) {
@@ -382,15 +365,13 @@ export default function QuestionnaireJoinWrapper({
                 }
               })()
             : (() => {
-                console.log("Rendering section: " + activeSectionId);
-                console.log("Questionnaire UI: ", questionnaire);
                 const item = questionnaire[activeSectionId];
                 if (
                   item !== undefined &&
                   activeSectionId + 1 <= questionnaire.length - 1
                 ) {
                   const section = item as Section;
-                  console.log("choice: ", section.questions);
+
                   return (
                     <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
                       <QuestionUI
@@ -402,20 +383,14 @@ export default function QuestionnaireJoinWrapper({
                           <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
                             {section.questions?.length >= 1
                               ? section.questions.map((question, index) => {
-                                  console.log("Question UI: ", question);
                                   const renderedQuestion = findQuestionById(
                                     questionnaire,
-                                    question.questionId as number,
+                                    question.questionId as number
                                   ) as Question;
-
-                                  console.log(
-                                    "Rendered Question: ",
-                                    renderedQuestion,
-                                  );
 
                                   return renderQuestion(
                                     renderedQuestion,
-                                    index,
+                                    index
                                   );
                                 })
                               : ""}
