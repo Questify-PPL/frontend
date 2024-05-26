@@ -90,7 +90,6 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const fetchQuestionnaire = useCallback(async () => {
     try {
       const response = await getQuestionnaire(id);
-      console.log(response.data);
 
       const { title, questions, ...rest } = response.data;
 
