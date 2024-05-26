@@ -18,7 +18,7 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
   const [answers, setAnswers] = useState<Answer[]>(ANSWERS);
   const [errorStatus, setErrorStatus] = useState<boolean>(false);
   const [activeQuestion, setActiveQuestion] = useState<number | undefined>(
-    undefined
+    undefined,
   );
 
   const [metadata, setMetadata] = useState<Metadata>({
@@ -52,7 +52,7 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
       setActiveQuestion,
       setMetadata,
     }),
-    [questionnaire, answers, errorStatus, activeQuestion, metadata]
+    [questionnaire, answers, errorStatus, activeQuestion, metadata],
   );
 
   return (
