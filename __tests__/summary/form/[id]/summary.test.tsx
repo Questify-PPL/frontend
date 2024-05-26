@@ -233,7 +233,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -278,7 +278,7 @@ describe("Summary Page", () => {
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
-      mockedForms
+      mockedForms,
     );
 
     (auth as jest.Mock).mockResolvedValue(newSession);
@@ -312,7 +312,7 @@ describe("Summary Page", () => {
     } as Session;
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch")
+      new Error("Failed to fetch"),
     );
 
     (auth as jest.Mock).mockResolvedValue(newSession);
@@ -368,7 +368,7 @@ describe("Summary Page", () => {
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
-      mockedForms
+      mockedForms,
     );
 
     (auth as jest.Mock).mockResolvedValue(newSession);
@@ -429,7 +429,7 @@ describe("Summary Page", () => {
     };
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockResolvedValue(
-      mockedForms
+      mockedForms,
     );
 
     (getInitialActiveTab as jest.Mock).mockReturnValue("summary");
@@ -441,7 +441,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -468,7 +468,7 @@ describe("Summary Page", () => {
     } as Session;
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch")
+      new Error("Failed to fetch"),
     );
 
     (getInitialActiveTab as jest.Mock).mockReturnValue("summary");
@@ -480,7 +480,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -499,7 +499,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     expect(screen.getAllByText("Question 2")[0]).toBeInTheDocument();
@@ -522,7 +522,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -590,7 +590,7 @@ describe("Summary Page", () => {
               ],
             }),
           status: 200,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     render(
@@ -598,7 +598,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     const tab = screen.getByText("Choose an individual to view their response");
@@ -629,7 +629,7 @@ describe("Summary Page", () => {
               message: "error",
             }),
           status: 400,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     render(
@@ -637,7 +637,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -677,7 +677,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
   });
 
@@ -698,7 +698,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     const exportButton = await screen.findAllByTestId("export-button");
@@ -709,7 +709,7 @@ describe("Summary Page", () => {
       () =>
         Promise.resolve({
           blob: () => Promise.resolve(new Blob()),
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
 
     fireEvent.click(exportButton[1] as Element);
@@ -737,7 +737,7 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     const exportButton = await screen.findAllByTestId("export-button");
@@ -931,43 +931,43 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     expect(
       screen.getByText(
-        "Oreo Official: Exploring Consumer Insights on Oreo Products"
-      )
+        "Oreo Official: Exploring Consumer Insights on Oreo Products",
+      ),
     ).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        "What motivated your purchase of the Oreo Special Edition?"
-      )
+        "What motivated your purchase of the Oreo Special Edition?",
+      ),
     ).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        "How likely are you to recommend the Oreo Special Edition to a friend or family member?"
-      )
+        "How likely are you to recommend the Oreo Special Edition to a friend or family member?",
+      ),
     ).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        "How frequently do you recall seeing Oreo's advertisements online?"
-      )
+        "How frequently do you recall seeing Oreo's advertisements online?",
+      ),
     ).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        "Which element of Oreo's online advertisements caught your attention the most?"
-      )
+        "Which element of Oreo's online advertisements caught your attention the most?",
+      ),
     ).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        "The vibrant colors and playful animations in Oreo ads always grab my attention. The ads are visually appealing and make me want to learn more about the product."
-      )
+        "The vibrant colors and playful animations in Oreo ads always grab my attention. The ads are visually appealing and make me want to learn more about the product.",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -981,7 +981,7 @@ describe("Summary Page", () => {
     } as Session;
 
     (getCompletedQuestionnaireForRespondent as jest.Mock).mockRejectedValue(
-      new Error("Failed to fetch")
+      new Error("Failed to fetch"),
     );
 
     (auth as jest.Mock).mockResolvedValue(newSession);
@@ -991,11 +991,11 @@ describe("Summary Page", () => {
         params: {
           id: "1",
         },
-      })
+      }),
     );
 
     expect(
-      screen.getByText("There's an issue with fetching the data")
+      screen.getByText("There's an issue with fetching the data"),
     ).toBeInTheDocument();
   });
 });

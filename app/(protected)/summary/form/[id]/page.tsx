@@ -21,20 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
   const session = (await auth()) as Session;
 
-  const form = await getQuestionnaireSummmary(session, id);
-
-  let title;
-
-  if (session.user.activeRole === UserRoleEnum.Respondent) {
-    title = form.title ?? "";
-  } else {
-    title = form?.formStatistics?.title ?? "";
-  }
-
-  return {
-    title: title,
-    description: "Questify - Summary Page",
-  };
+  return await getQuestionnaireSummmary(session, id, true);
 }
 
 export default async function Summary({ params }: Readonly<Props>) {
@@ -75,16 +62,46 @@ export default async function Summary({ params }: Readonly<Props>) {
   );
 }
 
-async function getQuestionnaireSummmary(session: Session, id: string) {
+async function getQuestionnaireSummmary(
+  session: Session,
+  id: string,
+  isMetadata = false,
+) {
+  let form;
+
   try {
     if (session.user.activeRole === UserRoleEnum.Respondent) {
-      return await getCompletedQuestionnaireForRespondent(id);
+      form = await getCompletedQuestionnaireForRespondent(id);
     }
 
     if (session.user.activeRole === UserRoleEnum.Creator) {
-      return await getSummaries(id);
+      form = await getSummaries(id);
     }
-  } catch (error) {}
 
-  return {};
+    if (!isMetadata) {
+      return form;
+    }
+
+    let title;
+
+    if (session.user.activeRole === UserRoleEnum.Respondent) {
+      title = form.title ?? "";
+    } else {
+      title = form?.formStatistics?.title ?? "";
+    }
+
+    return {
+      title: title,
+      description: "Questify - Summary Page",
+    };
+  } catch (error) {
+    if (isMetadata) {
+      return {
+        title: "Failed to Load",
+        description: "Questify - Summary Page",
+      };
+    }
+
+    return {};
+  }
 }

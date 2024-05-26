@@ -264,7 +264,7 @@ describe("Preview Page", () => {
         params: {
           id: "46f864f1-3531-4f02-b697-fdfb5339cc6e",
         },
-      })
+      }),
     );
   });
 
