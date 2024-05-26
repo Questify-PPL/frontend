@@ -2,8 +2,8 @@
 
 import {
   AddQuestionModal,
-  FormLeftMenu,
   FormLeftContents,
+  FormLeftMenu,
   FormLowerMenu,
   FormRightMenu,
   FormUpperMenu,
@@ -14,11 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
-import {
-  deleteQuestion,
-  publishQuestionnaire,
-  unpublishQuestionnaire,
-} from "@/lib/action/form";
+import { deleteQuestion } from "@/lib/action/form";
+import { steps } from "@/lib/constant";
 import {
   Question,
   QuestionnaireItem,
@@ -26,17 +23,19 @@ import {
 } from "@/lib/context";
 import { useQuestionnaireContext } from "@/lib/hooks";
 import {
+  findQuestionById,
   FormLeftMenuState as flms,
   FormRightMenuState as frms,
+  handleDuplicate,
+  handleMoveDown,
+  handleMoveUp,
   QuestionGroup as qg,
   QuestionTypeNames as qtn,
   templateHandler,
   transformData,
-  handleMoveUp,
-  handleMoveDown,
-  handleDuplicate,
-  findQuestionById,
 } from "@/lib/services/form";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -48,14 +47,11 @@ import {
   LuSearch,
   LuTrash,
 } from "react-icons/lu";
-import PublishNowModal from "./PublishNowModal";
-import { EmptyRenderer, QuestionRenderer, TerminusRenderer } from "./Renderer";
-import dynamic from "next/dynamic";
-import { EndingChildren } from "./EndingChildren";
-import { QuestionChildren } from "./QuestionChildren";
-import { steps } from "@/lib/constant";
-import Link from "next/link";
 import ConfirmationPublishModal from "./ConfirmationPublishModal";
+import { EndingChildren } from "./EndingChildren";
+import PublishNowModal from "./PublishNowModal";
+import { QuestionChildren } from "./QuestionChildren";
+import { EmptyRenderer, QuestionRenderer, TerminusRenderer } from "./Renderer";
 const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
 const useModalState = () => {
@@ -132,7 +128,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           (item.type === QuestionnaireItemTypes.DEFAULT &&
             item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            !item.questions?.some((q) => q.questionId === activeQuestion)),
+            !item.questions?.some((q) => q.questionId === activeQuestion))
       );
 
       // Update the numbering of the remaining questions
@@ -158,7 +154,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const handleAddQuestion = async (questionType: qtn) => {
     const newQuestion = templateHandler(
       questionType,
-      questionnaire.length - 1,
+      questionnaire.length - 1
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, newQuestion);
@@ -176,7 +172,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question,
+        findQuestionById(activeQuestion, questionnaire).question as Question
       );
     } else {
       return EmptyRenderer();

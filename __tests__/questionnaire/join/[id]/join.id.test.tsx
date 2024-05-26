@@ -70,7 +70,7 @@ describe("JoinForm Component", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     expect(screen.getByTestId("form-wrapper")).toBeInTheDocument();
   });
@@ -85,10 +85,10 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft",
+      "save-as-draft"
     ) as HTMLInputElement;
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
@@ -98,15 +98,15 @@ describe("Saved As Draft Functionality", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     const saveAsDraftButton = screen.getByTestId(
-      "save-as-draft",
+      "save-as-draft"
     ) as HTMLInputElement;
     saveAsDraftButton.click();
     await screen.findByText("Saved As Draft!");
     const closeButton = screen.getByTestId(
-      "cancel-saved-as-draft",
+      "cancel-saved-as-draft"
     ) as HTMLInputElement;
     fireEvent.click(closeButton);
   });
@@ -117,7 +117,7 @@ describe("Flow Skeleton Functionality", () => {
     render(
       <QuestionnaireProvider>
         <JoinForm params={{ id: "123" }} />
-      </QuestionnaireProvider>,
+      </QuestionnaireProvider>
     );
     // expect(screen.getByText("Start")).toBeInTheDocument();
     // fireEvent.click(screen.getByText("Start"));
