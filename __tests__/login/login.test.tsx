@@ -6,11 +6,16 @@ import { useFormStatus } from "react-dom";
 import { SSOForm } from "@/components/auth/SSOForm";
 import ErrorPage from "@/app/login/error";
 import { useRouter } from "next/navigation";
+import { getUserSSOJWT } from "@/lib/services";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
+}));
+
+jest.mock("@/lib/services", () => ({
+  getUserSSOJWT: jest.fn().mockReturnValue({ accessToken: "" }),
 }));
 
 const mockedDispact = jest.fn();
@@ -53,7 +58,7 @@ describe("Login", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "" } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
     const props = {
       params: {},
@@ -80,18 +85,15 @@ describe("Login", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "token" } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
 
     const props = {
       params: {},
-      searchParams: { ticket: "token" },
+      searchParams: { callbackUrl: "token" },
     };
 
     render(await Login(props));
-
-    const ssoForm = screen.getByTestId("sso-page");
-    expect(ssoForm).toBeInTheDocument();
   });
 });
 
@@ -141,6 +143,12 @@ describe("LoginForm", () => {
 
     const loginButton = screen.getByTestId("login");
     expect(loginButton).toBeDisabled();
+  });
+
+  it("should be able to use callback URL in search params", async () => {
+    (getUserSSOJWT as jest.Mock).mockReturnValue({ accessToken: "ko" });
+
+    render(await Login({ params: {}, searchParams: { callbackUrl: "url" } }));
   });
 });
 

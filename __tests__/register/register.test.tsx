@@ -1,7 +1,7 @@
-import Register from "@/app/register/page";
-import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import ErrorPage from "@/app/register/error";
+import Register from "@/app/register/page";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 
 jest.mock("@/app/register/page", () => {
@@ -59,7 +59,7 @@ describe("Register and RegisterForm", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: undefined } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
 
     render(await Register({ params: "", searchParams: {} }));
@@ -85,14 +85,14 @@ describe("Register and RegisterForm", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: undefined } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
 
     render(
       await Register({
         params: "",
         searchParams: { ticket: "Token" },
-      }),
+      })
     );
 
     const email = screen.getByLabelText("Email");
@@ -116,14 +116,14 @@ describe("Register and RegisterForm", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "Token" } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
 
     render(
       await Register({
         params: "",
         searchParams: { ticket: "Token" },
-      }),
+      })
     );
 
     const ssoLabel = screen.getByTestId("sso-label");
@@ -146,7 +146,7 @@ describe("Register and RegisterForm", () => {
               message: "error",
             }),
           status: 400,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
 
     expect.assertions(1);
@@ -156,7 +156,7 @@ describe("Register and RegisterForm", () => {
         await Register({
           params: "",
           searchParams: { ticket: "Token" },
-        }),
+        })
       );
     } catch (error) {
       // @ts-ignore
@@ -191,5 +191,19 @@ describe("Register and RegisterForm", () => {
     fireEvent.click(button);
 
     expect(mockReplace).toHaveBeenCalledWith("/");
+  });
+
+  it("it should be able to use callback URL in search params", async () => {
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          json: () => Promise.resolve({ data: { accessToken: "11" } }),
+          status: 200,
+        }) as Promise<Response>
+    );
+
+    render(
+      await Register({ params: {}, searchParams: { callbackUrl: "url" } })
+    );
   });
 });
