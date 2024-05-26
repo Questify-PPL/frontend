@@ -49,6 +49,7 @@ import dynamic from "next/dynamic";
 import { EndingChildren } from "./EndingChildren";
 import { QuestionChildren } from "./QuestionChildren";
 import { steps } from "@/lib/constant";
+import { useToast } from "@/components/ui/use-toast";
 const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
 const useModalState = () => {
@@ -66,8 +67,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const [addQuestionState, toggleAddQuestion] = useModalState();
   const [savedAsDraftState, toggleSavedAsDraft] = useModalState();
   const [openPublishNowState, togglePublishNow] = useModalState();
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { toast } = useToast();
 
   // Mobile State
   const [isMobile, setIsMobile] = useState(false);
@@ -81,6 +84,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       setTitle(response.data.title);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
+      toast({
+        title: "Failed to get questionnaire",
+        description: "Please try again.",
+      });
     }
   }, [id, setQuestionnaire]);
 
@@ -95,6 +102,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
+      toast({
+        title: "Failed to update questionnaire",
+        description: "Please try again.",
+      });
     }
   };
 
@@ -104,6 +115,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       togglePublishNow();
     } catch (error) {
       console.error("Failed to publish questionnaire", error);
+      toast({
+        title: "Failed to publish questionnaire",
+        description: "Please try again.",
+      });
     }
   };
 
@@ -135,6 +150,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to delete the question", error);
+      toast({
+        title: "Failed to delete the question",
+        description: "Please try again.",
+      });
     }
   };
 
@@ -149,6 +168,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
+      toast({
+        title: "Failed to add question",
+        description: "Please try again.",
+      });
     }
   };
 
@@ -210,9 +233,11 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
         onCancel={toggleAddQuestion}
         onShortTextClick={() => handleAddQuestion(qtn.SHORT_TEXT)}
         onLongTextClick={() => handleAddQuestion(qtn.LONG_TEXT)}
+        onDateClick={() => handleAddQuestion(qtn.DATE)}
         onCheckboxClick={() => handleAddQuestion(qtn.CHECKBOX)}
         onMultipleChoiceClick={() => handleAddQuestion(qtn.MULTIPLE_CHOICE)}
         onYesNoClick={() => handleAddQuestion(qtn.YES_NO)}
+        onLinkClick={() => handleAddQuestion(qtn.LINK)}
       />
 
       <SavedAsDraftModal
@@ -275,12 +300,15 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
                     onClick={() => {
+                      setLoading(true);
                       handleDuplicate(questionnaire, activeQuestion as number);
                       patchQuestionnaire(id, questionnaire);
                       fetchQuestionnaire();
+                      setLoading(false);
                     }}
                     data-testid="duplicate-question"
                     id="duplicate-question"
+                    disabled={loading}
                   >
                     <LuCopy className="w-3 h-3" />
                   </Button>

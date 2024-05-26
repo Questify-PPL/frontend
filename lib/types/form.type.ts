@@ -131,6 +131,7 @@ export type QuestionGet = {
   isRequired: boolean;
   question: string;
   description: string;
+  choice?: string[];
 };
 
 export type SectionGet = {
