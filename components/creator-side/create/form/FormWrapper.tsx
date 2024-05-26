@@ -2,8 +2,8 @@
 
 import {
   AddQuestionModal,
-  FormLeftMenu,
   FormLeftContents,
+  FormLeftMenu,
   FormLowerMenu,
   FormRightMenu,
   FormUpperMenu,
@@ -13,28 +13,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
-import { deleteQuestion, publishQuestionnaire } from "@/lib/action/form";
+import { deleteQuestion } from "@/lib/action/form";
+import { steps } from "@/lib/constant";
 import {
-  DefaultQuestion,
   Question,
   QuestionnaireItem,
   QuestionnaireItemTypes,
-  Section,
 } from "@/lib/context";
 import { useQuestionnaireContext } from "@/lib/hooks";
 import {
+  findQuestionById,
   FormLeftMenuState as flms,
   FormRightMenuState as frms,
+  handleDuplicate,
+  handleMoveUp,
+  handleMoveDown,
   QuestionGroup as qg,
   QuestionTypeNames as qtn,
   templateHandler,
   transformData,
-  handleMoveUp,
-  handleMoveDown,
-  handleDuplicate,
-  findQuestionById,
 } from "@/lib/services/form";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -43,63 +45,69 @@ import {
   LuCopy,
   LuGlobe,
   LuPlusSquare,
+  LuSearch,
   LuTrash,
 } from "react-icons/lu";
+import ConfirmationPublishModal from "./ConfirmationPublishModal";
+import { EndingChildren } from "./EndingChildren";
 import PublishNowModal from "./PublishNowModal";
+import { QuestionChildren } from "./QuestionChildren";
 import { EmptyRenderer, QuestionRenderer, TerminusRenderer } from "./Renderer";
+const Joyride = dynamic(() => import("react-joyride"), { ssr: false });
 
-export default function FormWrapper({ id }: Readonly<{ id: string }>) {
-  const { questionnaire, setQuestionnaire, activeQuestion, setActiveQuestion } =
-    useQuestionnaireContext();
+const useModalState = () => {
+  const [state, setState] = useState("hidden");
+  const toggle = () => setState(state === "hidden" ? "flex" : "hidden");
+  return [state, toggle] as const;
+};
+
+const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
+  const {
+    questionnaire,
+    setQuestionnaire,
+    activeQuestion,
+    setActiveQuestion,
+    metadata,
+    setMetadata,
+    setIsOpen,
+  } = useQuestionnaireContext();
   const [title, setTitle] = useState<string>("");
 
-  // Open Add Question Modal
-  const [addQuestionState, setAddQuestionState] = useState("hidden");
-  const toggleAddQuestion = () => {
-    setAddQuestionState(addQuestionState === "hidden" ? "flex" : "hidden");
-  };
-
-  // Open Saved As Draft Modal
-  const [savedAsDraftState, setSavedAsDraftState] = useState("hidden");
-  const toggleSavedAsDraft = () => {
-    setSavedAsDraftState(savedAsDraftState === "hidden" ? "flex" : "hidden");
-  };
-
-  // Open Publish Now Modal
-  const [openPublishNowState, setOpenPublishNowState] = useState("hidden");
-  const togglePublishNow = () => {
-    const newClass = openPublishNowState === "hidden" ? "flex" : "hidden";
-    setOpenPublishNowState(newClass);
-  };
+  // Modal States
+  const [addQuestionState, toggleAddQuestion] = useModalState();
+  const [savedAsDraftState, toggleSavedAsDraft] = useModalState();
+  const [openPublishNowState, togglePublishNow] = useModalState();
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { toast } = useToast();
+
+  // Mobile State
+  const [isMobile, setIsMobile] = useState(false);
+  const toggleMobile = () => setIsMobile(!isMobile);
 
   const fetchQuestionnaire = useCallback(async () => {
     try {
       const response = await getQuestionnaire(id);
-      const transformed = transformData(response.data.questions);
+
+      const { title, questions, ...rest } = response.data;
+
+      const transformed = transformData(questions);
       setQuestionnaire(transformed);
-      setTitle(response.data.title);
+      setTitle(title);
+      setMetadata(rest);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
+      toast({
+        title: "Failed to get questionnaire",
+        description: "Please try again.",
+      });
     }
-  }, [id, setQuestionnaire]);
+  }, [id, setMetadata, setQuestionnaire]);
 
-  // Change Left and Right Menu
-  const [leftMenuState, setLeftMenuState] = useState(flms.OPENING);
-  const handleLeftMenuChange = (menuState: React.SetStateAction<flms>) => {
-    setLeftMenuState(menuState);
-  };
-
+  // Left and Right Menu State
+  const [leftMenuState, setLeftMenuState] = useState(flms.CONTENTS);
   const [rightMenuState, setRightMenuState] = useState(frms.QUESTION);
-  const handleRightMenuChange = (menuState: React.SetStateAction<frms>) => {
-    setRightMenuState(menuState);
-  };
-
-  // Back and Save Handler
-  const handleBack = () => {
-    router.push("../../create");
-  };
 
   const handleSave = async () => {
     try {
@@ -108,57 +116,54 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
+      toast({
+        title: "Failed to update questionnaire",
+        description: "Please try again.",
+      });
     }
   };
 
   const handlePublish = async () => {
-    try {
-      await publishQuestionnaire(id);
-      togglePublishNow();
-    } catch (error) {
-      console.error("Failed to publish questionnaire", error);
-    }
+    setIsOpen(true);
+  };
+
+  const handleUnpublish = async () => {
+    setIsOpen(true);
   };
 
   const handleDelete = async () => {
     try {
       await deleteQuestion(id, activeQuestion as number);
-      const index = questionnaire.findIndex(
+      const updatedQuestionnaire = questionnaire.filter(
         (item) =>
           (item.type === QuestionnaireItemTypes.DEFAULT &&
-            item.question?.questionId === activeQuestion) ||
+            item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            item.questions?.some((q) => q.questionId === activeQuestion)),
+            !item.questions?.some((q) => q.questionId === activeQuestion)),
       );
 
-      if (index !== -1) {
-        // Remove the question from the questionnaire
-        questionnaire.splice(index, 1);
-
-        // Update the numbering of the remaining questions
-        for (let i = index; i < questionnaire.length; i++) {
-          if (questionnaire[i].type === QuestionnaireItemTypes.DEFAULT) {
-            (questionnaire[i] as DefaultQuestion).question.number -= 1;
-          } else if (questionnaire[i].type === QuestionnaireItemTypes.SECTION) {
-            (questionnaire[i] as Section).questions.forEach((q) => {
-              q.number -= 1;
-            });
-          }
+      // Update the numbering of the remaining questions
+      updatedQuestionnaire.forEach((item, index) => {
+        if (item.type === QuestionnaireItemTypes.DEFAULT) {
+          item.question.number = index + 1;
+        } else if (item.type === QuestionnaireItemTypes.SECTION) {
+          item.questions.forEach((q, qIndex) => {
+            q.number = index + qIndex + 1;
+          });
         }
-      }
+      });
 
+      setQuestionnaire(updatedQuestionnaire);
       setActiveQuestion(undefined);
-      await patchQuestionnaire(id, questionnaire);
+      await patchQuestionnaire(id, updatedQuestionnaire);
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to delete the question", error);
+      toast({
+        title: "Failed to delete the question",
+        description: "Please try again.",
+      });
     }
-  };
-
-  // Mobile Toggle Handler
-  const [isMobile, setIsMobile] = useState(true);
-  const handleMobileToggle = () => {
-    setIsMobile(!isMobile);
   };
 
   const handleAddQuestion = async (questionType: qtn) => {
@@ -167,28 +172,31 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
       questionnaire.length - 1,
     ) as QuestionnaireItem[];
     try {
-      await patchQuestionnaire(id, questionnaire);
       await patchQuestionnaire(id, newQuestion);
       toggleAddQuestion();
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
+      toast({
+        title: "Failed to add question",
+        description: "Please try again.",
+      });
     }
   };
 
-  function decideWhichToRender() {
+  const decideWhichToRender = () => {
     if (leftMenuState === flms.OPENING) {
-      return TerminusRenderer({ sectionKey: qg.OPENING });
+      return TerminusRenderer({ sectionKey: qg.OPENING, id: "form-opening" });
     } else if (leftMenuState === flms.ENDING) {
       return TerminusRenderer({ sectionKey: qg.ENDING });
-    } else if (activeQuestion) {
+    } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
         findQuestionById(activeQuestion, questionnaire).question as Question,
       );
     } else {
       return EmptyRenderer();
     }
-  }
+  };
 
   useEffect(() => {
     fetchQuestionnaire();
@@ -196,14 +204,49 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
 
   return (
     <div className="flex w-full h-full" data-testid="form-wrapper">
+      <Joyride
+        run
+        steps={steps}
+        showProgress
+        showSkipButton
+        continuous
+        styles={{
+          options: {
+            zIndex: 10000,
+          },
+          buttonNext: {
+            backgroundColor: "#33646C",
+            color: "#fff",
+            borderRadius: "10px",
+          },
+          buttonBack: {
+            color: "#33646C",
+            borderRadius: "10px",
+          },
+          buttonSkip: {
+            color: "#33646C",
+            borderRadius: "10px",
+          },
+          buttonClose: {
+            color: "#33646C",
+            borderRadius: "10px",
+          },
+        }}
+        floaterProps={{
+          hideArrow: true,
+        }}
+      />
+
       <AddQuestionModal
         className={`${addQuestionState}`}
         onCancel={toggleAddQuestion}
         onShortTextClick={() => handleAddQuestion(qtn.SHORT_TEXT)}
         onLongTextClick={() => handleAddQuestion(qtn.LONG_TEXT)}
+        onDateClick={() => handleAddQuestion(qtn.DATE)}
         onCheckboxClick={() => handleAddQuestion(qtn.CHECKBOX)}
         onMultipleChoiceClick={() => handleAddQuestion(qtn.MULTIPLE_CHOICE)}
         onYesNoClick={() => handleAddQuestion(qtn.YES_NO)}
+        onLinkClick={() => handleAddQuestion(qtn.LINK)}
       />
 
       <SavedAsDraftModal
@@ -218,22 +261,13 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
         onCancel={togglePublishNow}
       />
 
-      <div className="flex flex-row w-full h-full gap-4 p-5">
+      <div className="flex flex-row w-full h-full gap-4 p-5" id="form-wrapper">
         <FormLeftMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
           state={leftMenuState}
-          onClickOpening={() => {
-            handleLeftMenuChange(flms.OPENING);
-            patchQuestionnaire(id, questionnaire);
-          }}
-          onClickContents={() => {
-            handleLeftMenuChange(flms.CONTENTS);
-            patchQuestionnaire(id, questionnaire);
-          }}
-          onClickEnding={() => {
-            handleLeftMenuChange(flms.ENDING);
-            patchQuestionnaire(id, questionnaire);
-          }}
+          onClickOpening={() => setLeftMenuState(flms.OPENING)}
+          onClickContents={() => setLeftMenuState(flms.CONTENTS)}
+          onClickEnding={() => setLeftMenuState(flms.ENDING)}
           openingChildren={<OpeningChildren />}
           contentsChildren={
             <div className="flex flex-col w-full h-full gap-4">
@@ -249,24 +283,25 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
               <FormLeftContents />
             </div>
           }
-          endingChildren={<div>Ending Children</div>}
+          endingChildren={<EndingChildren />}
         />
 
         <div className="flex flex-col w-3/5 min-w-[58%] h-full gap-4 justify-center items-center">
           <FormUpperMenu
-            onBack={handleBack}
+            onBack={() => router.push("../../create")}
             onSave={handleSave}
             QRETitle={title}
           />
           <div className="flex flex-col w-full h-full items-center gap-2">
             {leftMenuState !== flms.OPENING &&
               leftMenuState !== flms.ENDING && (
-                <div className="flex items-center justify-start w-1/2">
+                <div className="flex items-center justify-start w-1/2 gap-1">
                   <Button
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
                     onClick={handleDelete}
                     data-testid="delete-question"
+                    id="delete-question"
                   >
                     <LuTrash className="w-3 h-3" />
                   </Button>
@@ -274,11 +309,15 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
                     onClick={() => {
+                      setLoading(true);
                       handleDuplicate(questionnaire, activeQuestion as number);
                       patchQuestionnaire(id, questionnaire);
                       fetchQuestionnaire();
+                      setLoading(false);
                     }}
                     data-testid="duplicate-question"
+                    id="duplicate-question"
+                    disabled={loading}
                   >
                     <LuCopy className="w-3 h-3" />
                   </Button>
@@ -291,6 +330,7 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                       fetchQuestionnaire();
                     }}
                     data-testid="move-up-question"
+                    id="move-up-question"
                   >
                     <LuChevronUp className="w-3 h-3" />
                   </Button>
@@ -303,6 +343,7 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
                       fetchQuestionnaire();
                     }}
                     data-testid="move-down-question"
+                    id="move-down-question"
                   >
                     <LuChevronDown className="w-3 h-3" />
                   </Button>
@@ -312,32 +353,48 @@ export default function FormWrapper({ id }: Readonly<{ id: string }>) {
               {decideWhichToRender()}
             </Card>
           </div>
-          <FormLowerMenu onChange={handleMobileToggle} isMobile={isMobile} />
+          <FormLowerMenu onChange={toggleMobile} isMobile={isMobile} />
         </div>
 
         <FormRightMenu
           className="hidden md:flex w-1/5 md:min-w-[20%] h-full"
           state={rightMenuState}
-          onClickQuestion={() => handleRightMenuChange(frms.QUESTION)}
-          onClickDesign={() => handleRightMenuChange(frms.DESIGN)}
-          onClickLogic={() => handleRightMenuChange(frms.LOGIC)}
-          onClickPublish={() => handleRightMenuChange(frms.PUBLISH)}
-          questionChildren={<div>Question Children</div>}
+          onClickQuestion={() => setRightMenuState(frms.QUESTION)}
+          onClickDesign={() => setRightMenuState(frms.DESIGN)}
+          onClickLogic={() => setRightMenuState(frms.LOGIC)}
+          onClickPublish={() => setRightMenuState(frms.PUBLISH)}
+          questionChildren={<QuestionChildren id={id} />}
           designChildren={<div>Design Children</div>}
           logicChildren={<div>Logic Children</div>}
           publishChildren={
-            <Button
-              variant="outline"
-              className="text-primary w-full hover:text-primary gap-2"
-              onClick={handlePublish}
-              data-testid="publish-button"
-            >
-              <LuGlobe className="w-5 h-5" />
-              <span>Publish Now</span>
-            </Button>
+            <>
+              <Link
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-[#F3F8F9] h-10 px-4 py-2 text-primary w-full hover:text-primary gap-2"
+                href={`${metadata.id}/preview`}
+                data-testid="preview-button"
+              >
+                <LuSearch className="w-5 h-5" />
+                Preview Form
+              </Link>
+              <Button
+                variant="outline"
+                className="text-primary w-full hover:text-primary gap-2"
+                onClick={metadata.isPublished ? handleUnpublish : handlePublish}
+                data-testid="publish-button"
+              >
+                <LuGlobe className="w-5 h-5" />
+                <span>
+                  {metadata.isPublished ? "Unpublish Now" : "Publish Now"}
+                </span>
+              </Button>
+            </>
           }
         />
       </div>
+
+      <ConfirmationPublishModal />
     </div>
   );
-}
+};
+
+export default FormWrapper;

@@ -1,7 +1,7 @@
-import Register from "@/app/register/page";
-import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import ErrorPage from "@/app/register/error";
+import Register from "@/app/register/page";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 
 jest.mock("@/app/register/page", () => {
@@ -191,5 +191,19 @@ describe("Register and RegisterForm", () => {
     fireEvent.click(button);
 
     expect(mockReplace).toHaveBeenCalledWith("/");
+  });
+
+  it("it should be able to use callback URL in search params", async () => {
+    global.fetch = jest.fn(
+      () =>
+        Promise.resolve({
+          json: () => Promise.resolve({ data: { accessToken: "11" } }),
+          status: 200,
+        }) as Promise<Response>,
+    );
+
+    render(
+      await Register({ params: {}, searchParams: { callbackUrl: "url" } }),
+    );
   });
 });

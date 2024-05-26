@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LuCheckCircle, LuX } from "react-icons/lu";
-import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
 import { LucideClipboardCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { LuCheckCircle, LuX } from "react-icons/lu";
 
 interface FinalizationCardProps {
   className?: string;

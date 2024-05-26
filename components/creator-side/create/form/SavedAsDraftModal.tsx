@@ -35,7 +35,11 @@ export function SavedAsDraftModal({
             </span>
           </div>
         </div>
-        <Button className="w-full" onClick={onCancel}>
+        <Button
+          className="w-full"
+          onClick={onCancel}
+          data-testid="ok-saved-as-draft"
+        >
           OK
         </Button>
       </Card>

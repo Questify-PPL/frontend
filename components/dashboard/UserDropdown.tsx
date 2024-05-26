@@ -33,6 +33,12 @@ export function UserDropdownMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <Link href="/notification">
+            <DropdownMenuItem>Notifications</DropdownMenuItem>
+          </Link>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
           <Link href="/help">
             <DropdownMenuItem>Help</DropdownMenuItem>
           </Link>

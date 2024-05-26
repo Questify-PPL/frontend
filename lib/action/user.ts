@@ -11,6 +11,7 @@ import { CreateReport } from "../schema/create-report.schema";
 import { logoutUrl as ssoLogoutUrl } from "../services";
 import { ActionReponse } from "../types";
 import { UserRole } from "../types/auth";
+import { revalidatePath } from "next/cache";
 
 export type UpdateState = FlattenedUpdateErrors | ActionReponse | undefined;
 
@@ -159,4 +160,6 @@ export async function createReport(createReport: CreateReport) {
   } catch (error) {
     return { message: "Failed to create report" };
   }
+
+  revalidatePath("/");
 }

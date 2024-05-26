@@ -2,6 +2,12 @@ import AdminNav from "@/components/admin-side/AdminNav";
 import { getReports } from "@/lib/action/admin";
 import { ReportInfo } from "@/components/admin/ReportInfo";
 import { Report } from "@/lib/types/admin/report";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Reports",
+  description: "Questify - Admin Reports Page",
+};
 
 export default async function ReportPage() {
   let reports: Report[] = [];

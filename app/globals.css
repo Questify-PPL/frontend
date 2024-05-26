@@ -93,3 +93,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.unset {
+  display: unset;
+}

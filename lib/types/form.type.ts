@@ -19,6 +19,9 @@ export type BareForm = {
   winningChance?: number;
   winningStatus?: boolean;
   winnerAmount?: number;
+  formIsReported: boolean;
+  notificationRead?: boolean;
+  link?: string;
 };
 
 export type FetchListForm = {
@@ -130,6 +133,7 @@ export type QuestionGet = {
   isRequired: boolean;
   question: string;
   description: string;
+  choice?: string[];
 };
 
 export type SectionGet = {
@@ -138,6 +142,42 @@ export type SectionGet = {
   name: string;
   description: string;
   questions: QuestionGet[];
+};
+
+export type Metadata = {
+  createdAt: string;
+  creatorId: string;
+  endedAt: string | null;
+  id: string;
+  isDraft: boolean;
+  isPublished: boolean;
+  isWinnerProcessed: boolean;
+  link: string;
+  maxParticipant: number | null;
+  maxWinner: number | null;
+  prize: number;
+  prizeType: "EVEN" | "LUCKY";
+  questionAmount: number;
+  updatedAt: string;
+};
+
+export type QuestionnaireCreator = {
+  id: string;
+  creatorId: string;
+  title: string;
+  prize: number;
+  isDraft: boolean;
+  isPublished: boolean;
+  maxParticipant: number | null;
+  maxWinner: number | null;
+  prizeType: "EVEN" | "LUCKY";
+  questionAmount: number;
+  link: string;
+  createdAt: string;
+  updatedAt: string;
+  endedAt: string | null;
+  isWinnerProcessed: boolean;
+  questions: QuestionnaireGetItem[];
 };
 
 export type QuestionnaireGetItem = SectionGet | QuestionGet;

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { URL } from "@/lib/constant";
 import { Answer, QuestionnaireItem } from "../context";
 import { FetchListForm } from "../types";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function createQuestionnaire(
   title: string,
@@ -90,6 +91,7 @@ export async function getQuestionnairesOwned(type?: string) {
 }
 
 export async function getQuestionnairesFilled() {
+  noStore();
   const session = await auth();
   const user = session?.user;
 
@@ -288,6 +290,33 @@ export async function publishQuestionnaire(formId: string) {
   }
 }
 
+export async function unpublishQuestionnaire(formId: string) {
+  const session = await auth();
+  const user = session?.user;
+
+  const unpublish = {
+    isPublished: false,
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify(unpublish),
+    },
+  );
+
+  const result = await response.json();
+
+  if (response.status >= 400) {
+    throw new Error(result.message);
+  }
+}
+
 export async function deleteQuestionnaire(formId: string) {
   const session = await auth();
   const user = session?.user;
@@ -359,31 +388,38 @@ export async function patchAnswer(
   let update: any;
 
   if (isFinal) {
+    const formattedData = data.map((item: any) => {
+      return {
+        questionId: item.questionId,
+        answer: item.answer,
+      };
+    });
+
     update = {
       isCompleted: true,
-      questionsAnswer: data,
+      questionsAnswer: formattedData,
     };
   } else {
     update = {
       questionsAnswer: data,
     };
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/form/participate/${formId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${user?.accessToken}`,
-          "Content-Type": "application/json",
-        },
-        method: "PATCH",
-        body: JSON.stringify(update),
-      },
-    );
-
-    if (response.status !== 200) {
-      throw new Error("Failed to add answer to the questionnaire");
-    }
-
-    return await response.json();
   }
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/form/participate/${formId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+      body: JSON.stringify(update),
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to add answer to the questionnaire");
+  }
+
+  return await response.json();
 }

@@ -51,7 +51,7 @@ export function FormRightMenu({
   publishChildren = null,
 }: Readonly<FormRightMenuProps>) {
   return (
-    <div className={`flex p-0  ${className}`}>
+    <div className={`flex p-0  ${className}`} id="form-right-menu">
       <Card className="flex flex-col w-full h-full gap-0 py-2 px-0">
         {renderButton("Question", onClickQuestion, state === frms.QUESTION)}
         {state === frms.QUESTION ? (

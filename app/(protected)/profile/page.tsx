@@ -4,6 +4,12 @@ import { UserRoleEnum } from "@/lib/types/auth";
 import { Profile, ProfileSection } from "@/components/profile";
 import { titleCase } from "@/lib/utils";
 import { ProfileFormWrapper } from "@/components/profile/ProfileForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  description: "Questify - Profile Page",
+};
 
 export default async function ProfilePage() {
   const { user } = (await auth()) as Session;

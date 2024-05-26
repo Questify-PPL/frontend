@@ -9,6 +9,7 @@ import {
   Answer,
 } from "@/lib/context/QuestionnaireContext";
 import { BareForm } from "./types/form.type";
+import { useToast } from "@/components/ui/use-toast";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -136,4 +137,32 @@ export async function convertToCSV(response: Response, formTitle: string) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+export function useShareClick(form: BareForm) {
+  const { toast } = useToast();
+
+  const handleShareClick = async () => {
+    if (form.link) {
+      try {
+        await navigator.clipboard.writeText(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/${form.link}`,
+        );
+        toast({
+          title: "Success",
+          description: "Link copied to clipboard!",
+        });
+      } catch (err) {
+        console.error("Failed to copy the text to clipboard", err);
+      }
+    } else {
+      toast({
+        title: "Error",
+        description: "No link available to share.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return handleShareClick;
 }

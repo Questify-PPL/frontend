@@ -12,7 +12,7 @@ import { CreateQuestionnaire } from "@/lib/schema/create-questionnaire.schema";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { QuestionGroup as qg } from "@/lib/services/form";
+import { QuestionTypeNames, QuestionGroup as qg } from "@/lib/services/form";
 import { QuestionnaireItem } from "@/lib/context";
 
 interface CreateModalProps {
@@ -72,6 +72,16 @@ export function CreateModal({
           sectionName: qg.ENDING,
           sectionDescription: "",
           questions: [],
+        },
+        {
+          type: "DEFAULT",
+          question: {
+            number: 1,
+            questionId: null,
+            questionType: "TEXT",
+            questionTypeName: QuestionTypeNames.SHORT_TEXT,
+            question: "Let's start with a simple question",
+          },
         },
       ] as QuestionnaireItem[];
       await patchQuestionnaire(formId, initSection);

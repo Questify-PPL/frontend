@@ -16,7 +16,7 @@ export function QuestionToggle({
   question = "",
 }: Readonly<QuestionToggleProps>) {
   return (
-    <div
+    <button
       className={`flex flex-row gap-1.5 py-2.5 px-2 w-full rounded-md justify-start items-center ${isActive ? "bg-[#F3F8F9] border-2 border-[#D8EAEE]" : "bg-transparent hover:bg-[#F3F8F9] cursor-pointer border-2 border-transparent"}`}
       onClick={onSelect}
     >
@@ -24,7 +24,9 @@ export function QuestionToggle({
         {numbering}
       </div>
       <QuestionType type={questionType} noText={true} />
-      <div className="flex-grow-0 w-full truncate text-xs">{question}</div>
-    </div>
+      <div className="flex-grow-0 w-full truncate text-xs text-left">
+        {question}
+      </div>
+    </button>
   );
 }

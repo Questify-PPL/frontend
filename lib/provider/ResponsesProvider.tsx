@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import Fuse from "fuse.js";
+import { useCallback, useMemo, useState } from "react";
+import { unpublishQuestionnaire } from "../action/form";
 import { ResponsesContext } from "../context";
 import { BareForm } from "../types";
-import Fuse from "fuse.js";
 
 type ResponsesProviderProps = {
   children: React.ReactNode;
@@ -14,20 +16,53 @@ export function ResponsesProvider({
 }: Readonly<ResponsesProviderProps>) {
   const [title, setTitle] = useState<string>("");
   const [tag, setTag] = useState<"All" | "Ongoing" | "Ended">("All");
+  const [statefulForms, setStatefulForms] = useState<BareForm[]>(forms);
+
+  const [chosenFormId, setChosenFormId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(true);
+
+  const { toast } = useToast();
+
+  const onUnpublish = useCallback(async () => {
+    console.log(isOpen);
+    console.log(chosenFormId);
+    if (!isOpen || !chosenFormId) return;
+
+    setIsFinished(false);
+
+    try {
+      await unpublishQuestionnaire(chosenFormId);
+
+      setStatefulForms((prev) => {
+        return prev.filter((form) => form.id !== chosenFormId);
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+
+    setIsOpen(false);
+    setChosenFormId(null);
+    setIsFinished(true);
+  }, [toast, isOpen, chosenFormId]);
 
   const fuse = useMemo(
     () =>
-      new Fuse(forms, {
+      new Fuse(statefulForms, {
         threshold: 0.1,
         keys: ["title", "prize", "questionAmount"],
         includeMatches: true,
       }),
-    [forms],
+    [statefulForms],
   );
 
   const filteredForms = useMemo(() => {
     const formsFilteredTitle =
-      title == "" ? forms : fuse.search(title).map((form) => form.item);
+      title == "" ? statefulForms : fuse.search(title).map((form) => form.item);
 
     if (tag === "All") {
       return formsFilteredTitle;
@@ -36,7 +71,7 @@ export function ResponsesProvider({
     return formsFilteredTitle.filter((form) => {
       return form.isCompleted === (tag === "Ended");
     });
-  }, [tag, title, fuse, forms]);
+  }, [tag, title, fuse, statefulForms]);
 
   const returns = useMemo(() => {
     return {
@@ -45,8 +80,23 @@ export function ResponsesProvider({
       forms: filteredForms,
       title,
       setTitle,
+      chosenFormId,
+      setChosenFormId,
+      isOpen,
+      setIsOpen,
+      onUnpublish,
+      isFinished,
+      setIsFinished,
     };
-  }, [tag, title, filteredForms]);
+  }, [
+    tag,
+    title,
+    filteredForms,
+    isOpen,
+    chosenFormId,
+    onUnpublish,
+    isFinished,
+  ]);
 
   return (
     <ResponsesContext.Provider value={returns}>

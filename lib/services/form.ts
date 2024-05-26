@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { useCallback } from "react";
 import {
   DefaultQuestion,
   Question,
@@ -8,7 +7,6 @@ import {
   Section,
 } from "../context";
 import { QuestionGet, QuestionnaireGetItem } from "../types";
-import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
 
 export function transformData(
   data: QuestionnaireGetItem[],
@@ -29,7 +27,7 @@ export function transformData(
         isRequired: question.isRequired,
         question: question.question,
         description: question.description,
-        choice: [],
+        choice: question.choice ?? [],
       }));
       return {
         type: QuestionnaireItemTypes.SECTION,
@@ -51,6 +49,7 @@ export function transformData(
           isRequired: question.isRequired,
           question: question.question,
           description: question.description,
+          choice: question.choice ?? [],
         },
       } as DefaultQuestion;
     }
@@ -298,11 +297,21 @@ const questionTemplates: { [key in QuestionTypeNames]: any } = {
   [QuestionTypeNames.MATRIX]: undefined,
   [QuestionTypeNames.NET_PROMOTER]: undefined,
   [QuestionTypeNames.RATING]: undefined,
-  [QuestionTypeNames.DATE]: undefined,
+  [QuestionTypeNames.DATE]: {
+    question: {
+      questionType: "TEXT",
+      questionTypeName: QuestionTypeNames.DATE,
+    },
+  },
   [QuestionTypeNames.TIME]: undefined,
   [QuestionTypeNames.NUMBER]: undefined,
   [QuestionTypeNames.FILE_UPLOAD]: undefined,
-  [QuestionTypeNames.LINK]: undefined,
+  [QuestionTypeNames.LINK]: {
+    question: {
+      questionType: "TEXT",
+      questionTypeName: QuestionTypeNames.LINK,
+    },
+  },
 };
 
 export function templateHandler(type: QuestionTypeNames, number: number) {

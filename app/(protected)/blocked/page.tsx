@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "You are blocked!",
+  description: "Questify - Blocked Page",
+};
+
 export default function BlockedPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">

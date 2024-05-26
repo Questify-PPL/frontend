@@ -1,29 +1,40 @@
-"use client";
 import NotificationCard from "@/components/notification/NotificationCard";
-import { motion } from "framer-motion";
+import Separator from "@/components/notification/Separator";
+import { getQuestionnairesFilled, markAllAsRead } from "@/lib/action";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
+import { UserRoleEnum } from "@/lib/types/auth";
+import { BareForm } from "@/lib/types";
 
-export default function Notification() {
+export default async function Notification() {
+  const session = (await auth()) as Session;
+  const forms: BareForm[] = await getForms();
+  const unreadForms = forms.filter((form) => !form.notificationRead);
+  const readForms = forms.filter((form) => form.notificationRead);
+
+  async function getForms() {
+    let result: BareForm[] = [];
+    try {
+      if (session.user.activeRole === UserRoleEnum.Respondent) {
+        result = await getQuestionnairesFilled();
+        await markAllAsRead();
+      }
+    } catch (error) {}
+    return result;
+  }
+
   return (
-    <div className="flex flex-col">
-      <div>
-        <motion.span
-          className="font-bold md:text-2xl sm:text-base flex justify-center items-center mb-5 mt-5"
-          initial={{ opacity: 0, y: -100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          data-testid="notification-text"
-        >
-          Notifications
-        </motion.span>
-      </div>
-      <div className="flex justify-center items-center">
-        <NotificationCard
-          title={"Congratulations"}
-          message={
-            "You have won questionnaire A. We have added the price to your credit."
-          }
-        ></NotificationCard>
-      </div>
-    </div>
+    <section className="flex flex-col items-center h-full w-full absolute gap-2">
+      <span className="font-bold text-xl mt-5 mb-5 flex justify-center">
+        Notifications
+      </span>
+      {unreadForms.map((form) => (
+        <NotificationCard key={form.id} form={form} />
+      ))}
+      {unreadForms.length > 0 && readForms.length > 0 && <Separator />}
+      {readForms.map((form) => (
+        <NotificationCard key={form.id} form={form} />
+      ))}
+    </section>
   );
 }

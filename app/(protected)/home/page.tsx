@@ -11,6 +11,12 @@ import { BareForm } from "@/lib/types/form.type";
 import { Session } from "next-auth";
 import { getInvoices } from "@/lib/action";
 import { Invoice } from "@/lib/types";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Questify Dashboard",
+};
 
 export default async function Home() {
   const session = (await auth()) as Session;

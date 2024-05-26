@@ -1,17 +1,21 @@
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto } from "@/lib/utils";
+import { decidePhoto, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuSend } from "react-icons/lu";
 
 export function ResponseMobile({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
+  const handleShareClick = useShareClick(form);
 
   function toSummary() {
     router.push(`/summary/form/${form.id}`);
   }
 
   return (
-    <div className="flex flex-row justify-between items-center md:hidden">
+    <div
+      className="flex flex-row justify-between items-center md:hidden"
+      onClick={toSummary}
+    >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
         <div className="flex flex-col items-start justify-start">
           <div className="min-w-8 h-8 bg-[#95B0B4] rounded-md flex justify-center items-center text-white">
@@ -43,7 +47,11 @@ export function ResponseMobile({ form }: Readonly<FormAsProps>) {
       </div>
       <button
         className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white cursor-pointer"
-        onClick={toSummary}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleShareClick;
+        }}
+        data-testid="share-icon"
       >
         <LuSend className="w-[16px] h-[16px] text-[#32636A]" />
       </button>

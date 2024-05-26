@@ -33,7 +33,7 @@ const HomeNav: React.FC<HomeNavProps> = ({
     <Navigation
       className={
         className +
-        " fixed bottom-4 md:top-auto md:bottom-auto md:relative md:flex md:w-fit w-full !left-0"
+        " fixed bottom-4 md:top-0 md:bottom-auto md:sticky md:flex md:w-fit w-full !left-0"
       }
       action="Create Questionnaire"
       state={state}

@@ -70,9 +70,14 @@ export const authConfig = {
         isLoggedIn &&
         !auth.user.hasCompletedProfile &&
         nextUrl.pathname !== additionalInfoRoute;
-
       if (authUserHasNotCompletedProfile) {
-        return NextResponse.redirect(new URL(additionalInfoRoute, nextUrl));
+        const additionalInfoUrl = new URL(additionalInfoRoute, nextUrl);
+
+        if (nextUrl.pathname) {
+          additionalInfoUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+        }
+
+        return NextResponse.redirect(additionalInfoUrl);
       }
 
       // Check role
@@ -137,8 +142,8 @@ export const authConfig = {
 
       const urlObj = new URL(url);
 
-      // Redirect /login to homepage
-      if (urlObj.pathname === "/login") {
+      // Redirect /login or /register to callback URL or homepage
+      if (urlObj.pathname === "/login" || urlObj.pathname === "/register") {
         const urlObj = new URL(url);
         const hasCallbackUrl = urlObj.searchParams.has("callbackUrl");
         const callbackUrl = urlObj.searchParams.get("callbackUrl") as string;

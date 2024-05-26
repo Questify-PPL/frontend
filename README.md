@@ -1,26 +1,36 @@
-![Coverage](https://gitlab.com/questify-ppl/frontend/badges/main/coverage.svg?job=Test)
+![Coverage](https://gitlab.cs.ui.ac.id/questify/frontend/badges/main/coverage.svg?job=Test)
 
-This is Questify bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Installation
 
-## Getting Started
+Use the node package manager [npm](https://pip.pypa.io/en/stable/) to install packages required to run the application.
 
-First, run the development server:
+```bash
+npm install
+```
+
+## Add Environment Variable
+
+> See env.example()
+
+```bash
+cp .env.example .env
+```
+
+## Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run Production Server
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+npm run start
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Learn More
 
@@ -29,10 +39,64 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/)
 
-## Deploy on Vercel
+## Linting
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Test
+
+```bash
+npm run test
+```
+
+## Test Coverage
+
+```
+npm run test:coverage
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Deployment
+
+Deployed to [Vercel](https://vercel.com/)
+
+## Built with
+
+- [Next.js](https://nextjs.org/)
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Jest](https://jestjs.io/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- [React Query](https://react-query.tanstack.com/)
+- [Axios](https://axios-http.com/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Husky](https://typicode.github.io/husky/)
+
+## API
+
+[Questify API](https://gitlab.cs.ui.ac.id/questify/backend)
+
+## Documentation
+
+[Questify Documentation](https://docs.google.com/document/u/1/d/1kElitEAo8iqA-0Tf2iwcx5q2mKKOTygi/edit)
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
