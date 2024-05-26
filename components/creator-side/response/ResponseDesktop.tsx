@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useResponsesContext } from "@/lib/context";
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto } from "@/lib/utils";
+import { decidePhoto, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
 
 export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
   const router = useRouter();
   const { setIsOpen, setChosenFormId } = useResponsesContext();
+  const handleShareClick = useShareClick(form);
 
   function toSummary() {
     router.push(`/summary/form/${form.id}`);
@@ -78,7 +79,7 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
       <div className="flex flex-col py-2 md:hidden lg:flex w-[14.375%] font-bold">
         {isNaN(
           form.completedParticipation /
-            (form.completedParticipation + form.ongoingParticipation),
+            (form.completedParticipation + form.ongoingParticipation)
         )
           ? 0
           : (form.completedParticipation /
@@ -99,7 +100,7 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
 
       <div className="flex flex-col py-2 w-[3.125%] items-center font-bold h-full">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger data-testid="dmt-creator">
             <LuMoreHorizontal className="w-3 h-3 cursor-pointer" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="right-0 absolute">
@@ -108,6 +109,16 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
             <DropdownMenuItem onClick={toSummary}>Summary</DropdownMenuItem>
             <DropdownMenuItem onClick={onUnpublish}>
               Unpublish Form
+            </DropdownMenuItem>
+            <DropdownMenuItem>Summary</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async (e) => {
+                e.stopPropagation();
+                await handleShareClick();
+              }}
+            >
+              Share
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

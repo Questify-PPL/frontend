@@ -3,7 +3,11 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Form from "@/app/(protected)/create/form/[id]/page";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 import { QuestionChildren } from "@/components/creator-side/create/form/QuestionChildren";
-import { deleteQuestion, patchQuestionnaire } from "@/lib/action/form";
+import {
+  deleteQuestion,
+  getQuestionnaire,
+  patchQuestionnaire,
+} from "@/lib/action/form";
 import "@testing-library/jest-dom";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -64,24 +68,16 @@ jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
 }));
 
 jest.mock("@/lib/action/form", () => ({
+  getQuestionnaire: jest.fn(),
   deleteQuestion: jest.fn(),
   patchQuestionnaire: jest.fn(),
 }));
 
-class MockPointerEvent extends Event {
-  button: number;
-  ctrlKey: boolean;
-  pointerType: string;
-
-  constructor(type: string, props: PointerEventInit) {
-    super(type, props);
-    this.button = props.button || 0;
-    this.ctrlKey = props.ctrlKey || false;
-    this.pointerType = props.pointerType || "mouse";
-  }
-}
-
-window.PointerEvent = MockPointerEvent as any;
+jest.mock("@/components/ui/use-toast", () => ({
+  useToast: jest.fn(() => ({
+    toast: jest.fn(),
+  })),
+}));
 
 describe("Form Component", () => {
   test("renders Form component with QuestionGetter and FormWrapper", () => {
@@ -225,6 +221,23 @@ describe("Add Question Functionality", () => {
     addQuestionButton.click();
     await screen.findByText("Choose a Question Type");
     const numberButton = screen.getByText("Yes/No");
+    numberButton.click();
+
+    expect(patchQuestionnaire).toHaveBeenCalled();
+  });
+
+  test("renders add question modal try to add date question", async () => {
+    render(
+      <QuestionnaireProvider>
+        <Form params={{ id: "123" }} />
+      </QuestionnaireProvider>,
+    );
+    const contentButton = screen.getByText("Contents");
+    contentButton.click();
+    const addQuestionButton = screen.getByTestId("add-question");
+    addQuestionButton.click();
+    await screen.findByText("Choose a Question Type");
+    const numberButton = screen.getByText("Date");
     numberButton.click();
 
     expect(patchQuestionnaire).toHaveBeenCalled();

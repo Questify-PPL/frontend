@@ -8,9 +8,19 @@ import { Props } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 import { getUserSSOJWT } from "@/lib/services";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Register",
+  description: "Questify - Register Page",
+};
 
 export default async function Register(props: Readonly<Props>) {
-  const { accessToken } = await getUserSSOJWT(props, "/register");
+  const registerUrl = props.searchParams.callbackUrl
+    ? `/register?callbackUrl=${props.searchParams.callbackUrl}`
+    : "/register";
+
+  const { accessToken } = await getUserSSOJWT(props, registerUrl);
 
   return (
     <>
@@ -50,7 +60,7 @@ export default async function Register(props: Readonly<Props>) {
               <SSOButton
                 text="Sign Up using SSO"
                 className="flex flex-row gap-2 border-primary w-3/5 border-[1px] border-solid"
-                url="/register"
+                url={registerUrl}
               />
             </div>
             <div className="flex flex-col items-center justify-center gap-4">

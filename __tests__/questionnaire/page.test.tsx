@@ -1,10 +1,13 @@
 import Questionnaire from "@/app/(protected)/questionnaire/page";
 import { auth } from "@/auth";
+import { DraftMobile, TableContent } from "@/components/forms";
 import { getAllAvailableForm } from "@/lib/action/form";
+import { QUESTIONNAIRES_FILLED } from "@/lib/constant";
 import { BareForm } from "@/lib/types";
 import { UserRole } from "@/lib/types/auth";
+import * as utils from "@/lib/utils";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { Session } from "next-auth";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -16,6 +19,11 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 jest.mock("@/lib/action/form", () => ({
   getQuestionnairesOwned: jest.fn(),
   getAllAvailableForm: jest.fn(),
+}));
+
+jest.mock("@/lib/utils", () => ({
+  ...jest.requireActual("@/lib/utils"),
+  useShareClick: jest.fn(),
 }));
 
 jest.mock("next/navigation", () => {
@@ -162,5 +170,34 @@ describe("Questionnaire List View Page", () => {
 
     expect(screen.getAllByText("Home")[0]).toBeInTheDocument();
     expect(screen.getAllByText("Responses")[0]).toBeInTheDocument();
+  });
+});
+
+describe("TableContent", () => {
+  test("should be able to share form", async () => {
+    render(
+      <TableContent form={QUESTIONNAIRES_FILLED[0]} isRespondent={true} />,
+    );
+
+    const dropdownMenuTrigger = screen.getByTestId("dmt-respondent");
+    expect(dropdownMenuTrigger).toBeInTheDocument();
+  });
+});
+
+describe("DraftMobile", () => {
+  test("should be able to share form", async () => {
+    render(
+      <DraftMobile
+        form={QUESTIONNAIRES_FILLED[0]}
+        isRespondent={true}
+        isSendIcon={true}
+      />,
+    );
+
+    const sendIcon = screen.getByTestId("share-icon");
+    expect(sendIcon).toBeInTheDocument();
+    fireEvent.click(sendIcon);
+
+    expect(utils.useShareClick as jest.Mock).toHaveBeenCalled();
   });
 });

@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 import { getQuestionnaire, patchQuestionnaire } from "@/lib/action";
 import { deleteQuestion } from "@/lib/action/form";
 import { steps } from "@/lib/constant";
@@ -27,8 +28,8 @@ import {
   FormLeftMenuState as flms,
   FormRightMenuState as frms,
   handleDuplicate,
-  handleMoveDown,
   handleMoveUp,
+  handleMoveDown,
   QuestionGroup as qg,
   QuestionTypeNames as qtn,
   templateHandler,
@@ -76,8 +77,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const [addQuestionState, toggleAddQuestion] = useModalState();
   const [savedAsDraftState, toggleSavedAsDraft] = useModalState();
   const [openPublishNowState, togglePublishNow] = useModalState();
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { toast } = useToast();
 
   // Mobile State
   const [isMobile, setIsMobile] = useState(false);
@@ -95,6 +98,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       setMetadata(rest);
     } catch (error) {
       console.error("Failed to get questionnaire", error);
+      toast({
+        title: "Failed to get questionnaire",
+        description: "Please try again.",
+      });
     }
   }, [id, setMetadata, setQuestionnaire]);
 
@@ -109,6 +116,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
+      toast({
+        title: "Failed to update questionnaire",
+        description: "Please try again.",
+      });
     }
   };
 
@@ -128,7 +139,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           (item.type === QuestionnaireItemTypes.DEFAULT &&
             item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            !item.questions?.some((q) => q.questionId === activeQuestion)),
+            !item.questions?.some((q) => q.questionId === activeQuestion))
       );
 
       // Update the numbering of the remaining questions
@@ -148,13 +159,17 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to delete the question", error);
+      toast({
+        title: "Failed to delete the question",
+        description: "Please try again.",
+      });
     }
   };
 
   const handleAddQuestion = async (questionType: qtn) => {
     const newQuestion = templateHandler(
       questionType,
-      questionnaire.length - 1,
+      questionnaire.length - 1
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, newQuestion);
@@ -162,6 +177,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
+      toast({
+        title: "Failed to add question",
+        description: "Please try again.",
+      });
     }
   };
 
@@ -172,7 +191,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question,
+        findQuestionById(activeQuestion, questionnaire).question as Question
       );
     } else {
       return EmptyRenderer();
@@ -223,9 +242,11 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
         onCancel={toggleAddQuestion}
         onShortTextClick={() => handleAddQuestion(qtn.SHORT_TEXT)}
         onLongTextClick={() => handleAddQuestion(qtn.LONG_TEXT)}
+        onDateClick={() => handleAddQuestion(qtn.DATE)}
         onCheckboxClick={() => handleAddQuestion(qtn.CHECKBOX)}
         onMultipleChoiceClick={() => handleAddQuestion(qtn.MULTIPLE_CHOICE)}
         onYesNoClick={() => handleAddQuestion(qtn.YES_NO)}
+        onLinkClick={() => handleAddQuestion(qtn.LINK)}
       />
 
       <SavedAsDraftModal
@@ -288,12 +309,15 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
                     variant="outline"
                     className="h-full text-primary hover:text-primary p-2"
                     onClick={() => {
+                      setLoading(true);
                       handleDuplicate(questionnaire, activeQuestion as number);
                       patchQuestionnaire(id, questionnaire);
                       fetchQuestionnaire();
+                      setLoading(false);
                     }}
                     data-testid="duplicate-question"
                     id="duplicate-question"
+                    disabled={loading}
                   >
                     <LuCopy className="w-3 h-3" />
                   </Button>

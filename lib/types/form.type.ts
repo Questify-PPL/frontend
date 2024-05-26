@@ -20,6 +20,8 @@ export type BareForm = {
   winningStatus?: boolean;
   winnerAmount?: number;
   formIsReported: boolean;
+  notificationRead?: boolean;
+  link?: string;
 };
 
 export type FetchListForm = {
@@ -131,6 +133,7 @@ export type QuestionGet = {
   isRequired: boolean;
   question: string;
   description: string;
+  choice?: string[];
 };
 
 export type SectionGet = {
