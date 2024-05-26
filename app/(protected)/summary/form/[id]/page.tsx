@@ -10,6 +10,7 @@ import {
 import { UserRoleEnum } from "@/lib/types/auth";
 import { Metadata } from "next";
 import { Session } from "next-auth";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: {
@@ -17,31 +18,36 @@ interface Props {
   };
 }
 
-export const metadata: Metadata = {
-  title: "Summary",
-  description: "Questify - Summary Page",
-};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = params.id;
+  const session = (await auth()) as Session;
+
+  try {
+    const form = await getQuestionnaireSummmary(session, id);
+
+    let title;
+
+    if (session.user.activeRole === UserRoleEnum.Respondent) {
+      title = form.title ?? "";
+    } else {
+      title = form?.formStatistics?.title ?? "";
+    }
+
+    return {
+      title: title,
+      description: "Questify - Summary Page",
+    };
+  } catch (error) {
+    notFound();
+  }
+}
 
 export default async function Summary({ params }: Readonly<Props>) {
   const { id } = params;
   const session = (await auth()) as Session;
 
-  const form = await getQuestionnaireSummmary();
+  const form = await getQuestionnaireSummmary(session, id);
   const initialActiveTab = await getInitialActiveTab();
-
-  async function getQuestionnaireSummmary() {
-    try {
-      if (session.user.activeRole === UserRoleEnum.Respondent) {
-        return await getCompletedQuestionnaireForRespondent(id);
-      }
-
-      if (session.user.activeRole === UserRoleEnum.Creator) {
-        return await getSummaries(id);
-      }
-    } catch (error) {}
-
-    return {};
-  }
 
   return (
     <>
@@ -72,4 +78,18 @@ export default async function Summary({ params }: Readonly<Props>) {
       </div>
     </>
   );
+}
+
+async function getQuestionnaireSummmary(session: Session, id: string) {
+  try {
+    if (session.user.activeRole === UserRoleEnum.Respondent) {
+      return await getCompletedQuestionnaireForRespondent(id);
+    }
+
+    if (session.user.activeRole === UserRoleEnum.Creator) {
+      return await getSummaries(id);
+    }
+  } catch (error) {}
+
+  return {};
 }

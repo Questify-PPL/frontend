@@ -1,10 +1,30 @@
+import { getQuestionnaireRespondent } from "@/lib/action/form";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Preview Form",
-  description: "Questify - Create a new form",
-};
+interface Props {
+  params: {
+    id: string;
+  };
+}
 
-export default async function Preview() {
-  return <div>Preview</div>;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = params.id;
+
+  try {
+    const form = await getQuestionnaireRespondent(id);
+
+    const title = form.data.title ?? "";
+
+    return {
+      title: title,
+      description: "Questify - Preview Page",
+    };
+  } catch (error) {
+    notFound();
+  }
+}
+
+export default async function Preview({ params }: Readonly<Props>) {
+  return <div>{params.id}</div>;
 }

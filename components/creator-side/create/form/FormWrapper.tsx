@@ -132,7 +132,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           (item.type === QuestionnaireItemTypes.DEFAULT &&
             item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            !item.questions?.some((q) => q.questionId === activeQuestion))
+            !item.questions?.some((q) => q.questionId === activeQuestion)),
       );
 
       // Update the numbering of the remaining questions
@@ -158,7 +158,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const handleAddQuestion = async (questionType: qtn) => {
     const newQuestion = templateHandler(
       questionType,
-      questionnaire.length - 1
+      questionnaire.length - 1,
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, newQuestion);
@@ -176,7 +176,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question
+        findQuestionById(activeQuestion, questionnaire).question as Question,
       );
     } else {
       return EmptyRenderer();
