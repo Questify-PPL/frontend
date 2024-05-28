@@ -36,7 +36,10 @@ export function ShopProvider({
   const processPurchasement = useMemo(() => {
     return async function () {
       setIsLoading(true);
-      const { error } = await processPurchase(chosenShopItem, chosenVoucher);
+      const { data, error } = await processPurchase(
+        chosenShopItem,
+        chosenVoucher
+      );
 
       if (error) {
         toast({
@@ -46,6 +49,7 @@ export function ShopProvider({
         });
         return;
       } else {
+        setStatefulPurchaseHistory((prev) => [...prev, data]);
         toast({
           title: "Success",
           description: "You have successfully purchased the item",

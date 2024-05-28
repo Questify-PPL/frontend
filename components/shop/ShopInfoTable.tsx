@@ -1,3 +1,5 @@
+"use client";
+
 import { useShopContext } from "@/lib/context";
 
 export function ShopInfoTable() {
@@ -27,7 +29,10 @@ export function ShopInfoTable() {
               </span>
             </td>
             <td className="flex w-1/2">
-              <span className="text-[#1D2425] text-[12px] font-bold leading-normal">
+              <span
+                className="text-[#1D2425] text-[12px] font-bold leading-normal"
+                suppressHydrationWarning
+              >
                 {new Date(purchase.createdAt).toLocaleString()}
               </span>
             </td>

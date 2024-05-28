@@ -43,7 +43,7 @@ export async function getShopData() {
 
 export async function processPurchase(
   chosenShopItem: ShopItem | undefined,
-  chosenVoucher: Voucher | undefined,
+  chosenVoucher: Voucher | undefined
 ) {
   try {
     if (!chosenShopItem) {
@@ -97,6 +97,7 @@ export async function processPurchase(
 
     return {
       error: undefined,
+      data: res.data,
     };
   } catch (error) {
     return { error: (error as ErrorReponse).message };

@@ -55,7 +55,7 @@ export function PreviewLogic() {
 
   function findQuestionById(
     questionnaire: QuestionnaireGetItem[],
-    questionId: number
+    questionId: number,
   ): Question | undefined {
     for (let item of questionnaire) {
       if (
@@ -63,7 +63,7 @@ export function PreviewLogic() {
         (item as SectionGet).questions !== undefined
       ) {
         const foundQuestion = (item as SectionGet).questions.find(
-          (question) => question.questionId === questionId
+          (question) => question.questionId === questionId,
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -80,7 +80,7 @@ export function PreviewLogic() {
 
   const renderQuestion = (question: Question, index: number) => {
     function mapToQuestionGrouped(
-      question: Question
+      question: Question,
     ): QuestionGroupedWithAnswerAndChoice {
       return {
         questionId: question.questionId ?? 0,
@@ -162,17 +162,17 @@ export function PreviewLogic() {
                                   console.log("Question UI: ", question);
                                   const renderedQuestion = findQuestionById(
                                     questionnaire.questions,
-                                    question.questionId
+                                    question.questionId,
                                   ) as Question;
 
                                   console.log(
                                     "Rendered Question: ",
-                                    renderedQuestion
+                                    renderedQuestion,
                                   );
 
                                   return renderQuestion(
                                     renderedQuestion,
-                                    index
+                                    index,
                                   );
                                 })
                               : ""}
