@@ -45,7 +45,7 @@ export function CreateWrapper({
                   form={form}
                   onDeleteCallback={() => {
                     setStatefulForms(
-                      statefulForms.filter((f) => f.id !== form.id)
+                      statefulForms.filter((f) => f.id !== form.id),
                     );
                   }}
                 />

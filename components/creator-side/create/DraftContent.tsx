@@ -40,7 +40,7 @@ export function DraftContent({
       event.stopPropagation();
       router.push(`/create/form/${form.id}`);
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   const handleDeleteClick = useCallback(
@@ -56,7 +56,7 @@ export function DraftContent({
         description: "Your form has been successfully deleted",
       });
     },
-    [form.id, toast, onDeleteCallback]
+    [form.id, toast, onDeleteCallback],
   );
 
   return (

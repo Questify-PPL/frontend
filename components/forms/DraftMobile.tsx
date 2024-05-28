@@ -30,7 +30,7 @@ export function DraftMobile({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, form.title, onOpenRespondCard]
+    [form.id, form.title, onOpenRespondCard],
   );
 
   return (
