@@ -98,10 +98,10 @@ export function AddQuestionModal({
 }: Readonly<AddQuestionModalProps>) {
   return (
     <div
-      className={`absolute w-full h-full flex justify-start md:justify-center items-start md:items-center bg-[#324B4F]/70 overflow-auto ${className}`}
+      className={`absolute w-full h-full flex justify-center items-start md:items-center bg-[#324B4F]/70 overflow-auto ${className}`}
       data-testid="add-question"
     >
-      <Card className="flex flex-col w-full max-w-lg md:max-w-2xl lg:max-w-4xl my-4 p-5 justify-start md:justify-center items-start md:items-center gap-6 pb-12 mx-4">
+      <Card className="flex flex-col w-full max-w-lg md:max-w-2xl lg:max-w-4xl my-4 p-5 justify-center items-start md:items-center gap-6 pb-12 mx-4">
         <div className="flex flex-row justify-end items-start md:items-center w-full">
           <LuX
             className="w-5 h-5 cursor-pointer"
@@ -109,7 +109,7 @@ export function AddQuestionModal({
             data-testid="cancel-add-question"
           />
         </div>
-        <div className="flex flex-col justify-start md:justify-center items-center text-center">
+        <div className="flex flex-col w-full justify-center items-center text-center">
           <span className="flex font-extrabold text-xl">
             Choose a Question Type
           </span>
