@@ -1,5 +1,5 @@
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto, useShareClick } from "@/lib/utils";
+import { decidePhoto, useHomeClick, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { LuCoins, LuDices, LuSend } from "react-icons/lu";
@@ -8,18 +8,21 @@ export function DraftMobile({
   form,
   isRespondent = false,
   isSendIcon = false,
+  isFromHome = false,
   // eslint-disable-next-line no-unused-vars
   onOpenRespondCard = (id, title) => {},
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
     isSendIcon?: boolean;
+    isFromHome?: boolean;
     // eslint-disable-next-line no-unused-vars
     onOpenRespondCard?: (id: string, title: string) => void;
   }
 >) {
   const router = useRouter();
   const handleShareClick = useShareClick(form);
+  const handleHomeClick = useHomeClick(form);
 
   function toEdit() {
     router.push(`/create/form/${form.id}`); // Adjust it to the correct path, if needed
@@ -30,13 +33,19 @@ export function DraftMobile({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, form.title, onOpenRespondCard],
+    [form.id, form.title, onOpenRespondCard]
   );
 
   return (
     <div
       className="flex flex-row justify-between items-center md:hidden"
-      onClick={isRespondent ? handleRespondClick : toEdit}
+      onClick={
+        isRespondent
+          ? isFromHome
+            ? handleHomeClick
+            : handleRespondClick
+          : toEdit
+      }
       role="none"
     >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">

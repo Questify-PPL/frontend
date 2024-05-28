@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import HomeLayout from "@/app/(protected)/layout";
 import React from "react";
 import Home from "@/app/(protected)/home/page";
@@ -12,6 +12,8 @@ import {
 } from "@/lib/action/form";
 import { BareForm } from "@/lib/types";
 import { getInvoices } from "@/lib/action";
+import RespondentHomePage from "@/components/respondent-side/RespondentHomePage";
+import { useRouter } from "next/navigation";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -29,7 +31,14 @@ jest.mock("@/lib/action", () => ({
 }));
 
 jest.mock("next/navigation", () => {
-  return { useRouter: jest.fn(), usePathname: jest.fn() };
+  const push = jest.fn();
+
+  return {
+    useRouter: () => ({
+      push,
+    }),
+    usePathname: jest.fn(),
+  };
 });
 
 const mockedDispact = jest.fn();
@@ -76,6 +85,10 @@ jest.mock("@/auth", () => {
   };
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("Login", () => {
   beforeEach(() => {
     jest.spyOn(console, "error").mockImplementation(jest.fn());
@@ -87,7 +100,7 @@ describe("Login", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "" } }),
           status: 201,
-        }) as Promise<Response>,
+        }) as Promise<Response>
     );
     const props = {
       children: <div data-testid="div"></div>,
@@ -300,5 +313,108 @@ describe("Admin", () => {
 
     const adminHomepage = screen.getByTestId("admin-homepage");
     expect(adminHomepage).toBeInTheDocument();
+  });
+});
+
+describe("Respondent", () => {
+  const session = {
+    user: {
+      email: "questify@gmail.com",
+      id: "1",
+      roles: ["RESPONDENT"] as UserRole[],
+      ssoUsername: null,
+      firstName: null,
+      lastName: null,
+      phoneNumber: null,
+      gender: null,
+      companyName: null,
+      birthDate: null,
+      credit: 0,
+      isVerified: true,
+      isBlocked: false,
+      hasCompletedProfile: false,
+      activeRole: "RESPONDENT",
+    },
+    expires: new Date().toISOString(),
+  } as Session;
+
+  const mockedForms: BareForm[] = [
+    {
+      id: "1",
+      title: "Mocked Form 1",
+      prize: 100,
+      prizeType: "EVEN",
+      maxWinner: 1,
+      createdAt: "2024-03-17T12:00:00Z",
+      updatedAt: "2024-03-17T12:00:00Z",
+      endedAt: "2024-03-18T12:00:00Z",
+      ongoingParticipation: 10,
+      completedParticipation: 5,
+      formIsReported: false,
+      isCompleted: false,
+    },
+    {
+      id: "2",
+      title: "Mocked Form 2",
+      prize: 200,
+      prizeType: "LUCKY",
+      maxWinner: 2,
+      createdAt: "2024-03-16T12:00:00Z",
+      updatedAt: "2024-03-16T12:00:00Z",
+      endedAt: "2024-03-17T12:00:00Z",
+      ongoingParticipation: 15,
+      completedParticipation: 8,
+      formIsReported: false,
+      isCompleted: true,
+    },
+  ];
+
+  const router = useRouter();
+
+  test("renders correctly when there are no forms", () => {
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(
+      <RespondentHomePage forms={[]} isRespondent={true} session={session} />
+    );
+
+    expect(screen.getByTestId("home-card")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Here are your on-going answered questionnaire(s)")
+    ).not.toBeInTheDocument();
+  });
+
+  test("should navigate to continue upon clicking uncompleted form", () => {
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(
+      <RespondentHomePage
+        forms={mockedForms}
+        isRespondent={true}
+        session={session}
+      />
+    );
+
+    fireEvent.click(screen.getAllByText(mockedForms[0].title)[0]);
+    expect(router.push).toHaveBeenCalledWith(
+      `questionnaire/join/${mockedForms[0].id}`
+    );
+  });
+
+  test("should navigate to summary upon clicking completed form", () => {
+    (auth as jest.Mock).mockResolvedValue(session);
+
+    render(
+      <RespondentHomePage
+        forms={mockedForms}
+        isRespondent={true}
+        session={session}
+      />
+    );
+
+    fireEvent.click(screen.getAllByText(mockedForms[1].title)[0]);
+    expect(router.push).toHaveBeenCalledWith(
+      `summary/form/${mockedForms[1].id}`
+    );
   });
 });

@@ -16,10 +16,18 @@ interface RespondCardProps {
   onCancel?: () => void;
   id?: string;
   title?: string;
+  winningChance?: number;
+  prize?: number;
+  prizeType?: string;
+  maxWinner?: number;
 }
 
 const RespondCard: React.FC<RespondCardProps> = ({
   className = "",
+  prizeType = "",
+  winningChance = 0,
+  prize = 0,
+  maxWinner = 0,
   onCancel = () => {},
   id,
   title,
@@ -38,6 +46,7 @@ const RespondCard: React.FC<RespondCardProps> = ({
   return (
     <div
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
+      data-testid="respond-card"
     >
       <Card className="flex flex-col p-5 justify-center items-center gap-6">
         <div className="flex flex-row justify-between items-center w-full">
@@ -60,14 +69,21 @@ const RespondCard: React.FC<RespondCardProps> = ({
             <div className="section bg-purple-100 p-1 pb-2 mb-2 rounded-lg flex items-center justify-between">
               <div className="flex items-center mt-2">
                 <LuCheckCircle className="h-5 w-5 text-purple-500 " />
-                <p className="ml-2 text-sm font-bold">10% winning chance</p>
+                <p className="ml-2 text-sm font-bold">
+                  {parseFloat(Number(winningChance).toFixed(2))
+                    .toString()
+                    .replace(".", ",")}
+                </p>
+                <div>%</div>
               </div>
             </div>
             <div className="section bg-yellow-100 p-1 pb-2 mb-2 rounded-lg flex items-center justify-between">
               <div className="flex items-center mt-2">
                 <LuCheckCircle className="h-5 w-5 text-yellow-500" />
                 <p className="ml-2 text-sm font-bold">
-                  2.000 for each respondent
+                  {prizeType === "LUCKY"
+                    ? `${prize} for ${maxWinner} lucky respondents`
+                    : `${prize} for each respondents`}
                 </p>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 import {
   Section,
   DefaultQuestion,
@@ -10,6 +10,7 @@ import {
 } from "@/lib/context/QuestionnaireContext";
 import { BareForm } from "./types/form.type";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,7 +29,7 @@ export function titleCase(text: string | undefined | null) {
 }
 
 export const handleTextAreaHeight = (
-  event: ChangeEvent<HTMLTextAreaElement>,
+  event: ChangeEvent<HTMLTextAreaElement>
 ) => {
   event.target.style.height = "auto";
   event.target.style.height = `${event.target.scrollHeight}px`;
@@ -37,7 +38,7 @@ export const handleTextAreaHeight = (
 // Quedes = Question Description
 export const handleQuedesChange = (
   event: ChangeEvent<HTMLTextAreaElement>,
-  setState: Dispatch<SetStateAction<string>>,
+  setState: Dispatch<SetStateAction<string>>
 ) => {
   handleTextAreaHeight(event);
   setState(event.target.value);
@@ -49,7 +50,7 @@ export const updateQuestionnaire = (
   requiredValue: boolean,
   questionValue: string,
   descriptionValue: string,
-  choiceValue?: string[],
+  choiceValue?: string[]
 ) => {
   const updatedQuestionnaire = latestQuestionnaire.map((item) => {
     if (item.type === "SECTION") {
@@ -93,10 +94,10 @@ export const updateQuestionnaire = (
 export const updateAnswers = (
   latestAnswers: Answer[],
   questionId: number,
-  answerValue: string | string[],
+  answerValue: string | string[]
 ) => {
   const answerIndex = latestAnswers.findIndex(
-    (answer) => answer.questionId === questionId,
+    (answer) => answer.questionId === questionId
   );
   const updatedAnswers = [...latestAnswers];
 
@@ -146,7 +147,7 @@ export function useShareClick(form: BareForm) {
     if (form.link) {
       try {
         await navigator.clipboard.writeText(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/${form.link}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/${form.link}`
         );
         toast({
           title: "Success",
@@ -166,3 +167,17 @@ export function useShareClick(form: BareForm) {
 
   return handleShareClick;
 }
+
+export const useHomeClick = (form: BareForm) => {
+  const router = useRouter();
+
+  return useCallback(
+    (event: { stopPropagation: () => void }) => {
+      event.stopPropagation();
+      !form.isCompleted
+        ? router.push(`questionnaire/join/${form.id}`)
+        : router.push(`summary/form/${form.id}`);
+    },
+    [form.id, form.isCompleted, router]
+  );
+};

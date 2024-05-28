@@ -21,10 +21,10 @@ interface FinalizationCardProps {
 const FinalizationCard: React.FC<FinalizationCardProps> = ({
   className = "",
   QRETitle = "",
-  prizeType = "EVEN",
-  winningChance = 10,
-  prize = 2000,
-  maxWinner = 1,
+  prizeType = "",
+  winningChance = 0,
+  prize = 0,
+  maxWinner = 0,
   onCancel = () => {},
 }) => {
   // const [inputValue, setInputValue] = useState<string>(
@@ -67,8 +67,11 @@ const FinalizationCard: React.FC<FinalizationCardProps> = ({
               <div className="flex items-center mt-2">
                 <LuCheckCircle className="h-5 w-5 text-purple-500 " />
                 <p className="ml-2 text-sm font-bold">
-                  {winningChance}% winning chance
+                  {parseFloat(Number(winningChance).toFixed(2))
+                    .toString()
+                    .replace(".", ",")}
                 </p>
+                <div>%</div>
               </div>
             </div>
             <div className="section bg-yellow-100 p-1 pb-2 mb-2 rounded-lg flex items-center justify-between">
