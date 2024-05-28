@@ -1,13 +1,14 @@
-import "@testing-library/jest-dom";
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
 import Create from "@/app/(protected)/create/page";
+import { auth } from "@/auth";
 import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
-import { deleteQuestionnaire, getQuestionnairesOwned } from "@/lib/action/form";
-import { BareForm } from "@/lib/types/form.type";
-import { InfoTable } from "@/components/forms";
 import { DraftContent } from "@/components/creator-side/create/DraftContent";
-import { useRouter } from "next/navigation";
+import { InfoTable } from "@/components/forms";
+import { deleteQuestionnaire, getQuestionnairesOwned } from "@/lib/action/form";
+import { UserRole } from "@/lib/types/auth";
+import { BareForm } from "@/lib/types/form.type";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { Session } from "next-auth";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -91,6 +92,28 @@ describe("CreateWrapper Component", () => {
     jest.clearAllMocks();
   });
 
+  const session = {
+    user: {
+      email: "questify@gmail.com",
+      id: "UI2100000000",
+      roles: ["CREATOR", "RESPONDENT"] as UserRole[],
+      ssoUsername: null,
+      firstName: null,
+      lastName: null,
+      phoneNumber: null,
+      gender: null,
+      companyName: null,
+      birthDate: null,
+      credit: 0,
+      isVerified: true,
+      isBlocked: false,
+      hasCompletedProfile: false,
+      accessToken: "token",
+      activeRole: "CREATOR",
+    },
+    expires: new Date().toISOString(),
+  } as Session;
+
   const mockedForms: BareForm[] = [
     {
       id: "1",
@@ -123,14 +146,16 @@ describe("CreateWrapper Component", () => {
   test("renders with no problems", async () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
+    (auth as jest.Mock).mockReturnValue(session);
+
     render(await Create());
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper forms={mockedForms} session={session} />);
   });
 
   test("renders with provided forms data", async () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue(mockedForms);
 
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper forms={mockedForms} session={session} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
 
@@ -141,7 +166,7 @@ describe("CreateWrapper Component", () => {
   test("renders with no forms data", async () => {
     (getQuestionnairesOwned as jest.Mock).mockResolvedValue([]);
 
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper forms={mockedForms} session={session} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -149,7 +174,7 @@ describe("CreateWrapper Component", () => {
   test("renders with error", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper forms={mockedForms} session={session} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -159,7 +184,7 @@ describe("CreateWrapper Component", () => {
       pending: true,
     });
 
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper forms={mockedForms} session={session} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -167,7 +192,7 @@ describe("CreateWrapper Component", () => {
   test("renders create with error when fetching", async () => {
     (getQuestionnairesOwned as jest.Mock).mockRejectedValue(new Error("error"));
 
-    render(<CreateWrapper forms={mockedForms} />);
+    render(<CreateWrapper forms={mockedForms} session={session} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     expect(createButton).toBeInTheDocument();
   });
@@ -194,7 +219,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>,
+      </InfoTable>
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
   });
@@ -221,7 +246,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>,
+      </InfoTable>
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
     const moreButton = screen.getByRole("button", {
@@ -232,7 +257,7 @@ describe("CreateWrapper Component", () => {
       new PointerEvent("pointerdown", {
         ctrlKey: false,
         button: 0,
-      }),
+      })
     );
 
     await screen.findByText("Delete");
@@ -241,22 +266,42 @@ describe("CreateWrapper Component", () => {
     deleteButton.click();
 
     expect(deleteQuestionnaire).toHaveBeenCalledWith("1");
-
-    expect(useRouter().refresh).toHaveBeenCalled();
   });
 });
 
 describe("CreateModal Component", () => {
+  const session = {
+    user: {
+      email: "questify@gmail.com",
+      id: "UI2100000000",
+      roles: ["CREATOR", "RESPONDENT"] as UserRole[],
+      ssoUsername: null,
+      firstName: null,
+      lastName: null,
+      phoneNumber: null,
+      gender: null,
+      companyName: null,
+      birthDate: null,
+      credit: 0,
+      isVerified: true,
+      isBlocked: false,
+      hasCompletedProfile: false,
+      accessToken: "token",
+      activeRole: "CREATOR",
+    },
+    expires: new Date().toISOString(),
+  } as Session;
+
   beforeEach(() => {
     jest.spyOn(console, "error").mockImplementation(jest.fn());
   });
 
   test("renders without crashing", async () => {
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper forms={[]} session={session} />);
   });
 
   test("opens modal when create button is clicked", async () => {
-    render(<CreateWrapper forms={[]} />);
+    render(<CreateWrapper forms={[]} session={session} />);
     const createButton = screen.getByText("Create a new Questionnaire");
     createButton.click();
     await screen.findByText("Create a new Questionnaire");

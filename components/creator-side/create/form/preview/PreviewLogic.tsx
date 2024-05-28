@@ -17,6 +17,7 @@ import { LuCheck, LuCheckCheck, LuChevronRight } from "react-icons/lu";
 export function PreviewLogic() {
   const { questionnaire } = usePreviewContext();
 
+  // eslint-disable-next-line no-unused-vars
   const [finalizationCard, setFinalizationCard] = useState("hidden");
   const [activeQuestionId, setActiveQuestionId] = useState(0);
   const [activeSectionId, setActiveSectionId] = useState(0);

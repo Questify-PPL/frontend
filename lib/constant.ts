@@ -63,6 +63,7 @@ export const URL = {
     update: (id: string) => `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
   },
   markAllAsRead: `${process.env.NEXT_PUBLIC_API_URL}/notification/read`,
+  invoice: `${process.env.NEXT_PUBLIC_API_URL}/shop/invoices`,
 };
 
 export const QUESTIONNAIRE: QuestionnaireItem[] = [

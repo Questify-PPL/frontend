@@ -9,21 +9,36 @@ export async function getShopData() {
   const session = await auth();
   const user = session?.user;
 
-  const response = await fetch(URL.shop, {
-    headers: {
-      Authorization: `Bearer ${user?.accessToken}`,
-      "Content-Type": "application/json",
-    },
-    method: "GET",
-  });
+  const [shopItemsResponse, purchaseHistoryResponse] = await Promise.all([
+    await fetch(URL.shop, {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }),
+    await fetch(URL.invoice, {
+      headers: {
+        Authorization: `Bearer ${user?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    }),
+  ]);
 
-  const res = await response.json();
+  const [shopItems, purchaseHistory] = await Promise.all([
+    shopItemsResponse.json(),
+    purchaseHistoryResponse.json(),
+  ]);
 
-  if (response.status > 400) {
-    throw new Error(res.message);
+  if (shopItemsResponse.status > 400 || purchaseHistoryResponse.status > 400) {
+    throw new Error(shopItems.message || purchaseHistory.message);
   }
 
-  return res.data;
+  return {
+    ...shopItems.data,
+    purchaseHistory: purchaseHistory.data,
+  };
 }
 
 export async function processPurchase(
@@ -82,6 +97,7 @@ export async function processPurchase(
 
     return {
       error: undefined,
+      data: res.data,
     };
   } catch (error) {
     return { error: (error as ErrorReponse).message };

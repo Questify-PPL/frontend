@@ -112,7 +112,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
         description: "Please try again.",
       });
     }
-  }, [id, setMetadata, setQuestionnaire]);
+  }, [id, setMetadata, setQuestionnaire, toast]);
 
   // Left and Right Menu State
   const [leftMenuState, setLeftMenuState] = useState(flms.CONTENTS);

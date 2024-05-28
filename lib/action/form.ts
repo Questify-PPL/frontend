@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth, unstable_update as update } from "@/auth";
 import { URL } from "@/lib/constant";
 import { Answer, QuestionnaireItem } from "../context";
 import { FetchListForm } from "../types";
@@ -431,4 +431,23 @@ export async function patchAnswer(
   }
 
   return await response.json();
+}
+
+export async function decreaseCreditAndBalance(prize: number) {
+  const session = await auth();
+
+  if (!session) {
+    return;
+  }
+
+  await update({
+    user: {
+      ...session.user,
+      credit: session.user.credit - prize,
+      Creator: {
+        ...session.user.Creator!,
+        emptyForms: (session.user.Creator?.emptyForms ?? 1) - 1,
+      },
+    },
+  });
 }

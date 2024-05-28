@@ -5,7 +5,7 @@ import { decidePhoto } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
 import { deleteQuestionnaire } from "@/lib/action/form";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,16 +14,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ReloadIcon } from "@/components/common";
+import { useToast } from "@/components/ui/use-toast";
 
 export function DraftContent({
   form,
   isRespondent = false,
+  onDeleteCallback,
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
+    onDeleteCallback?: () => void;
   }
 >) {
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { toast } = useToast();
 
   function toEdit() {
     router.push(`/create/form/${form.id}`);
@@ -38,12 +44,19 @@ export function DraftContent({
   );
 
   const handleDeleteClick = useCallback(
-    (event: { stopPropagation: () => void }) => {
+    async (event: { stopPropagation: () => void }) => {
+      setIsDeleting(true);
       event.stopPropagation();
-      deleteQuestionnaire(form.id);
-      router.refresh();
+      await deleteQuestionnaire(form.id);
+      onDeleteCallback?.();
+      setIsDeleting(false);
+
+      toast({
+        title: "Form Deleted",
+        description: "Your form has been successfully deleted",
+      });
     },
-    [form.id, router],
+    [form.id, toast, onDeleteCallback],
   );
 
   return (
@@ -165,10 +178,14 @@ export function DraftContent({
           <div className="flex flex-shrink-0 flex-grow-0 w-[3.125%] h-8 items-center justify-center font-bold rounded-sm border">
             <DropdownMenu data-testid="more-button">
               <DropdownMenuTrigger data-testid="trigger">
-                <LuMoreHorizontal
-                  className="flex w-4 h-full cursor-pointer"
-                  aria-label="More"
-                />
+                {isDeleting ? (
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin fill-white" />
+                ) : (
+                  <LuMoreHorizontal
+                    className="flex w-4 h-full cursor-pointer"
+                    aria-label="More"
+                  />
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="right-0 absolute"

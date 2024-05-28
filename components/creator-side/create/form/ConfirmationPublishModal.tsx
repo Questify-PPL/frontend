@@ -56,7 +56,7 @@ export default function ConfirmationPublishModal() {
                   {!isFinished && (
                     <ReloadIcon className="mr-2 h-4 w-4 animate-spin fill-white" />
                   )}
-                  Yes
+                  {isFinished && "Yes"}
                 </Button>
                 <Button
                   className="w-28 h-9 mt-5 bg-[#DA0A1E]"
