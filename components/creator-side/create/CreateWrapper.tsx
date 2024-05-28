@@ -7,8 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Fragment, useState } from "react";
 import { DraftContent } from "./DraftContent";
 import { FormsAsProps } from "@/lib/types";
+import { Session } from "next-auth";
 
-export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
+export function CreateWrapper({
+  forms,
+  session,
+}: Readonly<
+  FormsAsProps & {
+    session: Session;
+  }
+>) {
   const [createModalState, setCreateModalState] = useState("hidden");
 
   const OpenCreateModal = () => {
@@ -41,6 +49,8 @@ export function CreateWrapper({ forms }: Readonly<FormsAsProps>) {
       <CreateModal
         className={`${createModalState}`}
         onCancel={OpenCreateModal}
+        formsRemainder={session.user.Creator?.emptyForms}
+        creditsBalance={session.user.credit}
       ></CreateModal>
     </>
   );

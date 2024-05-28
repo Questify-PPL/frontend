@@ -12,7 +12,7 @@ export type ShopContextValue = ShopProps & {
   setChosenVoucher: (voucher: Voucher | undefined) => void;
   isLoading: boolean;
   // eslint-disable-next-line no-unused-vars
-  processPurchasement: () => void;
+  processPurchasement: () => Promise<void>;
 
   isOpen: boolean;
   // eslint-disable-next-line no-unused-vars
