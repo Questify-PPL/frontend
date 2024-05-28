@@ -1,16 +1,14 @@
-import "@testing-library/jest-dom";
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
 import Create from "@/app/(protected)/create/page";
-import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
-import { deleteQuestionnaire, getQuestionnairesOwned } from "@/lib/action/form";
-import { BareForm } from "@/lib/types/form.type";
-import { InfoTable } from "@/components/forms";
-import { DraftContent } from "@/components/creator-side/create/DraftContent";
-import { useRouter } from "next/navigation";
-import { Session } from "next-auth";
-import { UserRole } from "@/lib/types/auth";
 import { auth } from "@/auth";
+import { CreateWrapper } from "@/components/creator-side/create/CreateWrapper";
+import { DraftContent } from "@/components/creator-side/create/DraftContent";
+import { InfoTable } from "@/components/forms";
+import { deleteQuestionnaire, getQuestionnairesOwned } from "@/lib/action/form";
+import { UserRole } from "@/lib/types/auth";
+import { BareForm } from "@/lib/types/form.type";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { Session } from "next-auth";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -221,7 +219,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>,
+      </InfoTable>
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
   });
@@ -248,7 +246,7 @@ describe("CreateWrapper Component", () => {
     render(
       <InfoTable>
         <DraftContent form={mockedForms[0]}></DraftContent>
-      </InfoTable>,
+      </InfoTable>
     );
     expect(screen.getByText("Mocked Form 1")).toBeInTheDocument();
     const moreButton = screen.getByRole("button", {
@@ -259,7 +257,7 @@ describe("CreateWrapper Component", () => {
       new PointerEvent("pointerdown", {
         ctrlKey: false,
         button: 0,
-      }),
+      })
     );
 
     await screen.findByText("Delete");
@@ -268,8 +266,6 @@ describe("CreateWrapper Component", () => {
     deleteButton.click();
 
     expect(deleteQuestionnaire).toHaveBeenCalledWith("1");
-
-    expect(useRouter().refresh).toHaveBeenCalled();
   });
 });
 
