@@ -2,7 +2,6 @@
 "use client";
 
 import { ChangeEvent, ReactNode } from "react";
-import { LuCheckSquare } from "react-icons/lu";
 import { Switch } from "@/components/ui/switch";
 import QuestionType from "../creator-side/QuestionType";
 

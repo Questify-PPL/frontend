@@ -207,7 +207,7 @@ export function RadioButton(radioButtonProps: Readonly<RadioButtonProps>) {
   }, [selectedOptionsValues]);
 
   return (
-    <div className="w-[84%] flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <QuestionLayout
         role={role}
         numbering={numbering}

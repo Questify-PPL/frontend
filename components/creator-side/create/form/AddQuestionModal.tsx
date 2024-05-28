@@ -59,7 +59,7 @@ function QuestionTypeList({
       {types.map((type) => (
         <Button
           key={type}
-          className="flex flex-row py-2.5 px-2 gap-1.5 bg-white text-primary hover:bg-[#F3F8F9] items-start justify-center rounded-md cursor-pointer"
+          className="flex flex-row py-2.5 px-2 gap-1.5 bg-white text-primary hover:bg-[#F3F8F9] items-start justify-start md:justify-center rounded-md cursor-pointer"
           onClick={() => handleClick(type)}
           disabled={notYetImplemented.includes(type as qtn)}
         >
@@ -98,18 +98,18 @@ export function AddQuestionModal({
 }: Readonly<AddQuestionModalProps>) {
   return (
     <div
-      className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
+      className={`absolute w-full h-full flex justify-start md:justify-center items-start md:items-center bg-[#324B4F]/70 overflow-auto ${className}`}
       data-testid="add-question"
     >
-      <Card className="flex flex-col w-[60%] p-5 justify-center items-center gap-6 pb-12">
-        <div className="flex flex-row justify-end items-center w-full ">
+      <Card className="flex flex-col w-full max-w-lg md:max-w-2xl lg:max-w-4xl my-4 p-5 justify-start md:justify-center items-start md:items-center gap-6 pb-12 mx-4">
+        <div className="flex flex-row justify-end items-start md:items-center w-full">
           <LuX
-            className="w-5 h-5"
+            className="w-5 h-5 cursor-pointer"
             onClick={onCancel}
             data-testid="cancel-add-question"
-          ></LuX>
+          />
         </div>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-start md:justify-center items-center text-center">
           <span className="flex font-extrabold text-xl">
             Choose a Question Type
           </span>
@@ -117,8 +117,8 @@ export function AddQuestionModal({
             Choose the best question type for your questionnaire
           </span>
         </div>
-        <div className="flex flex-row w-full h-full justify-between gap-3 px-10">
-          <div className="flex flex-col w-[30%] gap-1">
+        <div className="flex flex-col md:flex-row w-full h-full justify-between gap-3 px-2 md:px-10 overflow-y-auto">
+          <div className="flex flex-col w-full md:w-[30%] gap-1">
             <span className="text-primary/40 font-semibold text-sm">Text</span>
             <Separator className="bg-[#F3F8F9]" />
             <QuestionTypeList
@@ -134,7 +134,7 @@ export function AddQuestionModal({
               {...{ onDateClick }}
             />
           </div>
-          <div className="flex flex-col w-[30%] gap-1">
+          <div className="flex flex-col w-full md:w-[30%] gap-1">
             <span className="text-primary/40 font-semibold text-sm">
               Choices
             </span>
@@ -150,7 +150,7 @@ export function AddQuestionModal({
               {...{ onMultipleChoiceClick, onCheckboxClick, onYesNoClick }}
             />
           </div>
-          <div className="flex flex-col w-[30%] gap-1">
+          <div className="flex flex-col w-full md:w-[30%] gap-1">
             <span className="text-primary/40 font-semibold text-sm">
               Scaler
             </span>
@@ -168,7 +168,7 @@ export function AddQuestionModal({
             />
           </div>
         </div>
-        <span className="flex text-xs">
+        <span className="flex text-xs text-center">
           The disabled ones are the future question types, stay tuned!
         </span>
       </Card>

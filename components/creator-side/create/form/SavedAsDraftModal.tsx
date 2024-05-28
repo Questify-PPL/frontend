@@ -18,7 +18,7 @@ export function SavedAsDraftModal({
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
       data-testid="saved-as-draft-modal"
     >
-      <Card className="flex flex-col w-[35%] p-5 justify-center items-center gap-6">
+      <Card className="flex flex-col w-[90%] md:w-[35%] p-5 justify-center items-center gap-6">
         <div className="flex flex-row justify-end items-center w-full">
           <LuX
             className="w-5 h-5"
