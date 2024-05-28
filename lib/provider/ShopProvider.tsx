@@ -17,11 +17,11 @@ export function ShopProvider({
   purchaseHistory,
 }: Readonly<ShopProviderProps>) {
   const [chosenShopItem, setChosenShopItem] = useState<ShopItem | undefined>(
-    undefined
+    undefined,
   );
 
   const [chosenVoucher, setChosenVoucher] = useState<Voucher | undefined>(
-    undefined
+    undefined,
   );
 
   const [statefulPurchaseHistory, setStatefulPurchaseHistory] =
@@ -38,7 +38,7 @@ export function ShopProvider({
       setIsLoading(true);
       const { data, error } = await processPurchase(
         chosenShopItem,
-        chosenVoucher
+        chosenVoucher,
       );
 
       if (error) {

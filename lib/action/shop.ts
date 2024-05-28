@@ -43,7 +43,7 @@ export async function getShopData() {
 
 export async function processPurchase(
   chosenShopItem: ShopItem | undefined,
-  chosenVoucher: Voucher | undefined
+  chosenVoucher: Voucher | undefined,
 ) {
   try {
     if (!chosenShopItem) {
