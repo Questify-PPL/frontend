@@ -15,6 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { QuestionTypeNames, QuestionGroup as qg } from "@/lib/services/form";
 import { QuestionnaireItem } from "@/lib/context";
 import { useToast } from "@/components/ui/use-toast";
+import { decreaseCreditAndBalance } from "@/lib/action/form";
+import { ReloadIcon } from "@/components/common";
 
 interface CreateModalProps {
   className?: string;
@@ -33,6 +35,7 @@ export function CreateModal({
 
   const router = useRouter();
   const { toast } = useToast();
+  const [isCreating, setIsCreating] = useState(false);
 
   const {
     watch,
@@ -50,13 +53,15 @@ export function CreateModal({
   });
 
   const toForm: SubmitHandler<CreateQuestionnaire> = async (data) => {
+    setIsCreating(true);
     try {
       const response = await createQuestionnaire(
         data.title,
         data.prize,
         data.prizeType,
-        data.maxWinner ?? undefined,
+        data.maxWinner ?? undefined
       );
+      await decreaseCreditAndBalance(data.prize);
       const formId = response.data.id;
       const initSection = [
         {
@@ -94,6 +99,8 @@ export function CreateModal({
         description: (error as Error).message,
       });
     }
+
+    setIsCreating(false);
   };
 
   return (
@@ -215,8 +222,11 @@ export function CreateModal({
           <Button variant="outline" className="w-full" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit" className="w-full">
-            Create
+          <Button type="submit" className="w-full" disabled={isCreating}>
+            {isCreating && (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin fill-white" />
+            )}
+            {!isCreating && "Create"}
           </Button>
         </div>
       </Card>
