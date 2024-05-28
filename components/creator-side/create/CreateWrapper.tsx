@@ -17,6 +17,7 @@ export function CreateWrapper({
     session: Session;
   }
 >) {
+  const [statefulForms, setStatefulForms] = useState(forms);
   const [createModalState, setCreateModalState] = useState("hidden");
 
   const OpenCreateModal = () => {
@@ -37,10 +38,17 @@ export function CreateWrapper({
           </Button>
           <p className="text-[#32636A] text-[10px] font-medium">Drafts</p>
           <InfoTable>
-            {forms.map((form) => (
+            {statefulForms.map((form) => (
               <Fragment key={form.id}>
                 <DraftMobile form={form} key={form.id} />
-                <DraftContent form={form} />
+                <DraftContent
+                  form={form}
+                  onDeleteCallback={() => {
+                    setStatefulForms(
+                      statefulForms.filter((f) => f.id !== form.id)
+                    );
+                  }}
+                />
               </Fragment>
             ))}
           </InfoTable>
