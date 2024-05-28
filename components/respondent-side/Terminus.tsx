@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loading } from "../common";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 interface TerminusProps {
   className?: string;
@@ -11,10 +12,12 @@ interface TerminusProps {
   terminusText?: string;
   buttonType?: "button" | "submit" | "reset";
   buttonClickHandler?: () => void;
+  buttonPrevHandler?: () => void;
   buttonText?: string;
   buttonIcon?: ReactNode;
   buttonDisabled?: boolean;
   isParticipate?: boolean;
+  isEnding?: boolean;
 }
 
 const Terminus: React.FC<TerminusProps> = ({
@@ -25,9 +28,11 @@ const Terminus: React.FC<TerminusProps> = ({
   terminusText = "",
   buttonType = "button",
   buttonClickHandler = () => {},
+  buttonPrevHandler = () => {},
   buttonText = "",
   buttonIcon = null,
   buttonDisabled = false,
+  isEnding = false,
   isParticipate = false,
 }) => {
   return (
@@ -58,6 +63,15 @@ const Terminus: React.FC<TerminusProps> = ({
           </Button>
         </div>
       </div>
+      {isEnding && (
+        <div className="flex flex-row bg-transparent h-[15%] justify-between items-end text-xl p-6 gap-1 rounded-t-md">
+          <div className="flex gap-1">
+            <Button variant="outline" id="prev" onClick={buttonPrevHandler}>
+              <LuChevronUp className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

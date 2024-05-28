@@ -41,7 +41,9 @@ const Question: React.FC<QuestionProps> = ({
         {questionQRETitle}
         {questionImage}
       </div>
-      <div className="flex flex-col h-full overflow-hidden gap-8 items-center font-medium text-xl px-24 py-14 rounded-t-md">
+      <div
+        className={`flex flex-col h-full overflow-hidden gap-8 items-center font-medium text-xl md:px-24 py-14 px-6 rounded-t-md`}
+      >
         <div className="flex flex-col h-full overflow-auto gap-8 w-full">
           <div className="flex flex-col gap-1.5 text-base text-primary w-full justify-start">
             <div className="flex flex-row w-full h-fit gap-2">

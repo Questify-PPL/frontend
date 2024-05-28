@@ -145,20 +145,7 @@ export const QUESTIONNAIRE: QuestionnaireItem[] = [
   },
 ];
 
-export const ANSWERS: Answer[] = [
-  {
-    questionId: 2,
-    answer: "answer2",
-  },
-  {
-    questionId: 5,
-    answer: "answer5",
-  },
-  {
-    questionId: 6,
-    answer: "answer6",
-  },
-];
+export const ANSWERS: Answer[] = [];
 
 export const QUESTIONNAIRES_FILLED: BareForm[] = [
   {
