@@ -267,7 +267,9 @@ export async function patchQuestionnaire(
   );
 
   if (response.status !== 200) {
-    throw new Error("Failed to update questionnaire");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to get questionnaire";
+    throw new Error(errorMessage);
   }
 }
 

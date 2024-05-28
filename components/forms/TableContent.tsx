@@ -42,7 +42,7 @@ export function TableContent({
       event.stopPropagation();
       router.push(`/create/form/${form.id}`);
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   const handleDeleteClick = useCallback(
@@ -51,7 +51,7 @@ export function TableContent({
       deleteQuestionnaire(form.id);
       router.refresh();
     },
-    [form.id, router]
+    [form.id, router],
   );
 
   const handleRespondClick = useCallback(
@@ -59,7 +59,7 @@ export function TableContent({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, form.title, onOpenRespondCard]
+    [form.id, form.title, onOpenRespondCard],
   );
 
   return (

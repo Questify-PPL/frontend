@@ -100,7 +100,7 @@ describe("Login", () => {
         Promise.resolve({
           json: () => Promise.resolve({ data: { accessToken: "" } }),
           status: 201,
-        }) as Promise<Response>
+        }) as Promise<Response>,
     );
     const props = {
       children: <div data-testid="div"></div>,
@@ -375,12 +375,12 @@ describe("Respondent", () => {
     (auth as jest.Mock).mockResolvedValue(session);
 
     render(
-      <RespondentHomePage forms={[]} isRespondent={true} session={session} />
+      <RespondentHomePage forms={[]} isRespondent={true} session={session} />,
     );
 
     expect(screen.getByTestId("home-card")).toBeInTheDocument();
     expect(
-      screen.queryByText("Here are your on-going answered questionnaire(s)")
+      screen.queryByText("Here are your on-going answered questionnaire(s)"),
     ).not.toBeInTheDocument();
   });
 
@@ -392,12 +392,12 @@ describe("Respondent", () => {
         forms={mockedForms}
         isRespondent={true}
         session={session}
-      />
+      />,
     );
 
     fireEvent.click(screen.getAllByText(mockedForms[0].title)[0]);
     expect(router.push).toHaveBeenCalledWith(
-      `questionnaire/join/${mockedForms[0].id}`
+      `questionnaire/join/${mockedForms[0].id}`,
     );
   });
 
@@ -409,12 +409,12 @@ describe("Respondent", () => {
         forms={mockedForms}
         isRespondent={true}
         session={session}
-      />
+      />,
     );
 
     fireEvent.click(screen.getAllByText(mockedForms[1].title)[0]);
     expect(router.push).toHaveBeenCalledWith(
-      `summary/form/${mockedForms[1].id}`
+      `summary/form/${mockedForms[1].id}`,
     );
   });
 });

@@ -22,7 +22,9 @@ export async function createWithdrawal(data: any[]) {
   });
 
   if (response.status !== 201) {
-    throw new Error("Failed to create withdrawal");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to create withdrawal";
+    throw new Error(errorMessage);
   }
 }
 
@@ -38,7 +40,9 @@ export async function getWithdrawals() {
   });
 
   if (response.status !== 200) {
-    throw new Error("Failed to get withdrawals");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to get withdrawals";
+    throw new Error(errorMessage);
   }
 
   return await response.json();

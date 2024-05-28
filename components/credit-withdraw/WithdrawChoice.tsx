@@ -20,6 +20,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateWithdrawal } from "@/lib/schema/create-withdrawal.schema";
 import { createWithdrawal as createWithdrawalAction } from "@/lib/action/withdraw";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -60,6 +61,7 @@ export function WithdrawChoice() {
   };
 
   const router = useRouter();
+  const { toast } = useToast();
 
   const {
     register,
@@ -78,7 +80,10 @@ export function WithdrawChoice() {
       await createWithdrawalAction([amount, data.payment, data.accountNumber]);
       router.push(`/withdraw`);
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Failed to create withdrawal",
+        description: (error as Error).message,
+      });
     }
   };
 
