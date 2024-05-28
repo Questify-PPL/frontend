@@ -9,17 +9,26 @@ import {
 } from "@/components/credit-withdraw";
 import { getWithdrawals } from "@/lib/action/withdraw";
 import { WithdrawData } from "@/lib/types/withdraw.type";
+import { useToast } from "@/components/ui/use-toast";
 
 export function WithdrawWrapper() {
   const [withdrawals, setWithdrawals] = useState<WithdrawData[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchWithdrawals = async () => {
-      const data = await getWithdrawals();
-      setWithdrawals(data.data);
+      try {
+        const data = await getWithdrawals();
+        setWithdrawals(data.data);
+      } catch (error) {
+        toast({
+          title: "Failed to add question",
+          description: (error as Error).message,
+        });
+      }
     };
     fetchWithdrawals();
-  }, [withdrawals]);
+  }, [withdrawals, toast]);
 
   return (
     <div className="flex flex-col gap-4">

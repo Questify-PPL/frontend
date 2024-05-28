@@ -34,9 +34,9 @@ const QuestionLayout: React.FC<QuestionLayoutProps> = ({
     <div className="flex flex-row gap-3 w-full">
       <div className="flex flex-row gap-0.5 md:gap-1 w-6.5 h-fit pt-1">
         {required ? (
-          <span className="w-1 h-6 md:w-1.5 bg-[#FE476C] rounded-md"></span>
+          <span className="w-1 h-6 md:hidden bg-[#FE476C] rounded-md"></span>
         ) : (
-          <span className="w-1 h-6 md:w-1.5 bg-transparent rounded-md"></span>
+          <span className="w-1 h-6 md:hidden bg-transparent rounded-md"></span>
         )}
         {numbering === 0 ? null : (
           <div className="flex w-6 h-6 bg-secondary rounded-md text-primary justify-center items-center text-[10px] leading-[12px]">

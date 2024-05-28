@@ -109,7 +109,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       console.error("Failed to get questionnaire", error);
       toast({
         title: "Failed to get questionnaire",
-        description: "Please try again.",
+        description: (error as Error).message,
       });
     }
   }, [id, setMetadata, setQuestionnaire, toast]);
@@ -127,7 +127,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       console.error("Failed to update questionnaire", error);
       toast({
         title: "Failed to update questionnaire",
-        description: "Please try again.",
+        description: (error as Error).message,
       });
     }
   };
@@ -172,7 +172,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       console.error("Failed to delete the question", error);
       toast({
         title: "Failed to delete the question",
-        description: "Please try again.",
+        description: (error as Error).message,
       });
     }
   };
@@ -190,7 +190,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       console.error("Failed to update questionnaire", error);
       toast({
         title: "Failed to add question",
-        description: "Please try again.",
+        description: (error as Error).message,
       });
     }
   };
@@ -201,8 +201,12 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
     } else if (leftMenuState === flms.ENDING) {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
-      return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question,
+      const { question } = findQuestionById(activeQuestion, questionnaire);
+      return (
+        <QuestionRenderer
+          q={question as Question}
+          isRequired={question?.isRequired as boolean}
+        />
       );
     } else {
       return EmptyRenderer();
@@ -230,7 +234,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       lifecycle === LIFECYCLE.COMPLETE
     ) {
       localStorage.setItem("hasRunJoyride", "true");
-      setRunJoyride(false); // Stop the Joyride
+      setRunJoyride(false);
     }
   };
 
@@ -383,7 +387,12 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
                         setActiveQuestion(item.question?.questionId as number)
                       }
                     >
-                      {item.question && QuestionRenderer(item.question)}
+                      {item.question && (
+                        <QuestionRenderer
+                          q={item.question as Question}
+                          isRequired={false}
+                        />
+                      )}
                     </Card>
                   </Card>
                 );
