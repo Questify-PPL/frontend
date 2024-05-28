@@ -59,7 +59,7 @@ export function CreateModal({
         data.title,
         data.prize,
         data.prizeType,
-        data.maxWinner ?? undefined
+        data.maxWinner ?? undefined,
       );
       await decreaseCreditAndBalance(data.prize);
       const formId = response.data.id;
