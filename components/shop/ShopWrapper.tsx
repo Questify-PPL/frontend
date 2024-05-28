@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
-import ShopInfoTable from "./ShopInfoTable";
-import { ShopProps } from "@/lib/types";
 import { ShopProvider } from "@/lib/provider/ShopProvider";
-import ItemShowcase from "./ItemShowcase";
-import { PurchaseCard, PurchaseConfirmationModal } from ".";
+import { ShopProps } from "@/lib/types";
+import {
+  ItemShowcase,
+  PurchaseCard,
+  PurchaseConfirmationModal,
+  ShopInfoTable,
+} from ".";
 
 export default function ShopWrapper(props: Readonly<ShopProps>) {
   return (

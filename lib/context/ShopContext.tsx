@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { ShopItem, ShopProps, Voucher } from "../types";
+import { PurchaseHistory, ShopItem, ShopProps, Voucher } from "../types";
 
 export type ShopContextValue = ShopProps & {
   chosenShopItem: ShopItem | undefined;
@@ -17,6 +17,10 @@ export type ShopContextValue = ShopProps & {
   isOpen: boolean;
   // eslint-disable-next-line no-unused-vars
   setIsOpen: (isOpen: boolean) => void;
+
+  purchaseHistory: PurchaseHistory[];
+  // eslint-disable-next-line no-unused-vars
+  setPurchaseHistory: (purchaseHistory: PurchaseHistory[]) => void;
 };
 
 export const ShopContext = createContext({} as ShopContextValue);

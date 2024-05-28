@@ -4,6 +4,7 @@ export type ShopProps = {
   shopItems: ShopItem[];
   vouchers: Voucher[];
   session: Session | null;
+  purchaseHistory: PurchaseHistory[];
 };
 
 export type ShopItem = {
@@ -27,9 +28,19 @@ export type Voucher = {
   updatedAt: string;
 };
 
+export type PurchaseHistory = {
+  id: string;
+  itemId: number;
+  userId: string;
+
+  createdAt: string;
+  totalPayment: number;
+};
+
 export type ShopFetchResponse = {
   shopItems: ShopItem[];
   vouchers: Voucher[];
+  purchaseHistory: PurchaseHistory[];
 };
 
 export type UpdateShopState =

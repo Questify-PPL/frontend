@@ -3,9 +3,9 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { processPurchase } from "../action";
 import { ShopContext } from "../context";
-import { ShopItem, ShopProps, Voucher } from "../types";
+import { PurchaseHistory, ShopItem, ShopProps, Voucher } from "../types";
 
-type SummaryProviderProps = {
+type ShopProviderProps = {
   children: React.ReactNode;
 } & ShopProps;
 
@@ -14,7 +14,8 @@ export function ShopProvider({
   shopItems,
   vouchers,
   session,
-}: Readonly<SummaryProviderProps>) {
+  purchaseHistory,
+}: Readonly<ShopProviderProps>) {
   const [chosenShopItem, setChosenShopItem] = useState<ShopItem | undefined>(
     undefined,
   );
@@ -22,6 +23,9 @@ export function ShopProvider({
   const [chosenVoucher, setChosenVoucher] = useState<Voucher | undefined>(
     undefined,
   );
+
+  const [statefulPurchaseHistory, setStatefulPurchaseHistory] =
+    useState(purchaseHistory);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -66,6 +70,8 @@ export function ShopProvider({
       processPurchasement,
       isOpen,
       setIsOpen,
+      purchaseHistory: statefulPurchaseHistory,
+      setPurchaseHistory: setStatefulPurchaseHistory,
     };
   }, [
     shopItems,
@@ -76,6 +82,7 @@ export function ShopProvider({
     isLoading,
     processPurchasement,
     isOpen,
+    statefulPurchaseHistory,
   ]);
 
   return (

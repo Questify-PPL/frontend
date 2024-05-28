@@ -1,9 +1,8 @@
-import React from "react";
-import ItemCard from "./ItemCard";
-import { useShopContext } from "@/lib/context";
 import { SHOP_IMAGE } from "@/lib/constant";
+import { useShopContext } from "@/lib/context";
+import ItemCard from "./ItemCard";
 
-export default function ItemShowcase() {
+export function ItemShowcase() {
   const { shopItems } = useShopContext();
 
   return (

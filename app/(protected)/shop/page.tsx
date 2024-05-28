@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Shop() {
   const session = await auth();
-  const { shopItems, vouchers } = await fetchShopItems();
+  const { shopItems, vouchers, purchaseHistory } = await fetchShopItems();
 
   async function fetchShopItems() {
     let data = {} as ShopFetchResponse;
@@ -23,6 +23,11 @@ export default async function Shop() {
   }
 
   return (
-    <ShopWrapper shopItems={shopItems} vouchers={vouchers} session={session} />
+    <ShopWrapper
+      shopItems={shopItems}
+      vouchers={vouchers}
+      session={session}
+      purchaseHistory={purchaseHistory}
+    />
   );
 }
