@@ -15,11 +15,11 @@ import {
   QuestionTypeNames as qtn,
 } from "@/lib/services/form";
 import { patchQuestionnaire } from "@/lib/action/form";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export function QuestionChildren({ id }: Readonly<{ id: string }>) {
-  const { questionnaire, activeQuestion } = useQuestionnaireContext();
+  const { questionnaire, activeQuestion, setQuestionnaire } =
+    useQuestionnaireContext();
   const { question } = findQuestionById(
     activeQuestion as number,
     questionnaire,
@@ -38,25 +38,53 @@ export function QuestionChildren({ id }: Readonly<{ id: string }>) {
   const handleTypeChange = async (value: string) => {
     if (!question) return;
 
-    question.questionTypeName = value;
+    const updatedQuestion = { ...question };
+
+    updatedQuestion.questionTypeName = value;
     switch (value) {
       case qtn.SHORT_TEXT:
       case qtn.LONG_TEXT:
-        question.questionType = "TEXT";
+      case qtn.LINK:
+      case qtn.DATE:
+        updatedQuestion.questionType = "TEXT";
         break;
       case qtn.MULTIPLE_CHOICE:
       case qtn.YES_NO:
-        question.questionType = "RADIO";
+        updatedQuestion.questionType = "RADIO";
         break;
       case qtn.CHECKBOX:
-        question.questionType = "CHECKBOX";
+        updatedQuestion.questionType = "CHECKBOX";
         break;
       default:
         return;
     }
+
     setTypeNameState(value);
+
+    const updatedQuestionnaire = questionnaire.map((item) => {
+      if (item.type === "SECTION") {
+        return {
+          ...item,
+          questions: item.questions.map((q) =>
+            q.questionId === updatedQuestion.questionId ? updatedQuestion : q,
+          ),
+        };
+      } else if (
+        item.type === "DEFAULT" &&
+        item.question.questionId === updatedQuestion.questionId
+      ) {
+        return {
+          ...item,
+          question: updatedQuestion,
+        };
+      }
+      return item;
+    });
+
+    setQuestionnaire(updatedQuestionnaire);
+
     try {
-      await patchQuestionnaire(id, questionnaire);
+      await patchQuestionnaire(id, updatedQuestionnaire);
     } catch (error) {
       console.error("Failed to update the question type", error);
     }
@@ -65,10 +93,34 @@ export function QuestionChildren({ id }: Readonly<{ id: string }>) {
   const handleRequiredChange = async (checked: boolean) => {
     if (!question) return;
 
-    question.isRequired = checked;
     setRequiredState(checked);
+
+    const updatedQuestion = { ...question, isRequired: checked };
+
+    const updatedQuestionnaire = questionnaire.map((item) => {
+      if (item.type === "SECTION") {
+        return {
+          ...item,
+          questions: item.questions.map((q) =>
+            q.questionId === updatedQuestion.questionId ? updatedQuestion : q,
+          ),
+        };
+      } else if (
+        item.type === "DEFAULT" &&
+        item.question.questionId === updatedQuestion.questionId
+      ) {
+        return {
+          ...item,
+          question: updatedQuestion,
+        };
+      }
+      return item;
+    });
+
+    setQuestionnaire(updatedQuestionnaire);
+
     try {
-      await patchQuestionnaire(id, questionnaire);
+      await patchQuestionnaire(id, updatedQuestionnaire);
     } catch (error) {
       console.error("Failed to update the question required status", error);
     }
@@ -76,12 +128,12 @@ export function QuestionChildren({ id }: Readonly<{ id: string }>) {
 
   if (!question)
     return (
-      <Image
-        src="/assets/choose-question.svg"
-        alt="Questify"
-        width={70}
-        height={16}
-      />
+      <div className="flex flex-col justify-center items-center">
+        <span className="text-primary text-sm font-semibold">
+          Select a question to start editing
+        </span>
+        <span className="text-[#95B0B4] text-xs">Watch the left pane :D</span>
+      </div>
     );
 
   return (
@@ -102,11 +154,13 @@ export function QuestionChildren({ id }: Readonly<{ id: string }>) {
             <SelectItem value={QuestionTypeNames.LONG_TEXT}>
               Long Text
             </SelectItem>
+            <SelectItem value={QuestionTypeNames.DATE}>Date</SelectItem>
             <SelectItem value={QuestionTypeNames.MULTIPLE_CHOICE}>
               Multiple Choice
             </SelectItem>
             <SelectItem value={QuestionTypeNames.CHECKBOX}>Checkbox</SelectItem>
             <SelectItem value={QuestionTypeNames.YES_NO}>Yes/No</SelectItem>
+            <SelectItem value={QuestionTypeNames.LINK}>Link</SelectItem>
           </SelectContent>
         </Select>
         <span className="flex text-xs text-[#95B0B4] mt-2">

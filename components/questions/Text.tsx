@@ -165,7 +165,7 @@ export function Text(textProps: Readonly<TextProps>) {
   }, [answerValue, questionId]);
 
   return (
-    <div className="w-[84%] flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <QuestionLayout
         role={role}
         required={requiredValue}

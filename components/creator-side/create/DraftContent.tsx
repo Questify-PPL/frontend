@@ -142,12 +142,12 @@ export function DraftContent({
 
           {/* Questions */}
           <div className="text-xs flex md:w-[14.375%] lg:w-[11.97916667%] font-bold">
-            N/A
+            {form.questionAmount}
           </div>
 
           {/* Time */}
           <div className="text-xs flex md:w-[14.375%] lg:w-[11.97916667%] font-bold">
-            N/A mins
+            {((form.questionAmount as number) * 7.5) / 60} mins
           </div>
 
           {/* Theme */}
@@ -162,11 +162,11 @@ export function DraftContent({
           </div>
 
           {/* Action */}
-          <div className="flex flex-shrink-0 flex-grow-0 w-[3.125%] items-center justify-center font-bold rounded-sm border">
+          <div className="flex flex-shrink-0 flex-grow-0 w-[3.125%] h-8 items-center justify-center font-bold rounded-sm border">
             <DropdownMenu data-testid="more-button">
               <DropdownMenuTrigger data-testid="trigger">
                 <LuMoreHorizontal
-                  className="w-4 h-4 cursor-pointer"
+                  className="flex w-4 h-full cursor-pointer"
                   aria-label="More"
                 />
               </DropdownMenuTrigger>
