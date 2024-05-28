@@ -224,7 +224,6 @@ export function MPContent({ form }: Readonly<FormAsProps>) {
             <DropdownMenuItem onClick={onClick}>
               {form.isCompleted ? "Summary" : "Continue"}
             </DropdownMenuItem>
-            <DropdownMenuItem>Report</DropdownMenuItem>
             {!isEnded(form.endedAt) && (
               <>
                 <DropdownMenuSeparator />
