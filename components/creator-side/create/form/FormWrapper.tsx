@@ -112,7 +112,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
         description: "Please try again.",
       });
     }
-  }, [id, setMetadata, setQuestionnaire]);
+  }, [id, setMetadata, setQuestionnaire, toast]);
 
   // Left and Right Menu State
   const [leftMenuState, setLeftMenuState] = useState(flms.CONTENTS);
@@ -149,7 +149,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
           (item.type === QuestionnaireItemTypes.DEFAULT &&
             item.question?.questionId !== activeQuestion) ||
           (item.type === QuestionnaireItemTypes.SECTION &&
-            !item.questions?.some((q) => q.questionId === activeQuestion)),
+            !item.questions?.some((q) => q.questionId === activeQuestion))
       );
 
       let questionNumber = 1;
@@ -180,7 +180,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   const handleAddQuestion = async (questionType: qtn) => {
     const newQuestion = templateHandler(
       questionType,
-      questionnaire.length - 1,
+      questionnaire.length - 1
     ) as QuestionnaireItem[];
     try {
       await patchQuestionnaire(id, newQuestion);
@@ -202,7 +202,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       return TerminusRenderer({ sectionKey: qg.ENDING });
     } else if (activeQuestion !== undefined) {
       return QuestionRenderer(
-        findQuestionById(activeQuestion, questionnaire).question as Question,
+        findQuestionById(activeQuestion, questionnaire).question as Question
       );
     } else {
       return EmptyRenderer();
@@ -404,7 +404,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
                   variant={"outline"}
                   className={cn(
                     "w-full",
-                    !publishDate && "text-muted-foreground",
+                    !publishDate && "text-muted-foreground"
                   )}
                 >
                   <LuCalendar className="mr-2 h-4 w-4" />
@@ -492,7 +492,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
                         setLoading(true);
                         handleDuplicate(
                           questionnaire,
-                          activeQuestion as number,
+                          activeQuestion as number
                         );
                         patchQuestionnaire(id, questionnaire);
                         fetchQuestionnaire();
@@ -566,7 +566,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
                         variant={"outline"}
                         className={cn(
                           "w-full",
-                          !publishDate && "text-muted-foreground",
+                          !publishDate && "text-muted-foreground"
                         )}
                       >
                         <LuCalendar className="mr-2 h-4 w-4" />

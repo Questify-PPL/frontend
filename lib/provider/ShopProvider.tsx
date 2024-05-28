@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { processPurchase } from "../action";
 import { ShopContext } from "../context";
-import { PurchaseHistory, ShopItem, ShopProps, Voucher } from "../types";
+import { ShopItem, ShopProps, Voucher } from "../types";
 
 type ShopProviderProps = {
   children: React.ReactNode;
@@ -17,11 +17,11 @@ export function ShopProvider({
   purchaseHistory,
 }: Readonly<ShopProviderProps>) {
   const [chosenShopItem, setChosenShopItem] = useState<ShopItem | undefined>(
-    undefined,
+    undefined
   );
 
   const [chosenVoucher, setChosenVoucher] = useState<Voucher | undefined>(
-    undefined,
+    undefined
   );
 
   const [statefulPurchaseHistory, setStatefulPurchaseHistory] =
