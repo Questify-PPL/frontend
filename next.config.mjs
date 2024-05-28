@@ -9,7 +9,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    instrumentationHook: true,
+    instrumentationHook: false,
   },
 };
 
