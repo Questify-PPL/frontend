@@ -79,7 +79,7 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
       <div className="flex flex-col py-2 md:hidden lg:flex w-[14.375%] font-bold">
         {isNaN(
           form.completedParticipation /
-            (form.completedParticipation + form.ongoingParticipation),
+            (form.completedParticipation + form.ongoingParticipation)
         )
           ? 0
           : (form.completedParticipation /
@@ -110,7 +110,6 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
             <DropdownMenuItem onClick={onUnpublish}>
               Unpublish Form
             </DropdownMenuItem>
-            <DropdownMenuItem>Summary</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async (e) => {
