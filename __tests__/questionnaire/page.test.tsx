@@ -23,7 +23,7 @@ jest.mock("@/lib/action/form", () => ({
 
 jest.mock("@/lib/utils", () => ({
   ...jest.requireActual("@/lib/utils"),
-  useShareClick: jest.fn(),
+  useShareClick: jest.fn(() => jest.fn()),
 }));
 
 jest.mock("next/navigation", () => {

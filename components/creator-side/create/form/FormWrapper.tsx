@@ -89,11 +89,10 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   // Modal States
   const [addQuestionState, toggleAddQuestion] = useModalState();
   const [savedAsDraftState, toggleSavedAsDraft] = useModalState();
-  const [openPublishNowState, togglePublishNow] = useModalState();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const router = useRouter();
-  const { toast } = useToast();
 
   const fetchQuestionnaire = useCallback(async () => {
     try {
@@ -133,6 +132,15 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
   };
 
   const handlePublish = async () => {
+    if (!publishDate) {
+      toast({
+        title: "Error Publishing",
+        description: "Please set the end date first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsOpen(true);
   };
 
@@ -292,12 +300,6 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
         className={`${savedAsDraftState}`}
         title={title}
         onCancel={toggleSavedAsDraft}
-      />
-
-      <PublishNowModal
-        className={`${openPublishNowState}`}
-        title={title}
-        onCancel={togglePublishNow}
       />
 
       {isMobile ? (
@@ -616,6 +618,7 @@ const FormWrapper: React.FC<{ id: string }> = ({ id }) => {
       )}
 
       <ConfirmationPublishModal />
+      <PublishNowModal title={title} />
     </div>
   );
 };
