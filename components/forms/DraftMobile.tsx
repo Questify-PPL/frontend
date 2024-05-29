@@ -33,7 +33,7 @@ export function DraftMobile({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, form.title, onOpenRespondCard],
+    [form.id, form.title, onOpenRespondCard]
   );
 
   return (
@@ -74,7 +74,7 @@ export function DraftMobile({
                 <div className="flex flex-row px-[6px] py-[2px] rounded-[8px] gap-[2px] bg-[#F9EBF6] w-fit justify-center items-center">
                   <LuDices className="stroke-[#C036A9] stroke-[1.044px] w-[10px] h-[10px] flex-shrink-0" />
                   <p className="text-[#685B2D] text-[8px] tracking-[-0.04px] font-medium">
-                    100% winning chances
+                    {form.winningChance} winning chances
                   </p>
                 </div>
               )}
@@ -102,6 +102,7 @@ export function DraftMobile({
                 handleShareClick;
               }}
               data-testid="share-icon"
+              role="none"
             >
               <LuSend className="w-[16px] h-[16px] text-[#32636A]" />
             </div>
@@ -109,7 +110,7 @@ export function DraftMobile({
           {!isSendIcon && (
             <div className="flex flex-col gap-1 mr-2">
               <span className="text-[14px] leading-normal font-bold text-[#1D2425]">
-                22/100
+                {form.questionFilled}/{form.questionAmount}
               </span>
               <span className="text-[#95B0B4] text-[10px] font-medium leading-normal tracking-[-0.05px]">
                 Answered
