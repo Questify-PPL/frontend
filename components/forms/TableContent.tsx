@@ -140,9 +140,9 @@ export function TableContent({
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    handleShareClick;
+                    await handleShareClick();
                   }}
                 >
                   Share

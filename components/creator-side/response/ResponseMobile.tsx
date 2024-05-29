@@ -48,9 +48,9 @@ export function ResponseMobile({ form }: Readonly<FormAsProps>) {
       </div>
       <button
         className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white cursor-pointer"
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          handleShareClick;
+          await handleShareClick();
         }}
         data-testid="share-icon"
       >

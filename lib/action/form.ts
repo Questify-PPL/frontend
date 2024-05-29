@@ -294,11 +294,15 @@ export async function publishQuestionnaire(formId: string, publishDate: Date) {
     },
   );
 
+  const result = await response.json();
+
   if (response.status !== 200) {
     const errorData = await response.json();
     const errorMessage = errorData.message || "Failed to publish questionnaire";
     throw new Error(errorMessage);
   }
+
+  return result.data;
 }
 
 export async function unpublishQuestionnaire(formId: string) {
@@ -326,6 +330,8 @@ export async function unpublishQuestionnaire(formId: string) {
   if (response.status >= 400) {
     throw new Error(result.message);
   }
+
+  return result.data;
 }
 
 export async function deleteQuestionnaire(formId: string) {

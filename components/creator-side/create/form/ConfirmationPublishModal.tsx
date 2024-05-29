@@ -3,8 +3,14 @@ import { Button } from "@/components/ui/button";
 import { useQuestionnaireContext } from "@/lib/hooks";
 
 export default function ConfirmationPublishModal() {
-  const { isOpen, setIsOpen, publishHandler, isFinished, metadata } =
-    useQuestionnaireContext();
+  const {
+    isOpen,
+    setIsOpen,
+    setIsPublishNow,
+    publishHandler,
+    isFinished,
+    metadata,
+  } = useQuestionnaireContext();
 
   return (
     <>
@@ -50,6 +56,9 @@ export default function ConfirmationPublishModal() {
                   onClick={async () => {
                     await publishHandler();
                     setIsOpen(false);
+                    if (!metadata.isPublished) {
+                      setIsPublishNow(true);
+                    }
                   }}
                   disabled={!isFinished}
                 >

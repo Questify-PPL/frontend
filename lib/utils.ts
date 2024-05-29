@@ -155,6 +155,11 @@ export function useShareClick(form: BareForm) {
         });
       } catch (err) {
         console.error("Failed to copy the text to clipboard", err);
+        toast({
+          title: "Error",
+          description: "Failed to copy link.",
+          variant: "destructive",
+        });
       }
     } else {
       toast({
@@ -181,3 +186,28 @@ export const useHomeClick = (form: BareForm) => {
     [form.id, form.isCompleted, router],
   );
 };
+
+export function useCopyClick(link: string) {
+  const { toast } = useToast();
+  const fullLink = `${process.env.NEXT_PUBLIC_BASE_URL}/${link}`;
+
+  const handleCopyClick = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/${link}`,
+      );
+      toast({
+        title: "Success",
+        description: "Link copied to clipboard!",
+      });
+    } catch (err) {
+      console.error("Failed to copy the text to clipboard", err);
+      toast({
+        title: "Error",
+        description: "Failed to copy link.",
+        variant: "destructive",
+      });
+    }
+  };
+  return { handleCopyClick, fullLink };
+}

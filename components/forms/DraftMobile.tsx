@@ -33,7 +33,7 @@ export function DraftMobile({
       event.stopPropagation();
       onOpenRespondCard(form.id, form.title);
     },
-    [form.id, form.title, onOpenRespondCard]
+    [form.id, form.title, onOpenRespondCard],
   );
 
   return (
@@ -97,9 +97,9 @@ export function DraftMobile({
           {isSendIcon && (
             <div
               className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.stopPropagation();
-                handleShareClick;
+                await handleShareClick();
               }}
               data-testid="share-icon"
               role="none"

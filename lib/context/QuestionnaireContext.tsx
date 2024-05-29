@@ -59,6 +59,11 @@ export interface QuestionnaireContextType {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   publishHandler: () => Promise<void>;
   isFinished: boolean;
+
+  isPublishNow: boolean;
+  setIsPublishNow: React.Dispatch<React.SetStateAction<boolean>>;
+
+  link: string;
 }
 
 export const QuestionnaireContext = createContext<

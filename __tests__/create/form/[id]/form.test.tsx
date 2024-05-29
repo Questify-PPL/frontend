@@ -3,12 +3,10 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Form from "@/app/(protected)/create/form/[id]/page";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 import { QuestionChildren } from "@/components/creator-side/create/form/QuestionChildren";
-import {
-  deleteQuestion,
-  getQuestionnaire,
-  patchQuestionnaire,
-} from "@/lib/action/form";
+import { deleteQuestion, patchQuestionnaire } from "@/lib/action/form";
 import "@testing-library/jest-dom";
+import { PublishNowModal } from "@/components/creator-side/create/form";
+import { useCopyClick } from "@/lib/utils";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -31,55 +29,75 @@ global.matchMedia = jest.fn().mockImplementation((query) => ({
   dispatchEvent: jest.fn(),
 }));
 
-jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
-  useQuestionnaireContext: jest.fn(() => ({
-    questionnaire: [
-      {
-        type: "DEFAULT",
-        question: {
-          questionId: 1,
-          number: 1,
-          questionType: "TEXT",
-          questionTypeName: "Short Text",
-          isRequired: false,
-          question: "question",
-          description: "desc",
-        },
-      },
-    ],
-    metadata: {
-      createdAt: "",
-      creatorId: "",
-      endedAt: "",
-      id: "",
-      isDraft: false,
-      isPublished: false,
-      isWinnerProcessed: false,
-      link: "",
-      maxParticipant: null,
-      maxWinner: null,
-      prize: 0,
-      prizeType: "EVEN",
-      questionAmount: 0,
-      updatedAt: "",
+const fullLink = "uV3kdLp";
+const setIsPublishNow = jest.fn();
+const handleCopyClick = jest.fn();
+const questionnaire = [
+  {
+    type: "DEFAULT",
+    question: {
+      questionId: 1,
+      number: 1,
+      questionType: "TEXT",
+      questionTypeName: "Short Text",
+      isRequired: false,
+      question: "question",
+      description: "desc",
     },
-    isOpen: false,
-    isFinished: false,
-    setIsOpen: jest.fn(),
-    publishHandler: jest.fn(),
-    errorStatus: false,
-    setErrorStatus: jest.fn(),
-    setMetadata: jest.fn(),
-    activeQuestion: 1,
-    answers: [],
-    setQuestionnaire: jest.fn(),
-    setActiveQuestion: jest.fn(),
-    setAnswers: jest.fn(),
+  },
+];
+
+let useQuestionnaireContextMock = {
+  questionnaire,
+  metadata: {
+    createdAt: "",
+    creatorId: "",
+    endedAt: "",
+    id: "",
+    isDraft: false,
+    isPublished: false,
+    isWinnerProcessed: false,
+    link: "",
+    maxParticipant: null,
+    maxWinner: null,
+    prize: 0,
+    prizeType: "EVEN",
+    questionAmount: 0,
+    updatedAt: "",
+  },
+  isOpen: false,
+  isFinished: false,
+  setIsOpen: jest.fn(),
+  publishHandler: jest.fn(),
+  errorStatus: false,
+  setErrorStatus: jest.fn(),
+  setMetadata: jest.fn(),
+  activeQuestion: 1,
+  answers: [],
+  setQuestionnaire: jest.fn(),
+  setActiveQuestion: jest.fn(),
+  setAnswers: jest.fn(),
+  isPublishNow: true,
+  setIsPublishNow,
+  link: fullLink,
+};
+
+jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
+  useQuestionnaireContext: jest.fn(() => useQuestionnaireContextMock),
+}));
+
+jest.mock("@/lib/utils", () => ({
+  ...jest.requireActual("@/lib/utils"),
+  useCopyClick: jest.fn(() => ({
+    handleCopyClick,
+    fullLink,
   })),
 }));
 
 jest.mock("@/lib/action/form", () => ({
-  getQuestionnaire: jest.fn(),
+  getQuestionnaire: jest.fn(() => ({
+    data: {},
+  })),
   deleteQuestion: jest.fn(),
   patchQuestionnaire: jest.fn(),
 }));
@@ -287,21 +305,6 @@ describe("Saved As Draft Functionality", () => {
     const closeButton = screen.getByTestId("cancel-saved-as-draft");
     fireEvent.click(closeButton);
     await screen.findByText("Contents");
-  });
-
-  test("renders published modal", async () => {
-    render(
-      <QuestionnaireProvider>
-        <Form params={{ id: "123" }} />
-      </QuestionnaireProvider>,
-    );
-    const publishSection = screen.getByText("Publish");
-    publishSection.click();
-
-    await screen.findByTestId("publish-button");
-    const publishButton = screen.getByTestId("publish-button");
-    publishButton.click();
-    await screen.findByText("Published!");
   });
 });
 
@@ -543,5 +546,46 @@ describe("QuestionChildren Component", () => {
     await screen.findByText("Required");
     const trigger = screen.getByText("Required");
     fireEvent.click(trigger);
+  });
+});
+
+describe("PublishNowModal", () => {
+  test("renders modal when isPublishNow is true", async () => {
+    useQuestionnaireContextMock.isPublishNow = true;
+    const title = "Example Title";
+
+    render(<PublishNowModal title={title} />);
+
+    expect(await screen.findByTestId("publish-now-modal")).toBeInTheDocument();
+    expect(screen.getByText("Published!")).toBeInTheDocument();
+    expect(screen.getByText(title)).toBeInTheDocument();
+    expect(screen.getByText(fullLink)).toBeInTheDocument();
+  });
+
+  test("hides modal when isPublishNow is false", () => {
+    useQuestionnaireContextMock.isPublishNow = false;
+
+    render(<PublishNowModal />);
+
+    expect(screen.queryByTestId("publish-now-modal")).not.toBeInTheDocument();
+  });
+
+  test("clicking OK button hides modal", async () => {
+    useQuestionnaireContextMock.isPublishNow = true;
+    render(<PublishNowModal />);
+
+    fireEvent.click(await screen.findByText("OK"));
+
+    expect(setIsPublishNow).toHaveBeenCalledWith(false);
+  });
+
+  test("clicking copy button invokes handleCopyClick", async () => {
+    useQuestionnaireContextMock.isPublishNow = true;
+
+    render(<PublishNowModal />);
+
+    fireEvent.click(await screen.findByTestId("copy-button"));
+
+    expect(handleCopyClick).toHaveBeenCalled();
   });
 });

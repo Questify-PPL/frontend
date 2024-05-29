@@ -44,6 +44,8 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(true);
+  const [isPublishNow, setIsPublishNow] = useState<boolean>(false);
+  const [link, setLink] = useState<string>("");
 
   const publishHandler = useCallback(async () => {
     if (!isOpen || !metadata.id) return;
@@ -59,9 +61,11 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
     setIsFinished(false);
 
     try {
-      metadata.isPublished
+      const result = metadata.isPublished
         ? await unpublishQuestionnaire(metadata.id)
         : await publishQuestionnaire(metadata.id, publishDate);
+
+      setLink(result.link);
 
       setMetadata((prev) => ({
         ...prev,
@@ -98,6 +102,9 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
       setIsOpen,
       publishHandler,
       isFinished,
+      isPublishNow,
+      setIsPublishNow,
+      link,
     }),
     [
       questionnaire,
@@ -109,6 +116,8 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
       isOpen,
       publishDate,
       publishHandler,
+      isPublishNow,
+      link,
     ],
   );
 
