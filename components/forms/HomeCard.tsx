@@ -20,6 +20,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { useRouter } from "next/navigation";
+import { useToast } from "../ui/use-toast";
 
 interface HomeNavProps {
   className?: string;
@@ -35,12 +36,17 @@ const HomeNav: React.FC<HomeNavProps> = ({
   isRespondent = false,
 }) => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const toFormShop = () => {
     router.push("/shop");
   };
+
   const toFormPromo = () => {
-    router.push("/home");
+    toast({
+      title: "Coming Soon",
+      description: "Form Promo is coming soon",
+    });
   };
   const toCreditTopUp = () => {
     router.push("/topup");
