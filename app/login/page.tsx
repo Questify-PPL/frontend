@@ -31,11 +31,14 @@ export default async function Login(props: Props) {
       <SSOForm accessToken={accessToken} />
     </main>
   ) : (
-    <main className="font-medium md:flex">
+    <div className="font-medium md:flex">
       <div className="h-[25px] bg-login-pattern bg-cover md:w-[512px] md:h-screen bg-center md:flex md:justify-center md:items-center">
         <TriviaForm />
       </div>
-      <div className="md:flex md:justify-center md:items-center flex-auto">
+      <main
+        className="md:flex md:justify-center md:items-center flex-auto"
+        aria-label="login"
+      >
         <div className="py-10 px-8 max-w-96 mx-auto md:max-w-full md:px-10">
           <div className="mb-7 md:flex md:gap-[15px] md:mb-8 md:items-center">
             <Link href="/">
@@ -75,7 +78,7 @@ export default async function Login(props: Props) {
             </Link>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

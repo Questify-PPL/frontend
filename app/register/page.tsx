@@ -32,25 +32,28 @@ export default async function Register(props: Readonly<Props>) {
           <SSOForm accessToken={accessToken} />
         </main>
       ) : (
-        <section className="w-full flex flex-col md:flex-row items-center justify-center h-full min-h-fit">
+        <div className="w-full flex flex-col md:flex-row items-center justify-center h-full min-h-fit">
           <div className="flex flex-col px-[20px] md:w-fit w-full py-[30px] md:py-[0px] md:min-h-screen self-stretch items-center justify-center md:px-[48px] bg-register-pattern bg-cover bg-no-repeat">
             <TriviaForm />
           </div>
-          <main className="flex-1 flex min-h-screen h-fit flex-col items-center justify-start md:justify-center  py-8 px-8 gap-8">
+          <main
+            className="flex-1 flex min-h-screen h-fit flex-col items-center justify-start md:justify-center  py-8 px-8 gap-8"
+            aria-label="register"
+          >
             <div className="flex flex-col md:flex-row gap-[15px] justify-center items-center">
               <Link href={"/"} className="min-w-fit h-full">
                 <Image
                   src={"/assets/Questify.svg"}
-                  alt="Logo"
+                  alt="Questify Logo"
                   width={138}
                   height={32}
                 />
               </Link>
-              <h2 className="font-medium text-base text-center md:text-start text-primary flex-wrap max-w-lg">
+              <h1 className="font-medium text-base text-center md:text-start text-primary flex-wrap max-w-lg">
                 <span className="font-bold">Sign Up</span> to create an
                 educationally optimal framework for diverse professional
                 questionnaires together
-              </h2>
+              </h1>
             </div>
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="font-medium text-center px-2">
@@ -76,7 +79,7 @@ export default async function Register(props: Readonly<Props>) {
               </Link>
             </div>
           </main>
-        </section>
+        </div>
       )}
     </>
   );

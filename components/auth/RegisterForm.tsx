@@ -64,6 +64,7 @@ export function RegisterForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="md:w-4/5 xl:w-3/5 w-full flex flex-col gap-4"
     >
+      <h2 className="sr-only">Register Form</h2>
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">Email</Label>
         <Input
