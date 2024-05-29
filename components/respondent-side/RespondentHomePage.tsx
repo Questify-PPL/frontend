@@ -73,7 +73,6 @@ export default function RespondentHomePage({
                       <DraftMobile
                         form={form}
                         isRespondent={true}
-                        isSendIcon={true}
                         isFromHome={true}
                       ></DraftMobile>
                       <TableContent
