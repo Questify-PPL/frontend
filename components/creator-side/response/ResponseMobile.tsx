@@ -15,6 +15,7 @@ export function ResponseMobile({ form }: Readonly<FormAsProps>) {
     <div
       className="flex flex-row justify-between items-center md:hidden"
       onClick={toSummary}
+      role="none"
     >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
         <div className="flex flex-col items-start justify-start">

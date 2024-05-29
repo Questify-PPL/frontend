@@ -31,7 +31,10 @@ export function ActiveQuestionnaire({ form }: Readonly<FormAsProps>) {
           <div className="flex flex-row px-[6px] py-[2px] rounded-[8px] gap-[2px] bg-[#FDF8EA] w-fit justify-center items-center">
             <LuCoins className="stroke-[#E2B720] stroke-[1.044px] w-[10px] h-[10px] flex-shrink-0" />
             <p className="text-[#685B2D] text-[8px] tracking-[-0.04px] font-medium">
-              2000 for all participants
+              {form.prize} for{" "}
+              {form.prizeType === "EVEN"
+                ? "all participants"
+                : `${form.maxWinner} lucky respondents`}
             </p>
           </div>
         </div>

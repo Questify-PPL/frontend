@@ -110,7 +110,6 @@ export function ResponseDesktop({ form }: Readonly<FormAsProps>) {
             <DropdownMenuItem onClick={onUnpublish}>
               Unpublish Form
             </DropdownMenuItem>
-            <DropdownMenuItem>Summary</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async (e) => {
