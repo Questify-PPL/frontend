@@ -16,6 +16,8 @@ export type BareForm = {
   isCompleted?: boolean;
   questionAmount?: number;
   canRespond?: boolean;
+  isPublished?: boolean;
+  isDraft?: boolean;
   winningChance?: number;
   winningStatus?: boolean;
   winnerAmount?: number;
