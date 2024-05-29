@@ -7,7 +7,10 @@ import { Highlight } from "../ui/highlight";
 
 export function Hero() {
   return (
-    <section className="flex flex-col items-center justify-center w-full px-2 py-6 lg:py-12 scroll-mt-48">
+    <section
+      className="flex flex-col items-center justify-center w-full px-2 py-6 lg:py-12 scroll-mt-48"
+      aria-label="hero"
+    >
       <Head content="Empower academic communities engagement" />
       <Highlight className="text-primary md:text-xl lg:text-2xl text-center font-bold mt-5 pt-1 px-8">
         through redefined prize-based questionnaire

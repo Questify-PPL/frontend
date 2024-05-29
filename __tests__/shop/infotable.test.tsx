@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ShopInfoTable from "@/components/shop/ShopInfoTable";
 import "@testing-library/jest-dom";
+import { ShopInfoTable } from "@/components/shop";
 
 describe("InfoTable", () => {
   test("renders item and date labels", () => {

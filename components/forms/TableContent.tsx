@@ -1,7 +1,7 @@
 "use client";
 
 import { FormAsProps } from "@/lib/types";
-import { decidePhoto, useShareClick } from "@/lib/utils";
+import { decidePhoto, useHomeClick, useShareClick } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { LuCoins, LuMoreHorizontal } from "react-icons/lu";
 import { deleteQuestionnaire } from "@/lib/action/form";
@@ -18,17 +18,20 @@ import {
 export function TableContent({
   form,
   isRespondent = false,
+  isFromHome = false,
   // eslint-disable-next-line no-unused-vars
   onOpenRespondCard = (id, title) => {},
 }: Readonly<
   FormAsProps & {
     isRespondent?: boolean;
+    isFromHome?: boolean;
     // eslint-disable-next-line no-unused-vars
     onOpenRespondCard?: (id: string, title: string) => void;
   }
 >) {
   const router = useRouter();
   const handleShareClick = useShareClick(form);
+  const handleHomeClick = useHomeClick(form);
 
   function toEdit() {
     router.push(`/create/form/${form.id}`);
@@ -62,7 +65,13 @@ export function TableContent({
   return (
     <div
       className="md:flex w-full p-3 hover:bg-[#F3F8F9]/30 rounded-md cursor-pointer hidden"
-      onClick={isRespondent ? handleRespondClick : toEdit}
+      onClick={
+        isRespondent
+          ? isFromHome
+            ? handleHomeClick
+            : handleRespondClick
+          : toEdit
+      }
       role="none"
     >
       <div className="w-1/4 flex flex-row gap-3">
@@ -122,12 +131,18 @@ export function TableContent({
               <DropdownMenuContent className="right-0 absolute">
                 <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Respond</DropdownMenuItem>
+                {isFromHome ? (
+                  <DropdownMenuItem>
+                    {form.isCompleted ? "Summary" : "Continue"}
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem>Respond</DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    handleShareClick;
+                    await handleShareClick();
                   }}
                 >
                   Share

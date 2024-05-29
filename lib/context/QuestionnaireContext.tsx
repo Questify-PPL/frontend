@@ -46,17 +46,24 @@ export interface QuestionnaireContextType {
   answers: Answer[];
   errorStatus: boolean;
   activeQuestion: number | undefined;
+  publishDate: Date | undefined;
   metadata: Metadata;
   setQuestionnaire: React.Dispatch<React.SetStateAction<QuestionnaireItem[]>>;
   setAnswers: React.Dispatch<React.SetStateAction<Answer[]>>;
   setErrorStatus: React.Dispatch<React.SetStateAction<boolean>>;
   setActiveQuestion: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setPublishDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setMetadata: React.Dispatch<React.SetStateAction<Metadata>>;
 
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   publishHandler: () => Promise<void>;
   isFinished: boolean;
+
+  isPublishNow: boolean;
+  setIsPublishNow: React.Dispatch<React.SetStateAction<boolean>>;
+
+  link: string;
 }
 
 export const QuestionnaireContext = createContext<

@@ -55,7 +55,13 @@ export function TerminusRenderer({
   );
 }
 
-export function QuestionRenderer(q: Readonly<Question>) {
+export const QuestionRenderer = ({
+  q,
+  isRequired,
+}: {
+  q: Question;
+  isRequired: boolean;
+}) => {
   let questionComponent;
   if (q.questionType === "TEXT") {
     questionComponent = (
@@ -102,11 +108,16 @@ export function QuestionRenderer(q: Readonly<Question>) {
   }
 
   return (
-    <div className="flex flex-col w-full" key={q.questionId}>
+    <div className="flex flex-col gap-2 w-full" key={q.questionId}>
+      {isRequired ? (
+        <div className="w-full hidden md:flex h-1 bg-red-500 mb-2 rounded-2xl"></div>
+      ) : (
+        <div className="w-full hidden md:flex h-1 mb-2 rounded-2xl"></div>
+      )}
       {questionComponent}
     </div>
   );
-}
+};
 
 export function EmptyRenderer() {
   return (

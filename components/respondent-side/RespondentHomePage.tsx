@@ -54,7 +54,7 @@ export default function RespondentHomePage({
         </div>
         <RespondentNav className="" state="home"></RespondentNav>
 
-        <div className="flex flex-col w-full flex-1">
+        <div className="flex flex-col w-full flex-1" data-testid="home-card">
           <HomeCard
             className="w-full"
             isRespondent={isRespondent}
@@ -72,9 +72,14 @@ export default function RespondentHomePage({
                     <Fragment key={form.id}>
                       <DraftMobile
                         form={form}
-                        isRespondent={isRespondent}
+                        isRespondent={true}
+                        isFromHome={true}
                       ></DraftMobile>
-                      <TableContent form={form} isRespondent={isRespondent} />
+                      <TableContent
+                        form={form}
+                        isRespondent={true}
+                        isFromHome={true}
+                      />
                     </Fragment>
                   );
                 })}

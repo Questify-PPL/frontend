@@ -44,8 +44,8 @@ export function PurchaseConfirmationModal() {
               <div className="flex flex-row gap-5">
                 <Button
                   className="w-28 h-9 mt-5 "
-                  onClick={() => {
-                    processPurchasement();
+                  onClick={async () => {
+                    await processPurchasement();
                     setIsOpen(false);
                   }}
                 >

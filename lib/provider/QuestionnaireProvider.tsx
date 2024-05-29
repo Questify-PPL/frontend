@@ -23,6 +23,7 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
   const [activeQuestion, setActiveQuestion] = useState<number | undefined>(
     undefined,
   );
+  const [publishDate, setPublishDate] = useState<Date | undefined>(undefined);
 
   const [metadata, setMetadata] = useState<Metadata>({
     createdAt: "",
@@ -43,16 +44,28 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(true);
+  const [isPublishNow, setIsPublishNow] = useState<boolean>(false);
+  const [link, setLink] = useState<string>("");
 
   const publishHandler = useCallback(async () => {
     if (!isOpen || !metadata.id) return;
+    if (publishDate === undefined) {
+      toast({
+        title: "Error",
+        description: "Please select a publish date",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsFinished(false);
 
     try {
-      metadata.isPublished
+      const result = metadata.isPublished
         ? await unpublishQuestionnaire(metadata.id)
-        : await publishQuestionnaire(metadata.id);
+        : await publishQuestionnaire(metadata.id, publishDate);
+
+      setLink(result.link);
 
       setMetadata((prev) => ({
         ...prev,
@@ -68,7 +81,7 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
 
     setIsOpen(false);
     setIsFinished(true);
-  }, [toast, isOpen, metadata.id, metadata.isPublished]);
+  }, [toast, isOpen, metadata.id, metadata.isPublished, publishDate]);
 
   // Memoize the context value to prevent unnecessary re-renders
   const providerValue = useMemo(
@@ -78,15 +91,20 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
       errorStatus,
       activeQuestion,
       metadata,
+      publishDate,
       setQuestionnaire,
       setAnswers,
       setErrorStatus,
       setActiveQuestion,
       setMetadata,
+      setPublishDate,
       isOpen,
       setIsOpen,
       publishHandler,
       isFinished,
+      isPublishNow,
+      setIsPublishNow,
+      link,
     }),
     [
       questionnaire,
@@ -96,7 +114,10 @@ export const QuestionnaireProvider: React.FC<{ children: ReactNode }> = ({
       metadata,
       isFinished,
       isOpen,
+      publishDate,
       publishHandler,
+      isPublishNow,
+      link,
     ],
   );
 

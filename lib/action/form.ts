@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth, unstable_update as update } from "@/auth";
 import { URL } from "@/lib/constant";
 import { Answer, QuestionnaireItem } from "../context";
 import { FetchListForm } from "../types";
@@ -30,7 +30,9 @@ export async function createQuestionnaire(
   });
 
   if (response.status !== 201) {
-    throw new Error("Failed to create questionnaire");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to get questionnaire";
+    throw new Error(errorMessage);
   }
 
   return await response.json();
@@ -78,7 +80,9 @@ export async function getQuestionnairesOwned(type?: string) {
   });
 
   if (response.status !== 200) {
-    throw new Error("Failed to get questionnaires owned");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to get questionnaire";
+    throw new Error(errorMessage);
   }
 
   const result: FetchListForm = await response.json();
@@ -132,7 +136,9 @@ export async function getQuestionnaire(formId: string) {
   );
 
   if (response.status !== 200) {
-    throw new Error("Failed to get questionnaire");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to get questionnaire";
+    throw new Error(errorMessage);
   }
 
   return await response.json();
@@ -261,16 +267,19 @@ export async function patchQuestionnaire(
   );
 
   if (response.status !== 200) {
-    throw new Error("Failed to update questionnaire");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to get questionnaire";
+    throw new Error(errorMessage);
   }
 }
 
-export async function publishQuestionnaire(formId: string) {
+export async function publishQuestionnaire(formId: string, publishDate: Date) {
   const session = await auth();
   const user = session?.user;
 
   const publish = {
     isPublished: true,
+    endedAt: publishDate,
   };
 
   const response = await fetch(
@@ -285,9 +294,15 @@ export async function publishQuestionnaire(formId: string) {
     },
   );
 
+  const result = await response.json();
+
   if (response.status !== 200) {
-    throw new Error("Failed to publish questionnaire");
+    const errorData = await response.json();
+    const errorMessage = errorData.message || "Failed to publish questionnaire";
+    throw new Error(errorMessage);
   }
+
+  return result.data;
 }
 
 export async function unpublishQuestionnaire(formId: string) {
@@ -315,6 +330,8 @@ export async function unpublishQuestionnaire(formId: string) {
   if (response.status >= 400) {
     throw new Error(result.message);
   }
+
+  return result.data;
 }
 
 export async function deleteQuestionnaire(formId: string) {
@@ -422,4 +439,23 @@ export async function patchAnswer(
   }
 
   return await response.json();
+}
+
+export async function decreaseCreditAndBalance(prize: number) {
+  const session = await auth();
+
+  if (!session) {
+    return;
+  }
+
+  await update({
+    user: {
+      ...session.user,
+      credit: session.user.credit - prize,
+      Creator: {
+        ...session.user.Creator!,
+        emptyForms: (session.user.Creator?.emptyForms ?? 1) - 1,
+      },
+    },
+  });
 }

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback } from "react";
 import {
   Section,
   DefaultQuestion,
@@ -10,6 +10,7 @@ import {
 } from "@/lib/context/QuestionnaireContext";
 import { BareForm } from "./types/form.type";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -154,6 +155,11 @@ export function useShareClick(form: BareForm) {
         });
       } catch (err) {
         console.error("Failed to copy the text to clipboard", err);
+        toast({
+          title: "Error",
+          description: "Failed to copy link.",
+          variant: "destructive",
+        });
       }
     } else {
       toast({
@@ -165,4 +171,43 @@ export function useShareClick(form: BareForm) {
   };
 
   return handleShareClick;
+}
+
+export const useHomeClick = (form: BareForm) => {
+  const router = useRouter();
+
+  return useCallback(
+    (event: { stopPropagation: () => void }) => {
+      event.stopPropagation();
+      !form.isCompleted
+        ? router.push(`questionnaire/join/${form.id}`)
+        : router.push(`summary/form/${form.id}`);
+    },
+    [form.id, form.isCompleted, router],
+  );
+};
+
+export function useCopyClick(link: string) {
+  const { toast } = useToast();
+  const fullLink = `${process.env.NEXT_PUBLIC_BASE_URL}/${link}`;
+
+  const handleCopyClick = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/${link}`,
+      );
+      toast({
+        title: "Success",
+        description: "Link copied to clipboard!",
+      });
+    } catch (err) {
+      console.error("Failed to copy the text to clipboard", err);
+      toast({
+        title: "Error",
+        description: "Failed to copy link.",
+        variant: "destructive",
+      });
+    }
+  };
+  return { handleCopyClick, fullLink };
 }

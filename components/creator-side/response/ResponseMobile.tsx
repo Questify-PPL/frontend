@@ -15,6 +15,7 @@ export function ResponseMobile({ form }: Readonly<FormAsProps>) {
     <div
       className="flex flex-row justify-between items-center md:hidden"
       onClick={toSummary}
+      role="none"
     >
       <div className="flex flex-row px-[5px] py-2 gap-[10px]">
         <div className="flex flex-col items-start justify-start">
@@ -47,9 +48,9 @@ export function ResponseMobile({ form }: Readonly<FormAsProps>) {
       </div>
       <button
         className="flex h-[51px] p-[6px] justify-center items-center gap-[8px] rounded-[6px] border border-solid border-[#CDDDE1] bg-white cursor-pointer"
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          handleShareClick;
+          await handleShareClick();
         }}
         data-testid="share-icon"
       >

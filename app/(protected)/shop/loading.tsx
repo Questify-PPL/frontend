@@ -14,7 +14,7 @@ export default function Loading() {
 
       <div className="flex flex-row h-full w-full md:flex-row items-center justify-center md:gap-8 gap-6 flex-wrap">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="w-[10%] h-72" />
+          <Skeleton key={`loading-${i + 1}`} className="w-[10%] h-72" />
         ))}
       </div>
 

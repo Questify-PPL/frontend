@@ -1,10 +1,13 @@
 import JoinForm, {
   generateMetadata,
 } from "@/app/(protected)/questionnaire/join/[id]/page";
-import { getQuestionnaireRespondent } from "@/lib/action/form";
+import {
+  getQuestionnaireRespondent,
+  postParticipation,
+} from "@/lib/action/form";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -33,6 +36,7 @@ jest.mock("@/lib/hooks/useQuestionnaireContext", () => ({
 
 jest.mock("@/lib/action/form", () => ({
   getQuestionnaireRespondent: jest.fn(),
+  postParticipation: jest.fn(),
 }));
 
 describe("QuestionnaireJoinWrapper Component", () => {
@@ -62,6 +66,18 @@ describe("QuestionnaireJoinWrapper Component", () => {
     (getQuestionnaireRespondent as jest.Mock).mockRejectedValue(new Error());
 
     await generateMetadata({ params: { id: "123" } });
+  });
+
+  test("participate error", async () => {
+    (getQuestionnaireRespondent as jest.Mock).mockResolvedValue({
+      data: {
+        title: "Test Title",
+      },
+    });
+
+    (postParticipation as jest.Mock).mockRejectedValue(new Error());
+
+    await generateMetadata({ params: { id: undefined as unknown as string } });
   });
 });
 

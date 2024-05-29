@@ -36,11 +36,12 @@ export default function QuestionnaireJoinWrapper({
   const [maxWinner, setMaxWinner] = useState(0);
   const [prizeType, setPrizeType] = useState("EVEN");
   const [finalizationCard, setFinalizationCard] = useState("hidden");
+  const [winningChance, setWinningChance] = useState(0);
 
   const handleAnswerChange = (questionId: number, newAnswer: string) => {
     setAnswers((prevAnswers) => {
       const answerIndex = prevAnswers.findIndex(
-        (answer) => answer.questionId === questionId,
+        (answer) => answer.questionId === questionId
       );
 
       if (answerIndex >= 0) {
@@ -95,7 +96,7 @@ export default function QuestionnaireJoinWrapper({
     try {
       await patchAnswer(id, answers);
       OpenSavedAsDraft();
-      await fetchQuestionnaire();
+      // await fetchQuestionnaire();
     } catch (error) {
       console.error("Failed to update questionnaire", error);
     }
@@ -113,12 +114,12 @@ export default function QuestionnaireJoinWrapper({
   // Find Question by ID
   function findQuestionById(
     questionnaire: QuestionnaireItem[],
-    questionId: number,
+    questionId: number
   ): Question | undefined {
     for (const item of questionnaire) {
       if (item.type === QuestionnaireItemTypes.SECTION) {
         const foundQuestion = item.questions.find(
-          (question) => question.questionId === questionId,
+          (question) => question.questionId === questionId
         );
         if (foundQuestion) {
           return foundQuestion;
@@ -145,7 +146,7 @@ export default function QuestionnaireJoinWrapper({
       choice,
     } = q;
     let existingAnswerIndex = answers.findIndex(
-      (answer) => answer.questionId === questionId,
+      (answer) => answer.questionId === questionId
     );
 
     const answer = answers[existingAnswerIndex]?.answer ?? "";
@@ -231,7 +232,7 @@ export default function QuestionnaireJoinWrapper({
           handleAnswerChange(question.questionId, question.answer);
           const existingQuestion = findQuestionById(
             questionnaire,
-            question.questionId,
+            question.questionId
           );
           if (existingQuestion) {
             const choice = existingQuestion.choice ?? question.choice;
@@ -266,18 +267,41 @@ export default function QuestionnaireJoinWrapper({
         } as Section;
       } else {
         const question = item as QuestionGet;
-        return {
-          type: QuestionnaireItemTypes.DEFAULT,
-          question: {
-            questionId: question.questionId,
-            questionType: question.questionType,
-            questionTypeName: question.questionTypeName,
-            isRequired: question.isRequired,
-            question: question.question,
-            description: question.description,
-            choice: question.choice,
-          },
-        } as DefaultQuestion;
+
+        handleAnswerChange(question.questionId, question.answer);
+        const existingQuestion = findQuestionById(
+          questionnaire,
+          question.questionId
+        );
+
+        if (existingQuestion) {
+          const choice = existingQuestion.choice ?? question.choice;
+          return {
+            type: QuestionnaireItemTypes.DEFAULT,
+            question: {
+              questionId: question.questionId,
+              questionType: question.questionType,
+              questionTypeName: question.questionTypeName,
+              isRequired: question.isRequired,
+              question: question.question,
+              description: question.description,
+              choice: choice,
+            },
+          } as DefaultQuestion;
+        } else {
+          return {
+            type: QuestionnaireItemTypes.DEFAULT,
+            question: {
+              questionId: question.questionId,
+              questionType: question.questionType,
+              questionTypeName: question.questionTypeName,
+              isRequired: question.isRequired,
+              question: question.question,
+              description: question.description,
+              choice: question.choice,
+            },
+          } as DefaultQuestion;
+        }
       }
     });
   }
@@ -291,6 +315,7 @@ export default function QuestionnaireJoinWrapper({
       setPrizeType(response.data.prizeType);
       setPrize(response.data.prize);
       setMaxWinner(response.data.maxWinner);
+      setWinningChance(response.data.winningChance);
 
       setQuestionnaire(transformed);
     } catch (error) {
@@ -333,6 +358,7 @@ export default function QuestionnaireJoinWrapper({
         prize={prize}
         maxWinner={maxWinner}
         QRETitle={QRETitle}
+        winningChance={winningChance}
         onCancel={openFinalizationCard}
       ></FinalizationCard>
       <div className="flex flex-row w-full h-full gap-4 p-5">
@@ -341,6 +367,7 @@ export default function QuestionnaireJoinWrapper({
             onBack={handleBack}
             onSave={handleSave}
             QRETitle={QRETitle}
+            isParticipate={true}
           />
 
           {activeSectionId === 0
@@ -370,39 +397,74 @@ export default function QuestionnaireJoinWrapper({
                   item !== undefined &&
                   activeSectionId + 1 <= questionnaire.length - 1
                 ) {
-                  const section = item as Section;
-
-                  return (
-                    <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
-                      <QuestionUI
-                        questionSectionTitle={"Section " + activeSectionId}
-                        questionSectionText={section.sectionName}
-                        required={true}
-                        isParticipate={true}
-                        questions={
-                          <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
-                            {section.questions?.length >= 1
-                              ? section.questions.map((question, index) => {
+                  if (item.type === QuestionnaireItemTypes.DEFAULT) {
+                    const defaultQuestion = item as DefaultQuestion;
+                    return (
+                      <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
+                        <QuestionUI
+                          questionSectionTitle={""}
+                          questionSectionText={""}
+                          required={defaultQuestion.question.isRequired}
+                          isParticipate={true}
+                          questions={
+                            <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
+                              {defaultQuestion.question.question !== null &&
+                                (() => {
                                   const renderedQuestion = findQuestionById(
                                     questionnaire,
-                                    question.questionId as number,
+                                    defaultQuestion.question
+                                      .questionId as number
                                   ) as Question;
 
                                   return renderQuestion(
                                     renderedQuestion,
-                                    index,
+                                    activeSectionId - 1
                                   );
-                                })
-                              : ""}
-                          </div>
-                        }
-                        prevButton={prev}
-                        nextButton={next}
-                        buttonText="Next"
-                        buttonIcon={<LuCheck className="w-5 h-5" />}
-                      />
-                    </Card>
-                  );
+                                })()}
+                            </div>
+                          }
+                          prevButton={prev}
+                          nextButton={next}
+                          buttonText="Next"
+                          buttonIcon={<LuCheck className="w-5 h-5" />}
+                        />
+                      </Card>
+                    );
+                  } else {
+                    const section = item as Section;
+
+                    return (
+                      <Card className="flex flex-row md:w-[70%] w-full h-full justify-center items-center">
+                        <QuestionUI
+                          questionSectionTitle={section.sectionName}
+                          questionSectionText={section.sectionDescription}
+                          required={section.questions[0].isRequired}
+                          isParticipate={true}
+                          questions={
+                            <div className="flex flex-col gap-8 text-base text-primary w-full justify-start">
+                              {section.questions?.length >= 1
+                                ? section.questions.map((question, index) => {
+                                    const renderedQuestion = findQuestionById(
+                                      questionnaire,
+                                      question.questionId as number
+                                    ) as Question;
+
+                                    return renderQuestion(
+                                      renderedQuestion,
+                                      index
+                                    );
+                                  })
+                                : ""}
+                            </div>
+                          }
+                          prevButton={prev}
+                          nextButton={next}
+                          buttonText="Next"
+                          buttonIcon={<LuCheck className="w-5 h-5" />}
+                        />
+                      </Card>
+                    );
+                  }
                 } else {
                   const item = questionnaire[activeSectionId];
                   if (
@@ -418,6 +480,8 @@ export default function QuestionnaireJoinWrapper({
                           terminusSectionTitle={section.sectionName}
                           terminusText={section.sectionDescription}
                           buttonClickHandler={next}
+                          buttonPrevHandler={prev}
+                          isEnding={true}
                           buttonText="Submit"
                           buttonIcon={<LuCheckCheck className="w-5 h-5" />}
                           buttonType="submit"

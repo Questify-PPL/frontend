@@ -3,8 +3,14 @@ import { Button } from "@/components/ui/button";
 import { useQuestionnaireContext } from "@/lib/hooks";
 
 export default function ConfirmationPublishModal() {
-  const { isOpen, setIsOpen, publishHandler, isFinished, metadata } =
-    useQuestionnaireContext();
+  const {
+    isOpen,
+    setIsOpen,
+    setIsPublishNow,
+    publishHandler,
+    isFinished,
+    metadata,
+  } = useQuestionnaireContext();
 
   return (
     <>
@@ -50,13 +56,16 @@ export default function ConfirmationPublishModal() {
                   onClick={async () => {
                     await publishHandler();
                     setIsOpen(false);
+                    if (!metadata.isPublished) {
+                      setIsPublishNow(true);
+                    }
                   }}
                   disabled={!isFinished}
                 >
                   {!isFinished && (
                     <ReloadIcon className="mr-2 h-4 w-4 animate-spin fill-white" />
                   )}
-                  Yes
+                  {isFinished && "Yes"}
                 </Button>
                 <Button
                   className="w-28 h-9 mt-5 bg-[#DA0A1E]"

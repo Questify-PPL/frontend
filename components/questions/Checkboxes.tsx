@@ -21,7 +21,7 @@ interface CheckboxProps {
 export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
   const { questionnaire, answers, setQuestionnaire, setAnswers } =
     useQuestionnaireContext();
-  const { role, numbering, questionId } = checkboxProps;
+  const { role, numbering, questionId, questionTypeName } = checkboxProps;
   const {
     isRequired,
     question,
@@ -158,10 +158,11 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
   }, [selectedOptionsValues]);
 
   return (
-    <div className="w-[84%] flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <QuestionLayout
         role={role}
         numbering={numbering}
+        questionType={questionTypeName}
         question={questionValue}
         description={descriptionValue}
         answer={handleOption()}

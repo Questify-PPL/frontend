@@ -11,14 +11,29 @@ export function QuestionnaireWrapper({ forms }: Readonly<FormsAsProps>) {
     visible: "hidden",
     id: "",
     title: "",
+    prizeType: "EVEN",
+    winningChance: 10,
+    prize: 2000,
+    maxWinner: 1,
   });
 
-  const openResponsCard = (id: string = "", title: string = "") => {
+  const openResponsCard = (
+    id: string = "",
+    title: string = "",
+    prizeType: string = "",
+    winningChance: number = 10,
+    prize: number = 2000,
+    maxWinner: number = 1,
+  ) => {
     setRespondCardState((prevState) => ({
       ...prevState,
       visible: prevState.visible === "hidden" ? "flex" : "hidden",
       id: id,
       title: title,
+      prizeType: prizeType,
+      winningChance: winningChance,
+      prize: prize,
+      maxWinner: maxWinner,
     }));
   };
   return (
@@ -37,12 +52,30 @@ export function QuestionnaireWrapper({ forms }: Readonly<FormsAsProps>) {
                   form={form}
                   isRespondent={true}
                   isSendIcon={true}
-                  onOpenRespondCard={openResponsCard}
+                  onOpenRespondCard={() =>
+                    openResponsCard(
+                      form.id,
+                      form.title,
+                      form.prizeType,
+                      form.winningChance,
+                      form.prize,
+                      form.maxWinner,
+                    )
+                  }
                 ></DraftMobile>
                 <TableContent
                   form={form}
                   isRespondent={true}
-                  onOpenRespondCard={openResponsCard}
+                  onOpenRespondCard={() =>
+                    openResponsCard(
+                      form.id,
+                      form.title,
+                      form.prizeType,
+                      form.winningChance,
+                      form.prize,
+                      form.maxWinner,
+                    )
+                  }
                 />
               </Fragment>
             ))}
@@ -53,6 +86,10 @@ export function QuestionnaireWrapper({ forms }: Readonly<FormsAsProps>) {
         className={respondCardState.visible}
         id={respondCardState.id}
         title={respondCardState.title}
+        maxWinner={respondCardState.maxWinner}
+        prize={respondCardState.prize}
+        prizeType={respondCardState.prizeType}
+        winningChance={respondCardState.winningChance}
         onCancel={() => openResponsCard()}
       />
     </main>

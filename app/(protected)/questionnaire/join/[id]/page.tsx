@@ -1,5 +1,8 @@
 import QuestionnaireJoinWrapper from "@/components/respondent-side/join/QuestionnaireJoinWrapper";
-import { getQuestionnaireRespondent } from "@/lib/action/form";
+import {
+  getQuestionnaireRespondent,
+  postParticipation,
+} from "@/lib/action/form";
 import { QuestionnaireProvider } from "@/lib/provider/QuestionnaireProvider";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -15,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     const form = await getQuestionnaireRespondent(id);
+    await postParticipation(id ?? "");
 
     const title = form.data.title ?? "";
 

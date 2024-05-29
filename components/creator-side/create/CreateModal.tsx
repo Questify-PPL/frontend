@@ -14,6 +14,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { QuestionTypeNames, QuestionGroup as qg } from "@/lib/services/form";
 import { QuestionnaireItem } from "@/lib/context";
+import { useToast } from "@/components/ui/use-toast";
+import { decreaseCreditAndBalance } from "@/lib/action/form";
+import { ReloadIcon } from "@/components/common";
 
 interface CreateModalProps {
   className?: string;
@@ -31,6 +34,8 @@ export function CreateModal({
   const [title, setTitle] = useState("");
 
   const router = useRouter();
+  const { toast } = useToast();
+  const [isCreating, setIsCreating] = useState(false);
 
   const {
     watch,
@@ -48,6 +53,7 @@ export function CreateModal({
   });
 
   const toForm: SubmitHandler<CreateQuestionnaire> = async (data) => {
+    setIsCreating(true);
     try {
       const response = await createQuestionnaire(
         data.title,
@@ -55,6 +61,7 @@ export function CreateModal({
         data.prizeType,
         data.maxWinner ?? undefined,
       );
+      await decreaseCreditAndBalance(data.prize);
       const formId = response.data.id;
       const initSection = [
         {
@@ -86,9 +93,14 @@ export function CreateModal({
       ] as QuestionnaireItem[];
       await patchQuestionnaire(formId, initSection);
       router.push(`/create/form/${formId}`);
-    } catch (error) {
-      console.error("Failed to create questionnaire", error);
+    } catch (error: any) {
+      toast({
+        title: "Failed to create new Questionnaire",
+        description: (error as Error).message,
+      });
     }
+
+    setIsCreating(false);
   };
 
   return (
@@ -96,8 +108,8 @@ export function CreateModal({
       className={`absolute w-full h-full justify-center items-center bg-[#324B4F]/70 ${className}`}
       onSubmit={handleSubmit(toForm)}
     >
-      <Card className="flex flex-col w-[35%] p-5 justify-center items-center gap-6">
-        <div className="flex flex-row justify-between items-center w-full">
+      <Card className="flex flex-col w-[90%] md:w-[35%] p-5 justify-center items-center gap-6">
+        <div className="flex flex-row justify-between w-full">
           <div className="flex flex-row gap-2">
             <div className="flex flex-row gap-1">
               <span className="flex w-5 h-5 justify-center bg-[#F9EBF6] items-center rounded-full">
@@ -115,11 +127,11 @@ export function CreateModal({
           <LuX className="w-5 h-5" onClick={onCancel}></LuX>
         </div>
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center text-center items-center">
             <span className="flex font-extrabold text-xl">
               Create a New Questionnaire
             </span>
-            <span className="flex font-regular text-sm text-primary/40">
+            <span className="hidden md:flex font-regular text-sm text-primary/40">
               Give the Questionnaire what it needs first :)
             </span>
           </div>
@@ -210,8 +222,11 @@ export function CreateModal({
           <Button variant="outline" className="w-full" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit" className="w-full">
-            Create
+          <Button type="submit" className="w-full" disabled={isCreating}>
+            {isCreating && (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin fill-white" />
+            )}
+            {!isCreating && "Create"}
           </Button>
         </div>
       </Card>
