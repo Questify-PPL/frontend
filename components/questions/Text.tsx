@@ -19,10 +19,9 @@ interface TextProps {
   question: string;
   description?: string;
   choice?: string[];
-  answer: string;
-  status?: boolean; // false means it can't be modified (submitted || questionnaire has ended)
+  answer: string | null | undefined;
+  status?: boolean; //
 
-  // eslint-disable-next-line no-unused-vars
   onAnswerChange?: (questionId: number, answer: string) => void;
 }
 
@@ -39,7 +38,7 @@ export function Text(textProps: Readonly<TextProps>) {
     isRequired,
     question,
     description,
-    answer,
+    answer = "",
     status = true,
   } = textProps;
 
@@ -47,9 +46,11 @@ export function Text(textProps: Readonly<TextProps>) {
   const [descriptionValue, setDescriptionValue] = useState<string>(
     description || "",
   );
-  const [answerValue, setAnswerValue] = useState(answer || "");
+  const [answerValue, setAnswerValue] = useState<string>(
+    typeof answer === "string" ? answer : "",
+  );
   const [requiredValue, setRequiredValue] = useState(isRequired || false);
-  const [answerError, setAnswerError] = useState<string | null>();
+  const [answerError, setAnswerError] = useState<string | null>(null);
 
   const handleQuestionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     handleQuedesChange(event, setQuestionValue);
@@ -70,7 +71,7 @@ export function Text(textProps: Readonly<TextProps>) {
     if (textProps.onAnswerChange) {
       textProps.onAnswerChange(questionId, event.target.value);
     }
-    handleAnswerValidation();
+    handleAnswerValidation(event.target.value);
   };
 
   const handleSwitchChange = () => {
@@ -80,9 +81,9 @@ export function Text(textProps: Readonly<TextProps>) {
   const urlPattern =
     /^((http|https):\/\/)?(www.)?(?!.*(http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+(\/)?.([\w\?[a-zA-Z-_%\/@?]+)*([^\/\w\?[a-zA-Z0-9_-]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/;
 
-  const handleAnswerValidation = () => {
-    const isEmpty = answerValue.trim() === "";
-    const isValidUrl = urlPattern.test(answerValue);
+  const handleAnswerValidation = (value: string) => {
+    const isEmpty = value.trim() === "";
+    const isValidUrl = urlPattern.test(value);
 
     if (requiredValue && isEmpty) {
       setAnswerError("Answer can't be empty.");
@@ -117,18 +118,22 @@ export function Text(textProps: Readonly<TextProps>) {
             type="date"
             data-testid="dateInput"
             onChange={handleAnswerChange}
-            onBlur={handleAnswerValidation}
+            onBlur={() => handleAnswerValidation(answerValue)}
             value={answerValue}
-            className="text-xs md:text-sm resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden"
+            className={`text-xs md:text-sm resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden ${
+              requiredValue && answerError ? "border-red-500" : ""
+            }`}
           />
         ) : (
           <textarea
             data-testid="textInput"
             placeholder="Type your answer here"
             onChange={handleAnswerChange}
-            onBlur={handleAnswerValidation}
+            onBlur={() => handleAnswerValidation(answerValue)}
             value={answerValue}
-            className="text-xs md:text-sm w-full resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden"
+            className={`text-xs md:text-sm w-full resize-none font-normal text-[#64748B] whitespace-pre-wrap placeholder:text-primary/30 border-none rounded-none p-0 focus-visible:outline-none overflow-y-hidden ${
+              requiredValue && answerError ? "border-red-500" : ""
+            }`}
             maxLength={questionTypeName === "Short Text" ? 70 : undefined}
             rows={1}
           />
