@@ -5,6 +5,7 @@ import { URL } from "@/lib/constant";
 import { Answer, QuestionnaireItem } from "../context";
 import { FetchListForm } from "../types";
 import { unstable_noStore as noStore } from "next/cache";
+import { stat } from "fs";
 
 export async function createQuestionnaire(
   title: string,
@@ -396,7 +397,6 @@ export async function postParticipation(formId: string) {
 
 export async function patchAnswer(
   formId: string,
-  // data: any[] | QuestionnaireItem[],
   data: any[] | Answer[],
   isFinal: boolean = false,
 ) {
@@ -404,11 +404,32 @@ export async function patchAnswer(
   const user = session?.user;
   let update: any;
 
+  const formatAnswer = (answer: any) => {
+    if (Array.isArray(answer)) {
+      if (answer.length === 0) {
+        return null;
+      }
+      return answer.map((item) =>
+        typeof item === "string" ? item : JSON.stringify(item),
+      );
+    }
+    if (answer === null || answer === undefined || answer === "") {
+      return null;
+    }
+    if (typeof answer === "object") {
+      if ("answer" in answer) {
+        return answer.answer || null;
+      }
+      return JSON.stringify(answer);
+    }
+    return answer;
+  };
+
   if (isFinal) {
     const formattedData = data.map((item: any) => {
       return {
         questionId: item.questionId,
-        answer: item.answer,
+        answer: formatAnswer(item.answer),
       };
     });
 
@@ -417,8 +438,13 @@ export async function patchAnswer(
       questionsAnswer: formattedData,
     };
   } else {
+    const formattedData = data.map((item: any) => ({
+      questionId: item.questionId,
+      answer: formatAnswer(item.answer),
+    }));
+
     update = {
-      questionsAnswer: data,
+      questionsAnswer: formattedData,
     };
   }
 

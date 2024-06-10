@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.id;
 
   try {
-    const form = await getQuestionnaireRespondent(id);
     await postParticipation(id ?? "");
+    const form = await getQuestionnaireRespondent(id);
 
     const title = form.data.title ?? "";
 

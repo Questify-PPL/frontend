@@ -36,9 +36,10 @@ export function Checkboxes(checkboxProps: Readonly<CheckboxProps>) {
     description ?? "",
   );
   const [requiredValue, setRequiredValue] = useState(isRequired);
-  const [options, setOptions] = useState<string[]>(choice || []);
-  const [selectedOptionsValues, setSelectedOptionsValues] =
-    useState<string[]>(answer);
+  const [options, setOptions] = useState<string[]>(choice);
+  const [selectedOptionsValues, setSelectedOptionsValues] = useState<string[]>(
+    Array.isArray(answer) ? answer : [],
+  );
 
   const handleQuestionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setQuestionValue(event.target.value);
